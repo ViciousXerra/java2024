@@ -4,9 +4,13 @@ import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.temp_repository.UserTemporaryRepository;
 import edu.java.bot.users.Action;
 import edu.java.bot.users.User;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Component("/start")
+@Qualifier("slash_input")
 public class StartInput implements Input {
 
     private static final String SUCCESSFULLY_REGISTERED_MESSAGE = "%s, you have been successfully registered. Hello!";

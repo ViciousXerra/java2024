@@ -1,8 +1,12 @@
 package edu.java.bot.inputs;
 
 import com.pengrad.telegrambot.model.Update;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
+@Component("/help")
+@Qualifier("slash_input")
 public class HelpInput implements Input {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
@@ -11,7 +15,7 @@ public class HelpInput implements Input {
 
     private final List<Input> inputsList;
 
-    public HelpInput(List<Input> inputsList) {
+    public HelpInput(@Qualifier("slash_input") List<Input> inputsList) {
         this.inputsList = inputsList;
     }
 

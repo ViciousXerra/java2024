@@ -23,4 +23,8 @@ public class UserTemporaryRepository {
         return tempStorage.containsKey(id) ? Optional.of(tempStorage.get(id)) : Optional.empty();
     }
 
+    public void drop() {
+        tempStorage.clear();
+    }
+
 }

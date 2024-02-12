@@ -3,10 +3,14 @@ package edu.java.bot.inputs;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.temp_repository.UserTemporaryRepository;
 import edu.java.bot.users.User;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@Component("/list")
+@Qualifier("slash_input")
 public class ListInput implements Input {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();

@@ -4,8 +4,12 @@ import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.temp_repository.UserTemporaryRepository;
 import edu.java.bot.users.Action;
 import edu.java.bot.users.User;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import java.util.Optional;
 
+@Component("/untrack")
+@Qualifier("slash_input")
 public class UntrackInput implements Input {
 
     public static final String SPECIFY_LINK_MESSAGE =
