@@ -55,6 +55,7 @@ public class ResponseEditor implements ResponseService {
         if (user.getCondition().equals(UserChatCondition.DEFAULT)) {
             return "Invalid command.";
         } else if (!urlParser.isValid(text)) {
+            user.setCondition(UserChatCondition.DEFAULT);
             return "The link is not in the correct format or the resource is not supported.";
         } else {
             URI url = URI.create(text);
