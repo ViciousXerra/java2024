@@ -42,21 +42,24 @@ public class ResponseEditor implements ResponseService {
                 commandMatch.getFirst().createMessage(optionalUser, username, id)
             );
         } else {
-            return new SendMessage(id, processUrl(optionalUser, incomingText));
+            return new SendMessage(id, processNonSlashCommand(optionalUser, incomingText));
         }
     }
 
-    private String processUrl(Optional<User> optionalUser, String text) {
-        if (optionalUser.isPresent()) {
-            if (urlParser.isValid(text)) {
-                User user = optionalUser.get();
-                URI url = URI.create(text);
-                return manageUrlAndCreateNotificationMessage(user, url);
-            } else {
-                return "The link is incorrectly formatted or this resource is not supported.";
-            }
+    private String processNonSlashCommand(Optional<User> optionalUser, String text) {
+        return optionalUser.map(user -> processWithFeaturedUser(user, text))
+            .orElse("First you need to register by entering the command /start.");
+    }
+
+    private String processWithFeaturedUser(User user, String text) {
+        if (user.getCondition().equals(UserChatCondition.DEFAULT)) {
+            return "Invalid command.";
+        } else if (!urlParser.isValid(text)) {
+            return "The link is not in the correct format or the resource is not supported.";
+        } else {
+            URI url = URI.create(text);
+            return manageUrlAndCreateNotificationMessage(user, url);
         }
-        return "First you need to register by entering the command /start.";
     }
 
     private String manageUrlAndCreateNotificationMessage(User user, URI url) {
