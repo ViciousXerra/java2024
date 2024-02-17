@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
+import edu.java.bot.users.User;
 import java.util.List;
 import java.util.Optional;
-import edu.java.bot.users.User;
 import org.springframework.stereotype.Component;
 
 @Component

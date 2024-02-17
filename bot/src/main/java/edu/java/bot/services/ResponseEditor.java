@@ -53,7 +53,7 @@ public class ResponseEditor implements ResponseService {
                 URI url = URI.create(text);
                 return manageUrlAndCreateNotificationMessage(user, url);
             } else {
-                return "The link is incorrectly formatted or is not a link.";
+                return "The link is incorrectly formatted or this resource is not supported.";
             }
         }
         return "First you need to register by entering the command /start.";

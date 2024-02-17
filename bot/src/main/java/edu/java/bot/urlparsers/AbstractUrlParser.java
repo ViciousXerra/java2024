@@ -19,8 +19,8 @@ public abstract class AbstractUrlParser {
 
     public final boolean isValid(String link) {
         Matcher matcher = LINK_PATTERN.matcher(link);
-        return matcher.matches() &&
-               (isVerifiedHost(matcher) || (nextParser != null && nextParser.isVerifiedHost(matcher)));
+        return matcher.matches()
+               && (isVerifiedHost(matcher) || (nextParser != null && nextParser.isVerifiedHost(matcher)));
     }
 
 }
