@@ -12,10 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class BotConfig {
 
     @Bean
-    TelegramBot telegramBot(ApplicationConfig config, List<Command> allSupportedCommands) {
+    TelegramBot telegramBot(ApplicationConfig config) {
         TelegramBot bot = new TelegramBot(config.telegramToken());
-        bot.execute(new SetMyCommands(allSupportedCommands.stream().map(Command::toBotCommand)
-            .toArray(BotCommand[]::new)));
         return bot;
     }
 
