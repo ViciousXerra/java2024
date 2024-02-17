@@ -70,7 +70,7 @@ public class ResponseEditor implements ResponseService {
             user.setCondition(UserChatCondition.DEFAULT);
             return "The link was successfully deleted.";
         } else {
-            return "Invalid state.";
+            return "First enter the command /track or /untrack.";
         }
     }
 
