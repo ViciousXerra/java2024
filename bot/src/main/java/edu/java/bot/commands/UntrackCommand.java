@@ -26,8 +26,11 @@ public class UntrackCommand implements Command {
             if (condition.equals(UserChatCondition.DEFAULT)) {
                 user.setCondition(UserChatCondition.AWAITING_LINK_TO_UNTRACK);
                 return "Waiting for a link to be entered.";
+            } else if (condition.equals(UserChatCondition.AWAITING_LINK_TO_UNTRACK)){
+                return "The link to delete is already expected.";
             } else {
-                return "The link to save/delete is already expected.";
+                user.setCondition(UserChatCondition.AWAITING_LINK_TO_UNTRACK);
+                return "OK, now the link sent in the next message will be deleted.";
             }
         }
         return "First you need to register by entering the command /start.";
