@@ -23,7 +23,7 @@ class TrackCommandTest {
     public static void setup() {
         emptyUserOptional = Optional.empty();
         presentUserOptional = TestUtils.createUserOptionalWithEmptyList();
-        mockUpdate = TestUtils.createMockUpdate("/track", 0L);
+        mockUpdate = TestUtils.createMockUpdate("/track", "username", 0L);
     }
 
     @Test

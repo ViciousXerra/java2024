@@ -28,7 +28,7 @@ class HelpCommandTest {
         mockCommand2 = TestUtils.createMockCommand("mockCommand2", "mockDesc2",
             Optional.empty(), "mockUserName2", 2L, "mockMessage2"
         );
-        mockUpdate = TestUtils.createMockUpdate("/help", 0L);
+        mockUpdate = TestUtils.createMockUpdate("/help", "username", 0L);
     }
 
     @Test

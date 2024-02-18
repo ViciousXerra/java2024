@@ -24,7 +24,7 @@ class ListCommandTest {
         emptyUserOptional = Optional.empty();
         userOptionalWithEmptyList = TestUtils.createUserOptionalWithEmptyList();
         userOptionalWithFilledList = TestUtils.createUserOptionalWithFilledList();
-        mockUpdate = TestUtils.createMockUpdate("/list", 0L);
+        mockUpdate = TestUtils.createMockUpdate("/list", "username", 0L);
     }
 
     @Test

@@ -25,7 +25,7 @@ class StartCommandTest {
         repositoryStub = TestUtils.createRepositoryStub();
         emptyUserOptional = Optional.empty();
         presentUserOptional = TestUtils.createUserOptionalWithEmptyList();
-        mockUpdate = TestUtils.createMockUpdate("/start", 0L);
+        mockUpdate = TestUtils.createMockUpdate("/start", "username", 0L);
     }
 
     @Test

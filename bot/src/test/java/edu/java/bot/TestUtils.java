@@ -28,10 +28,11 @@ public final class TestUtils {
         return mockCommand;
     }
 
-    public static Update createMockUpdate(String text, long chatId) {
+    public static Update createMockUpdate(String text, String username, long chatId) {
         Message mockMessage = Mockito.mock(Message.class);
         Chat mockChat = Mockito.mock(Chat.class);
         Mockito.when(mockChat.id()).thenReturn(chatId);
+        Mockito.when(mockChat.username()).thenReturn(username);
         Mockito.when(mockMessage.text()).thenReturn(text);
         Mockito.when(mockMessage.chat()).thenReturn(mockChat);
         Update mockUpdate = Mockito.mock(Update.class);

@@ -32,6 +32,7 @@ public class ListCommand implements Command {
                     sb
                         .append(link)
                         .append(System.lineSeparator())
+                        .append(System.lineSeparator())
             );
             return sb.toString();
         }

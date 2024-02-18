@@ -23,7 +23,7 @@ class UntrackCommandTest {
     public static void setup() {
         emptyUserOptional = Optional.empty();
         presentUserOptional = TestUtils.createUserOptionalWithEmptyList();
-        mockUpdate = TestUtils.createMockUpdate("/untrack", 0L);
+        mockUpdate = TestUtils.createMockUpdate("/untrack", "username", 0L);
     }
 
     @Test
