@@ -1,5 +1,6 @@
 package edu.java.bot.commandtests;
 
+import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.TestUtils;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.ListCommand;
@@ -16,12 +17,14 @@ class ListCommandTest {
     private static Optional<User> emptyUserOptional;
     private static Optional<User> userOptionalWithEmptyList;
     private static Optional<User> userOptionalWithFilledList;
+    private static Update mockUpdate;
 
     @BeforeAll
     public static void setup() {
         emptyUserOptional = Optional.empty();
         userOptionalWithEmptyList = TestUtils.createUserOptionalWithEmptyList();
         userOptionalWithFilledList = TestUtils.createUserOptionalWithFilledList();
+        mockUpdate = TestUtils.createMockUpdate("/list", 0L);
     }
 
     @Test
@@ -38,6 +41,7 @@ class ListCommandTest {
             listCommand.createMessage(userOptionalWithEmptyList, "userName2", 2L);
         String actualUserOptionalWithFilledListMessage =
             listCommand.createMessage(userOptionalWithFilledList, "userName3", 3L);
+        boolean actualSupports = listCommand.supports(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand).isEqualTo("/list"),
@@ -50,7 +54,8 @@ class ListCommandTest {
                 .contains(
                     "https://github.com/ViciousXerra",
                     "https://stackoverflow.com/questions/35531661/using-env-variable-in-spring-boots-application-properties"
-                )
+                ),
+            () -> assertThat(actualSupports).isTrue()
         );
     }
 

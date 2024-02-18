@@ -1,5 +1,6 @@
 package edu.java.bot.commandtests;
 
+import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.TestUtils;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.HelpCommand;
@@ -16,6 +17,7 @@ class HelpCommandTest {
     private static Command mockCommand1;
 
     private static Command mockCommand2;
+    private static Update mockUpdate;
 
     @BeforeAll
     public static void setup() {
@@ -26,6 +28,7 @@ class HelpCommandTest {
         mockCommand2 = TestUtils.createMockCommand("mockCommand2", "mockDesc2",
             Optional.empty(), "mockUserName2", 2L, "mockMessage2"
         );
+        mockUpdate = TestUtils.createMockUpdate("/help", 0L);
     }
 
     @Test
@@ -37,11 +40,13 @@ class HelpCommandTest {
         String actualCommand = helpCommand.command();
         String actualDescription = helpCommand.description();
         String actualMessage = helpCommand.createMessage(Optional.empty(), "user", 1L);
+        boolean actualSupports = helpCommand.supports(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand).isEqualTo("/help"),
             () -> assertThat(actualDescription).isEqualTo("Shows a list of all commands."),
-            () -> assertThat(actualMessage).contains("mockCommand1: mockDesc1", "mockCommand2: mockDesc2")
+            () -> assertThat(actualMessage).contains("mockCommand1: mockDesc1", "mockCommand2: mockDesc2"),
+            () -> assertThat(actualSupports).isTrue()
         );
     }
 

@@ -1,5 +1,6 @@
 package edu.java.bot.commandtests;
 
+import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.TestUtils;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.TrackCommand;
@@ -16,11 +17,13 @@ class TrackCommandTest {
 
     private static Optional<User> emptyUserOptional;
     private static Optional<User> presentUserOptional;
+    private static Update mockUpdate;
 
     @BeforeAll
     public static void setup() {
         emptyUserOptional = Optional.empty();
         presentUserOptional = TestUtils.createUserOptionalWithEmptyList();
+        mockUpdate = TestUtils.createMockUpdate("/track", 0L);
     }
 
     @Test
@@ -37,6 +40,7 @@ class TrackCommandTest {
         //Setting to UNTRACK condition
         presentUserOptional.get().setCondition(UserChatCondition.AWAITING_LINK_TO_UNTRACK);
         String actualAwaitingToUntrackMessage = trackCommand.createMessage(presentUserOptional, "username2", 2L);
+        boolean actualSupports = trackCommand.supports(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand)
@@ -50,7 +54,8 @@ class TrackCommandTest {
             () -> assertThat(actualAwaitingToTrackMessage)
                 .isEqualTo("The link to save is already expected."),
             () -> assertThat(actualAwaitingToUntrackMessage)
-                .isEqualTo("OK, now the link sent in the next message will be saved.")
+                .isEqualTo("OK, now the link sent in the next message will be saved."),
+            () -> assertThat(actualSupports).isTrue()
         );
     }
 
