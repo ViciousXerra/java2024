@@ -26,7 +26,7 @@ public class TrackCommand implements Command {
             if (condition.equals(UserChatCondition.DEFAULT)) {
                 user.setCondition(UserChatCondition.AWAITING_LINK_TO_TRACK);
                 return "Waiting for a link to be entered.";
-            } else if (condition.equals(UserChatCondition.AWAITING_LINK_TO_TRACK)){
+            } else if (condition.equals(UserChatCondition.AWAITING_LINK_TO_TRACK)) {
                 return "The link to save is already expected.";
             } else {
                 user.setCondition(UserChatCondition.AWAITING_LINK_TO_TRACK);
