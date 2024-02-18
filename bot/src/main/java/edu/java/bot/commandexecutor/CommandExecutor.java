@@ -23,9 +23,7 @@ public class CommandExecutor implements UpdatesListener {
 
     @Override
     public int process(List<Update> list) {
-        list.forEach(update -> {
-            bot.execute(responseService.prepareResponse(update));
-        });
+        list.forEach(update -> bot.execute(responseService.prepareResponse(update)));
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 

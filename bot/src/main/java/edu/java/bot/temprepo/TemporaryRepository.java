@@ -15,10 +15,12 @@ public class TemporaryRepository implements Registry {
         registeredUsersMap = new HashMap<>();
     }
 
+    @Override
     public Optional<User> getById(long id) {
         return registeredUsersMap.containsKey(id) ? Optional.of(registeredUsersMap.get(id)) : Optional.empty();
     }
 
+    @Override
     public void saveInDb(long id) {
         registeredUsersMap.put(id, new User());
     }
