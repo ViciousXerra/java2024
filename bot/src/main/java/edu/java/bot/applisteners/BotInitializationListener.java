@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.commands.Command;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class BotInitializationListener implements ApplicationListener<ContextRef
     private final List<Command> allSupportedCommands;
 
     @Autowired
-    public BotInitializationListener(TelegramBot bot, List<Command> allSupportedCommands) {
+    public BotInitializationListener(@Qualifier("main") TelegramBot bot, List<Command> allSupportedCommands) {
         this.bot = bot;
         this.allSupportedCommands = allSupportedCommands;
     }

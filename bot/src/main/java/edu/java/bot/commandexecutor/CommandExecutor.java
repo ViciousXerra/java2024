@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.services.ResponseService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +16,7 @@ public class CommandExecutor implements UpdatesListener {
     private final TelegramBot bot;
 
     @Autowired
-    public CommandExecutor(ResponseService responseService, TelegramBot bot) {
+    public CommandExecutor(ResponseService responseService, @Qualifier("main") TelegramBot bot) {
         this.responseService = responseService;
         this.bot = bot;
         bot.setUpdatesListener(this);

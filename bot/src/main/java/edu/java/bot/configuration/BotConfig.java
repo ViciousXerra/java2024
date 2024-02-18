@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BotConfig {
 
-    @Bean
+    @Bean("main")
     TelegramBot telegramBot(ApplicationConfig config) {
         TelegramBot bot = new TelegramBot(config.telegramToken());
         return bot;
