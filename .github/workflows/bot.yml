@@ -2,7 +2,7 @@ name: Bot Build
 
 on:
   workflow_dispatch:
-  pull_request:
+  push:
     paths:
       - .github/workflows/bot.yml
       - bot/**
@@ -13,7 +13,6 @@ jobs:
     name: Build
     permissions:
       packages: write
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
