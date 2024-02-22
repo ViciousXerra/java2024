@@ -1,8 +1,8 @@
-package edu.java.clients;
+package edu.java.scrapper.clients;
 
-import edu.java.dto.stackoverflow.AnswerInfo;
-import edu.java.dto.stackoverflow.QuestionInfo;
-import edu.java.dto.stackoverflow.StackOverFlowQuestionResponse;
+import edu.java.scrapper.dto.stackoverflow.AnswerInfo;
+import edu.java.scrapper.dto.stackoverflow.QuestionInfo;
+import edu.java.scrapper.dto.stackoverflow.StackOverFlowQuestionResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;

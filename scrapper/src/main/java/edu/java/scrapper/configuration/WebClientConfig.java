@@ -1,7 +1,7 @@
-package edu.java.configuration;
+package edu.java.scrapper.configuration;
 
-import edu.java.clients.GitHubClient;
-import edu.java.clients.StackOverFlowClient;
+import edu.java.scrapper.clients.GitHubClient;
+import edu.java.scrapper.clients.StackOverFlowClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class WebClientConfig {
     }
 
     @Bean
-    GitHubClient gitHubClient() {
+    public GitHubClient gitHubClient() {
         WebClient webClient = WebClient.builder().baseUrl(resolveGitHubBaseUrl()).build();
         WebClientAdapter adapter = WebClientAdapter.create(webClient);
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();
@@ -28,7 +28,7 @@ public class WebClientConfig {
     }
 
     @Bean
-    StackOverFlowClient stackOverFlowClient() {
+    public StackOverFlowClient stackOverFlowClient() {
         WebClient webClient = WebClient.builder().baseUrl(resolveStackOverFlowBaseUrl()).build();
         WebClientAdapter adapter = WebClientAdapter.create(webClient);
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();

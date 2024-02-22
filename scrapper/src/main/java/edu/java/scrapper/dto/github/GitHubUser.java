@@ -1,4 +1,4 @@
-package edu.java.dto.github;
+package edu.java.scrapper.dto.github;
 
 public record GitHubUser(
     String login,
