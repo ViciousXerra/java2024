@@ -10,7 +10,7 @@ public class LinkUpdaterScheduler {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    @Scheduled(fixedDelayString = "#{scheduler.forceCheckDelay()}")
+    @Scheduled(fixedDelayString = "#{scheduler.interval()}")
     public void update() {
         LOGGER.info("//Listening//");
     }
