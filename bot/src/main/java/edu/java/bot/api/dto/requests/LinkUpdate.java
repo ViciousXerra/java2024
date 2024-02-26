@@ -10,14 +10,4 @@ public record LinkUpdate(
     String description,
     List<Long> tgChatIds
 ) {
-
-    @JsonCreator
-    public static URI fromString(String text) {
-        try {
-            return URI.create(text);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid URI format: %s".formatted(text), e);
-        }
-    }
-
 }

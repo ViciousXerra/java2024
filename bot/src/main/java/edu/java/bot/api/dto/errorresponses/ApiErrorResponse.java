@@ -1,4 +1,4 @@
-package edu.java.bot.api.dto.responses;
+package edu.java.bot.api.dto.errorresponses;
 
 import java.util.List;
 
