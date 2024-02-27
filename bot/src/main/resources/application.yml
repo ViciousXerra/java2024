@@ -8,21 +8,8 @@ spring:
     time-zone: UTC
 
 springdoc:
-  api-docs:
-    path: /bot/api-docs
   swagger-ui:
-    path: /bot/swagger-ui.html
-  show-actuator: true
-  use-management-port: true
-  management:
-    server:
-      port: 8080
-    endpoints:
-      web:
-        exposure:
-          include:
-            - openapi
-            - swagger-ui
+    path: /swagger-ui
 
 server:
   port: 8090
