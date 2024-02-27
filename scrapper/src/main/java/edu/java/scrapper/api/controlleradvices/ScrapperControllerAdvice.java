@@ -1,9 +1,8 @@
 package edu.java.scrapper.api.controlleradvices;
 
 import edu.java.scrapper.api.dto.errorresponses.ApiErrorResponse;
-import edu.java.scrapper.api.exceptions.ChatNotFoundException;
+import edu.java.scrapper.api.exceptions.NotFoundException;
 import java.util.Arrays;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ScrapperControllerAdvice {
 
     private final static String BAD_REQUEST_DESCRIPTION = "Invalid or incorrect request parameters";
-    private final static String NOT_FOUND_DESCRIPTION = "The chat does not exist";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleLinkUpdateBadRequest(MethodArgumentNotValidException e) {
@@ -29,17 +27,17 @@ public class ScrapperControllerAdvice {
         );
     }
 
-    @ExceptionHandler(ChatNotFoundException.class)
-    public ResponseEntity<?> handleChatNotFound(ChatNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> handleNotFound(NotFoundException e) {
         return new ResponseEntity<>(
             new ApiErrorResponse(
-                NOT_FOUND_DESCRIPTION,
-                HttpStatus.NOT_FOUND.toString(),
+                e.getDescription(),
+                e.getStatusCode().toString(),
                 e.getClass().getSimpleName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ),
-            HttpStatus.NOT_FOUND
+            e.getStatusCode() //404 Not Found
         );
     }
 

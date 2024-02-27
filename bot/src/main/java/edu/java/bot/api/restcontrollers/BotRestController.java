@@ -15,8 +15,11 @@ public class BotRestController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<?> postLinkUpdate(@Valid @RequestBody LinkUpdate linkUpdate) {
-        //TODO
-        return new ResponseEntity<>("Update has been successfully processed", HttpStatus.OK);
+        /*
+        TODO
+        Post linkUpdate
+         */
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

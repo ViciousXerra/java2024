@@ -14,18 +14,21 @@ public class TelegramChatController {
 
     @PostMapping("/{id}")
     public ResponseEntity<?> chatSignUp(@PathVariable long id) {
-        //TODO
-        return new ResponseEntity<>("Chat has been successfully signed up", HttpStatus.OK);
+        /*
+        TODO
+        Chat registration
+         */
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteChat(@PathVariable long id) {
         /*
         TODO
-        Possible: throw new ChatNotFoundException("Chat not found");
+        Possible: throw new NotFoundException("Chat doesn't exist", "Chat with %d not found".formatted(id));
         Chat deletion
          */
-        return new ResponseEntity<>("Chat has been successfully deleted", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
