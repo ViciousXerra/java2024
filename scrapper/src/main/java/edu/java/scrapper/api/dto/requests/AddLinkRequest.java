@@ -1,6 +1,6 @@
 package edu.java.scrapper.api.dto.requests;
 
-import java.net.URI;
+import edu.java.scrapper.api.dto.customvalidations.LinkValidation;
 
-public record AddLinkRequest(String link) {
+public record AddLinkRequest(@LinkValidation String link) {
 }

@@ -1,4 +1,6 @@
 package edu.java.scrapper.api.dto.requests;
 
-public record RemoveLinkRequest(String link) {
+import edu.java.scrapper.api.dto.customvalidations.LinkValidation;
+
+public record RemoveLinkRequest(@LinkValidation String link) {
 }
