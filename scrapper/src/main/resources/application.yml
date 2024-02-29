@@ -3,6 +3,8 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 10s
+  bot-settings:
+    default-base-url: http://localhost:8090/bot
 
 spring:
   application:
