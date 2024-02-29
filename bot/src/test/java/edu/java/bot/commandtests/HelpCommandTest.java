@@ -40,7 +40,7 @@ class HelpCommandTest {
         String actualCommand = helpCommand.command();
         String actualDescription = helpCommand.description();
         String actualMessage = helpCommand.createMessage(Optional.empty(), "user", 1L);
-        boolean actualSupports = helpCommand.supports(mockUpdate);
+        boolean actualSupports = helpCommand.isSupport(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand).isEqualTo("/help"),

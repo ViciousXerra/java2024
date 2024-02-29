@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.commands.Command;
-import edu.java.bot.temprepo.Registry;
+import edu.java.bot.memoryuserrepository.UserRepository;
 import edu.java.bot.users.User;
 import java.net.URI;
 import java.util.Optional;
@@ -40,8 +40,8 @@ public final class TestUtils {
         return mockUpdate;
     }
 
-    public static Registry createRepositoryStub() {
-        return Mockito.mock(Registry.class);
+    public static UserRepository createRepositoryStub() {
+        return Mockito.mock(UserRepository.class);
     }
 
     public static Optional<User> createUserOptionalWithEmptyList() {

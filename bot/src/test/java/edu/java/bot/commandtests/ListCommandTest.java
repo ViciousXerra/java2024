@@ -41,7 +41,7 @@ class ListCommandTest {
             listCommand.createMessage(userOptionalWithEmptyList, "userName2", 2L);
         String actualUserOptionalWithFilledListMessage =
             listCommand.createMessage(userOptionalWithFilledList, "userName3", 3L);
-        boolean actualSupports = listCommand.supports(mockUpdate);
+        boolean actualSupports = listCommand.isSupport(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand).isEqualTo("/list"),

@@ -1,4 +1,4 @@
-package edu.java.bot.temprepo;
+package edu.java.bot.memoryuserrepository;
 
 import edu.java.bot.users.User;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TemporaryRepository implements Registry {
+public class TemporaryRepository implements UserRepository {
 
     private final Map<Long, User> registeredUsersMap;
 

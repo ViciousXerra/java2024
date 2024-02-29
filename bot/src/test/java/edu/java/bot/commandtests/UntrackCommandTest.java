@@ -40,7 +40,7 @@ class UntrackCommandTest {
         //Setting to TRACK condition
         presentUserOptional.get().setCondition(UserChatCondition.AWAITING_LINK_TO_TRACK);
         String actualAwaitingToTrackMessage = untrackCommand.createMessage(presentUserOptional, "username2", 2L);
-        boolean actualSupports = untrackCommand.supports(mockUpdate);
+        boolean actualSupports = untrackCommand.isSupport(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand)

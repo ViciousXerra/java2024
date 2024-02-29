@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.TestUtils;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.StartCommand;
-import edu.java.bot.temprepo.Registry;
+import edu.java.bot.memoryuserrepository.UserRepository;
 import edu.java.bot.users.User;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class StartCommandTest {
 
-    private static Registry repositoryStub;
+    private static UserRepository repositoryStub;
     private static Optional<User> emptyUserOptional;
     private static Optional<User> presentUserOptional;
     private static Update mockUpdate;
@@ -38,7 +38,7 @@ class StartCommandTest {
         String actualDescription = startCommand.description();
         String actualNewUserMessage = startCommand.createMessage(emptyUserOptional, "username1", 1L);
         String actualRegisteredUSerMesssage = startCommand.createMessage(presentUserOptional, "username2", 2L);
-        boolean actualSupports = startCommand.supports(mockUpdate);
+        boolean actualSupports = startCommand.isSupport(mockUpdate);
         //Then
         Assertions.assertAll(
             () -> assertThat(actualCommand).isEqualTo("/start"),

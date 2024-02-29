@@ -13,7 +13,7 @@ public interface Command {
 
     String createMessage(Optional<User> optionalUser, String username, long id);
 
-    default boolean supports(Update update) {
+    default boolean isSupport(Update update) {
         return command().equals(update.message().text());
     }
 

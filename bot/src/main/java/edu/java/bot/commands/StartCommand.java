@@ -1,6 +1,6 @@
 package edu.java.bot.commands;
 
-import edu.java.bot.temprepo.Registry;
+import edu.java.bot.memoryuserrepository.UserRepository;
 import edu.java.bot.users.User;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ public class StartCommand implements Command {
 
     private static final String NEW_USER_GREETINGS_TEMPLATE = "Nice to meet you, %s.";
     private static final String ALREADY_REGISTERED_TEMPLATE = "Hello again, %s. Shall we continue?";
-    private final Registry registry;
+    private final UserRepository registry;
 
     @Autowired
-    public StartCommand(Registry registry) {
+    public StartCommand(UserRepository registry) {
         this.registry = registry;
     }
 

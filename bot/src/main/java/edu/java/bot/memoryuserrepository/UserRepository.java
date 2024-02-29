@@ -1,9 +1,9 @@
-package edu.java.bot.temprepo;
+package edu.java.bot.memoryuserrepository;
 
 import edu.java.bot.users.User;
 import java.util.Optional;
 
-public interface Registry {
+public interface UserRepository {
 
     Optional<User> getById(long id);
 

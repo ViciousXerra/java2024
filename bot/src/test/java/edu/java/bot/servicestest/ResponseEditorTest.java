@@ -12,9 +12,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -23,17 +23,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class ResponseEditorTest {
 
+    @MockBean
+    TelegramBot bot;
+
     @TestConfiguration
     static class TestingConfig {
 
-        @Bean("test")
-        TelegramBot telegramBot() {
-            return new TelegramBot("");
-        }
-
         @Bean
         ApplicationListener<ContextRefreshedEvent> otInitializationListener(
-            @Qualifier("test") TelegramBot bot,
+            TelegramBot bot,
             List<Command> allSupportedCommands
         ) {
             return new BotInitializationListener(bot, allSupportedCommands);

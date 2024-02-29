@@ -3,7 +3,7 @@ package edu.java.bot.services;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.Command;
-import edu.java.bot.temprepo.Registry;
+import edu.java.bot.memoryuserrepository.UserRepository;
 import edu.java.bot.urlparsers.AbstractUrlParser;
 import edu.java.bot.users.User;
 import edu.java.bot.users.UserChatCondition;
@@ -18,10 +18,10 @@ public class ResponseEditor implements ResponseService {
 
     private final List<Command> allSupportedCommands;
     private final AbstractUrlParser urlParser;
-    private final Registry repository;
+    private final UserRepository repository;
 
     @Autowired
-    public ResponseEditor(List<Command> allSupportedCommands, AbstractUrlParser urlParser, Registry repository) {
+    public ResponseEditor(List<Command> allSupportedCommands, AbstractUrlParser urlParser, UserRepository repository) {
         this.allSupportedCommands = allSupportedCommands;
         this.urlParser = urlParser;
         this.repository = repository;
@@ -33,7 +33,7 @@ public class ResponseEditor implements ResponseService {
         Optional<User> optionalUser = repository.getById(id);
         String username = update.message().chat().username();
         String incomingText = update.message().text();
-        List<Command> commandMatch = allSupportedCommands.stream().filter(command -> command.supports(update)).toList();
+        List<Command> commandMatch = allSupportedCommands.stream().filter(command -> command.isSupport(update)).toList();
         if (commandMatch.size() > 1) {
             return new SendMessage(id, "Invalid service state.");
         } else if (commandMatch.size() == 1) {
