@@ -7,11 +7,11 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TemporaryRepository implements UserRepository {
+public class MemoryUserRepository implements UserRepository {
 
     private final Map<Long, User> registeredUsersMap;
 
-    public TemporaryRepository() {
+    public MemoryUserRepository() {
         registeredUsersMap = new HashMap<>();
     }
 

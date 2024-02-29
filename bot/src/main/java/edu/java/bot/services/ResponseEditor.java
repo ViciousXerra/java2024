@@ -33,7 +33,8 @@ public class ResponseEditor implements ResponseService {
         Optional<User> optionalUser = repository.getById(id);
         String username = update.message().chat().username();
         String incomingText = update.message().text();
-        List<Command> commandMatch = allSupportedCommands.stream().filter(command -> command.isSupport(update)).toList();
+        List<Command> commandMatch =
+            allSupportedCommands.stream().filter(command -> command.isSupport(update)).toList();
         if (commandMatch.size() > 1) {
             return new SendMessage(id, "Invalid service state.");
         } else if (commandMatch.size() == 1) {

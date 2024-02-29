@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HelpCommandTest {
 
     private static Command mockCommand1;
-
     private static Command mockCommand2;
     private static Update mockUpdate;
 

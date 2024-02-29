@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.services.ResponseService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
