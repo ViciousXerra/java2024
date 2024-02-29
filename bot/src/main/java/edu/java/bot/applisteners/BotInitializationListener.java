@@ -18,7 +18,7 @@ public class BotInitializationListener implements ApplicationListener<ContextRef
     private final List<Command> allSupportedCommands;
 
     @Autowired
-    public BotInitializationListener(@Qualifier("main") TelegramBot bot, List<Command> allSupportedCommands) {
+    public BotInitializationListener(TelegramBot bot, List<Command> allSupportedCommands) {
         this.bot = bot;
         this.allSupportedCommands = allSupportedCommands;
     }

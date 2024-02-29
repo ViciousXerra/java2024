@@ -17,7 +17,7 @@ public class CommandExecutor implements UpdatesListener {
     private final TelegramBot bot;
 
     @Autowired
-    public CommandExecutor(ResponseService responseService, @Qualifier("main") TelegramBot bot) {
+    public CommandExecutor(ResponseService responseService, TelegramBot bot) {
         this.responseService = responseService;
         this.bot = bot;
         bot.setUpdatesListener(this);
