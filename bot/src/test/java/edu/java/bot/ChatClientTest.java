@@ -1,4 +1,4 @@
-package edu.java.bot.scrapperclienttests;
+package edu.java.bot;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -51,7 +51,7 @@ class ChatClientTest {
     }
 
     @DynamicPropertySource
-    static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {
+    static void lstubScrapperBaseUrl(DynamicPropertyRegistry registry) {
         registry.add("app.scrapper-settings.default-base-url", () -> "http://localhost:8080");
     }
 
