@@ -8,5 +8,5 @@ public record BotApiErrorResponse(
     String exceptionName,
     String exceptionMessage,
     List<String> stacktrace
-) implements BotApiErrorResponseBody {
+) {
 }

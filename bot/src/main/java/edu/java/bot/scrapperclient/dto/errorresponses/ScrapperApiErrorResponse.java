@@ -8,5 +8,5 @@ public record ScrapperApiErrorResponse(
     String exceptionName,
     String exceptionMessage,
     List<String> stacktrace
-) implements ScrapperApiResponseBody {
+) {
 }
