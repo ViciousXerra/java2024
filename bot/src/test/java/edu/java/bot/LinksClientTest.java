@@ -55,6 +55,7 @@ class LinksClientTest {
     @AfterAll
     public static void stopMockServer() {
         mockServer.stop();
+        mockServer.shutdown();
     }
 
     @DynamicPropertySource

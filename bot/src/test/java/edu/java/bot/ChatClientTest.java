@@ -48,6 +48,7 @@ class ChatClientTest {
     @AfterAll
     public static void stopMockServer() {
         mockServer.stop();
+        mockServer.shutdown();
     }
 
     @DynamicPropertySource
