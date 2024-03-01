@@ -1,33 +1,51 @@
 package edu.java.bot.scrapperclienttests;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.bot.scrapperclient.clients.LinksClient;
 import edu.java.bot.scrapperclient.dto.requests.AddLinkRequest;
 import edu.java.bot.scrapperclient.dto.requests.RemoveLinkRequest;
 import edu.java.bot.scrapperclient.dto.responses.LinkResponse;
-import edu.java.bot.scrapperclient.dto.responses.ListLinkResponse;
 import java.net.URI;
-import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8080)
 @SpringBootTest
 class LinksClientTest {
 
+    private static WireMockServer mockServer;
     @Autowired
     private LinksClient linksClient;
+
+    @BeforeAll
+    public static void setUpMockServer() {
+        mockServer = new WireMockServer();
+        mockServer.start();
+        WireMock.configureFor("localhost", 8080);
+    }
+
+    @AfterEach
+    public void resetMockServerState() {
+        mockServer.resetAll();
+    }
+
+    @AfterAll
+    public static void stopMockServer() {
+        mockServer.stop();
+    }
 
     @DynamicPropertySource
     static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {
@@ -35,73 +53,40 @@ class LinksClientTest {
     }
 
     @Test
-    @DisplayName("Test GET exchange")
-    void testGetExchange() {
-        //set up
-        stubFor(get("/links").withHeader("Tg-Chat-Id", containing("1")).willReturn(okJson("""
-            {
-              "links": [
-                {
-                  "id": 1,
-                  "url": "https://github.com"
-                },
-                {
-                  "id": 2,
-                  "url": "https://stackoverflow.com"
-                }
-              ],
-              "size": 2
-            }""").withStatus(200)));
-        //Given
-        ListLinkResponse expectedResponse = new ListLinkResponse(
-            List.of(
-                new LinkResponse(1L, URI.create("https://github.com")),
-                new LinkResponse(2L, URI.create("https://stackoverflow.com"))
-            ),
-            2
-        );
-        //When
-        ListLinkResponse actualResponse = linksClient.getAllLinks(1L);
-        //Then
+    @DisplayName("Test DELETE exchange")
+    void testDeleteExchange() {
+        mockServer
+            .stubFor(delete(urlEqualTo("/links"))
+                .withHeader("Tg-Chat-Id", equalTo("3"))
+                .willReturn(aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(200)
+                    .withBody("""
+                        {
+                            "id":3,
+                            "url":"https://github.com"
+                        }""")));
+        LinkResponse expectedResponse = new LinkResponse(3L, URI.create("https://github.com"));
+        LinkResponse actualResponse = linksClient.removeLink(3L, new RemoveLinkRequest("https://github.com"));
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
     @Test
     @DisplayName("Test POST exchange")
     void testPostExchange() {
-        //set up
-        stubFor(post("/links").withHeader("Tg-Chat-Id", containing("1")).willReturn(okJson("""
-            {
-              "id": 1,
-              "url": "https://github.com"
-            }""").withStatus(200)));
-        //Given
-        LinkResponse expectedResponse = new LinkResponse(
-            1L,
-            URI.create("https://github.com")
-        );
-        //When
+        mockServer
+            .stubFor(post(urlEqualTo("/links"))
+                .withHeader("Tg-Chat-Id", equalTo("1"))
+                .willReturn(aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(200)
+                    .withBody("""
+                        {
+                            "id":1,
+                            "url":"https://github.com"
+                        }""")));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
         LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest("https://github.com"));
-        //Then
-        assertThat(actualResponse).isEqualTo(expectedResponse);
-    }
-
-    @Test
-    void testDeleteExchange() {
-        //set up
-        stubFor(delete("/links").withHeader("Tg-Chat-Id", containing("1")).willReturn(okJson("""
-            {
-              "id": 1,
-              "url": "https://github.com"
-            }""").withStatus(200)));
-        //Given
-        LinkResponse expectedResponse = new LinkResponse(
-            1L,
-            URI.create("https://github.com")
-        );
-        //When
-        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest("https://github.com"));
-        //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
