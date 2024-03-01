@@ -7,10 +7,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -22,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ChatClientTest {
 
     private static WireMockServer mockServer;
@@ -51,6 +56,7 @@ class ChatClientTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Test DELETE exchange")
     void testDeleteExchange() {
         //Set up
@@ -65,6 +71,7 @@ class ChatClientTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Test POST exchange")
     void testPostExchange() {
         //Set up
@@ -79,6 +86,8 @@ class ChatClientTest {
     }
 
     @Test
+    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("Test 4xx http status handler")
     void testClientErrorHandler() {
         //Set up
