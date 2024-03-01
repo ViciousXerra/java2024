@@ -2,7 +2,9 @@ package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.telegrambotclient.ClientException;
 import edu.java.scrapper.telegrambotclient.clients.BotUpdateClient;
+import edu.java.scrapper.telegrambotclient.dto.errorresponses.BotApiErrorResponse;
 import edu.java.scrapper.telegrambotclient.dto.requests.LinkUpdate;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
@@ -19,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -83,12 +84,35 @@ class BotUpdateClientTest {
         mockServer
             .stubFor(post(urlEqualTo("/updates"))
                 .willReturn(aResponse()
-                    .withStatus(400)));
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(400)
+                    .withBody("""
+                        {
+                            "description": "desc",
+                            "code": "400",
+                            "exceptionName":"exception_name",
+                            "exceptionMessage": "exception_message",
+                            "stacktrace":[
+                                "frame",
+                                "another_frame"
+                            ]
+                        }""")
+                )
+            );
+        //Given
+        BotApiErrorResponse expectedResponse = new BotApiErrorResponse(
+            "desc", "400", "exception_name", "exception_message",
+            List.of("frame", "another_frame")
+        );
         //Then
         assertThatThrownBy(
-            () -> botClient.postLinkUpdate(new LinkUpdate(1L, "https://github.com", "desc", List.of(1L, 2L, 3L)))
+            () -> botClient.postLinkUpdate(
+                new LinkUpdate(1L, "https://stackoverflow.com", "desc", List.of(1L, 2L, 3L))
+            )
         )
-            .isInstanceOf(WebClientResponseException.class);
+            .isInstanceOf(ClientException.class)
+            .satisfies(exception -> assertThat(((ClientException) exception).getBotApiErrorResponse()).isEqualTo(
+                expectedResponse));
     }
 
 }

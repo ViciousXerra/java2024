@@ -8,6 +8,6 @@ import lombok.Value;
 @EqualsAndHashCode(callSuper = true)
 public class ClientException extends RuntimeException {
 
-    private final ScrapperApiErrorResponse clientErrorResponseBody;
+    final ScrapperApiErrorResponse clientErrorResponseBody;
 
 }
