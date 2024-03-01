@@ -6,7 +6,9 @@ import edu.java.bot.scrapperclient.clients.LinksClient;
 import edu.java.bot.scrapperclient.dto.requests.AddLinkRequest;
 import edu.java.bot.scrapperclient.dto.requests.RemoveLinkRequest;
 import edu.java.bot.scrapperclient.dto.responses.LinkResponse;
+import edu.java.bot.scrapperclient.dto.responses.ListLinkResponse;
 import java.net.URI;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,6 +21,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,25 +58,30 @@ class LinksClientTest {
     @Test
     @DisplayName("Test DELETE exchange")
     void testDeleteExchange() {
+        //Set up
         mockServer
             .stubFor(delete(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("3"))
+                .withHeader("Tg-Chat-Id", equalTo("1"))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(200)
                     .withBody("""
                         {
-                            "id":3,
+                            "id":1,
                             "url":"https://github.com"
                         }""")));
-        LinkResponse expectedResponse = new LinkResponse(3L, URI.create("https://github.com"));
-        LinkResponse actualResponse = linksClient.removeLink(3L, new RemoveLinkRequest("https://github.com"));
+        //Given
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        //When
+        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest("https://github.com"));
+        //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
     @Test
     @DisplayName("Test POST exchange")
     void testPostExchange() {
+        //Set up
         mockServer
             .stubFor(post(urlEqualTo("/links"))
                 .withHeader("Tg-Chat-Id", equalTo("1"))
@@ -85,8 +93,49 @@ class LinksClientTest {
                             "id":1,
                             "url":"https://github.com"
                         }""")));
+        //Given
         LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        //When
         LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest("https://github.com"));
+        //Then
+        assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("Test GET exchange")
+    void testGetExchange() {
+        //Set up
+        mockServer
+            .stubFor(get(urlEqualTo("/links"))
+                .withHeader("Tg-Chat-Id", equalTo("1"))
+                .willReturn(aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(200)
+                    .withBody("""
+                        {
+                          "links": [
+                            {
+                              "id": 1,
+                              "url": "https://github.com"
+                            },
+                            {
+                              "id": 2,
+                              "url": "https://stackoverflow.com"
+                            }
+                          ],
+                          "size": 2
+                        }""")));
+        //Given
+        ListLinkResponse expectedResponse = new ListLinkResponse(
+            List.of(
+                new LinkResponse(1L, URI.create("https://github.com")),
+                new LinkResponse(2L, URI.create("https://stackoverflow.com"))
+            ),
+            2
+        );
+        //When
+        ListLinkResponse actualResponse = linksClient.getAllLinks(1L);
+        //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
