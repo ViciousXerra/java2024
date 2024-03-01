@@ -5,8 +5,12 @@ import edu.java.bot.scrapperclient.dto.requests.RemoveLinkRequest;
 import edu.java.bot.scrapperclient.dto.responses.LinkResponse;
 import edu.java.bot.scrapperclient.dto.responses.ListLinkResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.service.annotation.DeleteExchange;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
@@ -23,7 +27,7 @@ public interface LinksClient {
         @RequestBody AddLinkRequest addLinkRequest
     );
 
-    @DeleteMapping
+    @DeleteExchange
     LinkResponse removeLink(
         @RequestHeader("Tg-Chat-Id") long chatId,
         @RequestBody RemoveLinkRequest removeLinkRequest
