@@ -13,11 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class ChatClientTest {
@@ -74,6 +76,21 @@ class ChatClientTest {
         ResponseEntity<?> actualResponse = chatClient.signUpChat(1L);
         //Then
         assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Test 4xx http status handler")
+    void testClientErrorHandler() {
+        //Set up
+        mockServer
+            .stubFor(post(urlEqualTo("/tg-chat/1"))
+                .willReturn(aResponse()
+                    .withStatus(400)));
+        //Then
+        assertThatThrownBy(
+            () -> chatClient.signUpChat(1L)
+        )
+            .isInstanceOf(WebClientResponseException.class);
     }
 
 }
