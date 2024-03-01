@@ -2,7 +2,9 @@ package edu.java.bot;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.clients.LinksClient;
+import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
 import edu.java.bot.scrapperclient.dto.requests.AddLinkRequest;
 import edu.java.bot.scrapperclient.dto.requests.RemoveLinkRequest;
 import edu.java.bot.scrapperclient.dto.responses.LinkResponse;
@@ -22,7 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -164,19 +165,29 @@ class LinksClientTest {
                     .withStatus(400)
                     .withBody("""
                         {
-                           "description": "desc",
-                           "code": "code",
-                           "exceptionName": "exception",
-                           "exceptionMessage": "message",
-                           "stacktrace": [
-                             "stackelement"
-                           ]
-                         }""")));
+                            "description": "desc",
+                            "code": "400",
+                            "exceptionName":"exception_name",
+                            "exceptionMessage": "exception_message",
+                            "stacktrace":[
+                                "frame",
+                                "another_frame"
+                            ]
+                        }""")
+                )
+            );
+        //Given
+        ScrapperApiErrorResponse expectedResponse = new ScrapperApiErrorResponse(
+            "desc", "400", "exception_name", "exception_message",
+            List.of("frame", "another_frame")
+        );
         //Then
         assertThatThrownBy(
-            () -> linksClient.addLink(1L, new AddLinkRequest("https://github.com"))
+            () -> linksClient.addLink(1L, new AddLinkRequest("https://stackoverflow.com"))
         )
-            .isInstanceOf(WebClientResponseException.class);
+            .isInstanceOf(ClientException.class)
+            .satisfies(exception -> assertThat(((ClientException) exception).getClientErrorResponseBody()).isEqualTo(
+                expectedResponse));
     }
 
 }

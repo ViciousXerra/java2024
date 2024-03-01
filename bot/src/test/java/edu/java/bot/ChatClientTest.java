@@ -2,7 +2,10 @@ package edu.java.bot;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.clients.ChatClient;
+import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -95,12 +97,33 @@ class ChatClientTest {
         mockServer
             .stubFor(post(urlEqualTo("/tg-chat/1"))
                 .willReturn(aResponse()
-                    .withStatus(400)));
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(400)
+                    .withBody("""
+                        {
+                            "description": "desc",
+                            "code": "400",
+                            "exceptionName":"exception_name",
+                            "exceptionMessage": "exception_message",
+                            "stacktrace":[
+                                "frame",
+                                "another_frame"
+                            ]
+                        }""")
+                )
+            );
+        //Given
+        ScrapperApiErrorResponse expectedResponse = new ScrapperApiErrorResponse(
+            "desc", "400", "exception_name", "exception_message",
+            List.of("frame", "another_frame")
+        );
         //Then
         assertThatThrownBy(
             () -> chatClient.signUpChat(1L)
         )
-            .isInstanceOf(WebClientResponseException.class);
+            .isInstanceOf(ClientException.class)
+            .satisfies(exception -> assertThat(((ClientException) exception).getClientErrorResponseBody()).isEqualTo(
+                expectedResponse));
     }
 
 }
