@@ -22,7 +22,7 @@ class TelegramChatControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Test POST success 200 OK")
+    @DisplayName("Test POST \"chat sign up\" 200 OK")
     void testPostSuccess() throws Exception {
         mockMvc.perform(
             post("/scrapper/tg-chat/{id}", 1L)
@@ -30,7 +30,7 @@ class TelegramChatControllerTest {
     }
 
     @Test
-    @DisplayName("Test DELETE success 200 OK")
+    @DisplayName("Test DELETE \"chat deletion\" 200 OK")
     void testDeleteSuccess() throws Exception {
         mockMvc.perform(
             delete("/scrapper/tg-chat/{id}", 1L)

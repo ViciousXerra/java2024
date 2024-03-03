@@ -25,7 +25,7 @@ class BotRestControllerTest {
 
     @Test
     @DisplayName("Test POST 200 OK success")
-    void testPostSuccess() throws Exception {
+    void testPostLinkUpdateSuccess() throws Exception {
         mockMvc.perform(
             post("/bot/updates")
                 .contentType("application/json")
@@ -81,7 +81,7 @@ class BotRestControllerTest {
     @ParameterizedTest
     @MethodSource("provideBadRequestBody")
     @DisplayName("Test POST 400 Bad Request")
-    void testPostBadRequest(String badRequestBody) throws Exception {
+    void testPostLinkUpdateBadRequest(String badRequestBody) throws Exception {
         mockMvc.perform(
                 post("/bot/updates")
                     .contentType("application/json")
