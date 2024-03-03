@@ -6,4 +6,4 @@ create table Link
 
     primary key (id),
     unique (url)
-);
+)

@@ -6,5 +6,5 @@ create table Chat
 
     primary key (id),
     unique (username)
-);
+)
 
