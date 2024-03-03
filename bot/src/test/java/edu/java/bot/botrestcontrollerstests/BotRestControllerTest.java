@@ -1,4 +1,4 @@
-package edu.java.bot;
+package edu.java.bot.botrestcontrollerstests;
 
 import edu.java.bot.api.restcontrollers.BotRestController;
 import org.junit.jupiter.api.DisplayName;
@@ -24,8 +24,8 @@ class BotRestControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Test success 200 OK")
-    void testSuccess() throws Exception {
+    @DisplayName("Test POST 200 OK success")
+    void testPostSuccess() throws Exception {
         mockMvc.perform(
             post("/bot/updates")
                 .contentType("application/json")
@@ -80,8 +80,8 @@ class BotRestControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideBadRequestBody")
-    @DisplayName("Test 400 Bad Request")
-    void testBadRequest(String badRequestBody) throws Exception {
+    @DisplayName("Test POST 400 Bad Request")
+    void testPostBadRequest(String badRequestBody) throws Exception {
         mockMvc.perform(
                 post("/bot/updates")
                     .contentType("application/json")

@@ -22,7 +22,7 @@ public class TelegramChatController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Chat has been successfully signed up"),
         @ApiResponse(
-            responseCode = "400", description = "Invalid request body",
+            responseCode = "400", description = "Invalid request parameters",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ApiErrorResponse.class)
@@ -50,7 +50,7 @@ public class TelegramChatController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Chat has been successfully deleted"),
         @ApiResponse(
-            responseCode = "400", description = "Invalid request body",
+            responseCode = "400", description = "Invalid request parameters",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ApiErrorResponse.class)
