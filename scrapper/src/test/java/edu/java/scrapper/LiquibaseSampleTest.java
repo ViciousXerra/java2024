@@ -8,7 +8,7 @@ class LiquibaseSampleTest extends IntegrationTest {
 
     @Test
     @DisplayName("Simple container configuring and starting check")
-    void simpleStatusCheck() {
+    void simpleContainerStatusCheck() {
         assertTrue(true);
     }
 
