@@ -10,10 +10,10 @@
     <changeSet id="2024-03-04T10:00:30+00:00 - add 'Chat' table" author="ViciousXerra">
         <sqlFile path="01-Chat.sql"/>
     </changeSet>
-    <changeSet id="2024-03-04T10:00:30+00:00 - add 'Link' table" author="ViciousXerra">
+    <changeSet id="2024-03-04T10:00:35+00:00 - add 'Link' table" author="ViciousXerra">
         <sqlFile path="02-Link.sql"/>
     </changeSet>
-    <changeSet id="2024-03-04T10:00:30+00:00 - add 'ChatIdLinkId' table" author="ViciousXerra">
+    <changeSet id="2024-03-04T10:00:40+00:00 - add 'ChatIdLinkId' table" author="ViciousXerra">
         <sqlFile path="03-ChatIdLinkId.sql"/>
     </changeSet>
 
