@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ScrapperControllerAdvice {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, MissingRequestHeaderException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(Exception e) {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
             HttpStatus.BAD_REQUEST
@@ -34,7 +35,7 @@ public class ScrapperControllerAdvice {
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ApiErrorResponse> handleNotFound(ConflictException e) {
+    public ResponseEntity<ApiErrorResponse> handleConflict(ConflictException e) {
         return new ResponseEntity<>(
             createApiErrorResponse(e.getDescription(), HttpStatus.CONFLICT, e),
             HttpStatus.CONFLICT

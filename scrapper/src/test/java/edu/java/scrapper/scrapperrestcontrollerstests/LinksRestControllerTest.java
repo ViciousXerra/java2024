@@ -48,6 +48,16 @@ class LinksRestControllerTest {
     }
 
     @Test
+    @DisplayName("Test GET \"get all links\" 400 Bad Request (Missing header)")
+    void testGetAllLinksBadRequestMissingHeader() throws Exception {
+        mockMvc.perform(
+                get("/scrapper/links")
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
     @DisplayName("Test POST \"add link\" 200 OK")
     void testPostAddLinkRequestSuccess() throws Exception {
         mockMvc.perform(
@@ -66,6 +76,21 @@ class LinksRestControllerTest {
                   "id": 1,
                   "url": "https://stackoverflow.com"
                 }""", false));
+    }
+
+    @Test
+    @DisplayName("Test POST \"add link\" 400 Bad Request (Missing header)")
+    void testPostAddLinkRequestBadRequestMissingHeader() throws Exception {
+        mockMvc.perform(
+                post("/scrapper/links")
+                    .contentType("application/json")
+                    .content("""
+                        {
+                          "link": "not a valid url link"
+                        }""")
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType("application/json"));
     }
 
     @Test
@@ -103,6 +128,21 @@ class LinksRestControllerTest {
                   "id": 1,
                   "url": "https://github.com/ViciousXerra"
                 }""", false));
+    }
+
+    @Test
+    @DisplayName("Test DELETE \"remove link\" 400 Bad Request (Missing header)")
+    void testDeleteRemoveLinkRequestBadRequestMissingHeader() throws Exception {
+        mockMvc.perform(
+                post("/scrapper/links")
+                    .contentType("application/json")
+                    .content("""
+                        {
+                          "link": "https://github.com/ViciousXerra"
+                        }""")
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType("application/json"));
     }
 
     @Test
