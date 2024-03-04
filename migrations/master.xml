@@ -7,7 +7,14 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="01-Chat.sql" relativeToChangelogFile="true"/>
-    <include file="02-Link.sql" relativeToChangelogFile="true"/>
-    <include file="03-ChatIdLinkId.sql" relativeToChangelogFile="true"/>
+    <changeSet id="2024-03-04T10:00:30+00:00 - add 'Chat' table" author="ViciousXerra">
+        <sqlFile path="01-Chat.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-04T10:00:30+00:00 - add 'Link' table" author="ViciousXerra">
+        <sqlFile path="02-Link.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-04T10:00:30+00:00 - add 'ChatIdLinkId' table" author="ViciousXerra">
+        <sqlFile path="03-ChatIdLinkId.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

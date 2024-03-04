@@ -1,4 +1,7 @@
-create table Chat
+--liquibase formatted sql
+
+--changeset ViciousXerra:create 'Chat' table
+create table IF NOT EXISTS Chat
 (
     id              bigint generated always as identity,
     username        text not null,
