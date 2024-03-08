@@ -7,10 +7,16 @@ app:
     default-base-url: https://api.stackexchange.com/2.3/
   git-hub-settings:
     default-base-url: https://api.github.com/
+  bot-settings:
+    default-base-url: http://localhost:8090/bot
 
 spring:
   application:
     name: scrapper
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
 
 server:
   port: 8080
