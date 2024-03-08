@@ -13,6 +13,8 @@ app:
 spring:
   application:
     name: scrapper
+  liquibase:
+    enabled: false
 
 springdoc:
   swagger-ui:
