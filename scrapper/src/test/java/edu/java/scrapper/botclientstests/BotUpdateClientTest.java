@@ -30,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BotUpdateClientTest {
 

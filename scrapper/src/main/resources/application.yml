@@ -16,6 +16,11 @@ spring:
   liquibase:
     enabled: false
 
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/scrapper
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui
