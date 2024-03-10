@@ -1,15 +1,19 @@
-package edu.java.scrapper.dto.stackoverflow;
+package edu.java.scrapper.webclients.dto.stackoverflow;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
+import java.util.List;
 
-public record AnswerInfo(
+public record QuestionInfo(
+    String title,
+    List<String> tags,
     StackOverFlowUser owner,
-    @JsonProperty("is_accepted")
-    boolean isAccepted,
-    int score,
+    @JsonProperty("is_answered")
+    boolean isAnswered,
+    @JsonProperty("answer_count")
+    int answerCount,
     @JsonProperty("creation_date")
-    OffsetDateTime creationTime,
+    OffsetDateTime creationDate,
     @JsonProperty("last_edit_date")
     OffsetDateTime lastEditTime,
     @JsonProperty("last_activity_date")

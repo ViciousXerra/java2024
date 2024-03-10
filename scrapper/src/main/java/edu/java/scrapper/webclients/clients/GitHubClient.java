@@ -1,7 +1,7 @@
-package edu.java.scrapper.clients;
+package edu.java.scrapper.webclients.clients;
 
-import edu.java.scrapper.dto.github.RepositoryActivityResponse;
-import edu.java.scrapper.dto.github.RepositoryGeneralInfoResponse;
+import edu.java.scrapper.webclients.dto.github.RepositoryActivityResponse;
+import edu.java.scrapper.webclients.dto.github.RepositoryGeneralInfoResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.service.annotation.GetExchange;
