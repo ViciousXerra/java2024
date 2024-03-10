@@ -27,7 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Testcontainers
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest
 public abstract class IntegrationTest {
     @Container
     @ServiceConnection

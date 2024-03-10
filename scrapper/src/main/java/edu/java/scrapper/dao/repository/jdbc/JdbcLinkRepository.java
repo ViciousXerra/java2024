@@ -1,0 +1,87 @@
+package edu.java.scrapper.dao.repository.jdbc;
+
+import edu.java.scrapper.dao.repository.dto.Link;
+import edu.java.scrapper.dao.repository.dto.mappers.LinkRowMapper;
+import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
+import java.time.ZonedDateTime;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class JdbcLinkRepository implements LinkRepository {
+
+    private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?)";
+    private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ?";
+    private final static String FIND_ALL_QUERY = "SELECT * FROM Link";
+    private final static String FIND_UP_TO_CHECK_QUERY = "SELECT * FROM Link ORDER BY checked_at LIMIT ?";
+    private final static String MODIFY_UPDATED_AT_QUERY =
+        "UPDATE Link SET checked_at = ?, updated_at = ? WHERE url = ?";
+    private final static String MODIFY_CHECKED_AT_QUERY =
+        "UPDATE Link SET checked_at = ? WHERE url = ?";
+
+    private final static RowMapper<Link> ROW_MAPPER = new LinkRowMapper();
+    private final JdbcClient jdbcClient;
+
+    @Autowired
+    public JdbcLinkRepository(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
+    }
+
+    @Override
+    public Link add(String url) {
+        return jdbcClient
+            .sql(ADD_QUERY)
+            .param(url)
+            .query(ROW_MAPPER)
+            .single();
+    }
+
+    @Override
+    public Link remove(String url) {
+        return jdbcClient
+            .sql(REMOVE_QUERY)
+            .param(url)
+            .query(ROW_MAPPER)
+            .single();
+    }
+
+    @Override
+    public List<Link> findAll() {
+        return jdbcClient
+            .sql(FIND_ALL_QUERY)
+            .query(ROW_MAPPER)
+            .list();
+    }
+
+    @Override
+    public List<Link> findUpToCheck(int limit) {
+        return jdbcClient
+            .sql(FIND_UP_TO_CHECK_QUERY)
+            .param(limit)
+            .query(ROW_MAPPER)
+            .list();
+    }
+
+    @Override
+    public void modifyUpdatedAtTimestamp(String url, ZonedDateTime newCheckedAt, ZonedDateTime newUpdatedAt) {
+        jdbcClient
+            .sql(MODIFY_UPDATED_AT_QUERY)
+            .param(newCheckedAt)
+            .param(newUpdatedAt)
+            .param(url)
+            .update();
+    }
+
+    @Override
+    public void modifyCheckedAtTimestamp(String url, ZonedDateTime newCheckedAt) {
+        jdbcClient
+            .sql(MODIFY_CHECKED_AT_QUERY)
+            .param(newCheckedAt)
+            .param(url)
+            .update();
+    }
+
+}
