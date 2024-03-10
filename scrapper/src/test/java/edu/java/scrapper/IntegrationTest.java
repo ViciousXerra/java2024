@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.sql.DataSource;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -14,17 +13,14 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @Testcontainers
 @SpringBootTest
@@ -36,27 +32,16 @@ public abstract class IntegrationTest {
         .withUsername("postgres")
         .withPassword("postgres");
 
-    @Autowired
-    protected DataSource dataSource;
-
-    @TestConfiguration
-    static class TestConfig {
-
-        @Bean
-        DataSource dataSource() {
-            return DataSourceBuilder
-                .create()
-                .url(POSTGRES.getJdbcUrl())
-                .username(POSTGRES.getUsername())
-                .password(POSTGRES.getPassword())
-                .build();
-        }
-
-    }
-
     static {
         POSTGRES.start();
         runMigrations(POSTGRES);
+    }
+
+    @DynamicPropertySource
+    static void stubDataSource(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", () -> POSTGRES.getJdbcUrl());
+        registry.add("spring.datasource.username", () -> POSTGRES.getUsername());
+        registry.add("spring.datasource.password", () -> POSTGRES.getPassword());
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) {
