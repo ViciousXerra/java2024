@@ -1,27 +1,24 @@
-package edu.java.scrapper.integrationtests;
+package edu.java.scrapper.integrationtests.jdbc.repositorytests;
 
-import edu.java.scrapper.dao.repository.jdbc.JdbcChatIdLinkIdRepository;
+import edu.java.scrapper.api.exceptions.ConflictException;
+import edu.java.scrapper.api.exceptions.NotFoundException;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
-import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
+import edu.java.scrapper.integrationtests.IntegrationTest;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class JdbcRepositoriesTest extends IntegrationTest {
+public class JdbcChatRepositoryTest extends IntegrationTest {
 
     @Autowired
     private JdbcChatRepository chatRepository;
-    @Autowired
-    private JdbcLinkRepository linkRepository;
-    @Autowired
-    private JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
     @Autowired
     private JdbcClient jdbcClient;
 
@@ -81,7 +78,30 @@ public class JdbcRepositoriesTest extends IntegrationTest {
             chatRepository.add(1L);
             chatRepository.add(1L);
         })
-            .isInstanceOf(DuplicateKeyException.class);
+            .isInstanceOf(ConflictException.class)
+            .satisfies(exception ->
+                Assertions.assertAll(
+                    () -> assertThat(exception.getMessage()).isEqualTo("Chat already signed up"),
+                    () -> assertThat(((ConflictException) exception).getDescription()).isEqualTo(
+                        "Chat associated with this id already signed up")
+                )
+            );
+    }
+
+    @Test
+    @DisplayName("Test remove not existing id")
+    @Transactional
+    @Rollback
+    void testRemoveNotExistingId() {
+        assertThatThrownBy(() -> chatRepository.remove(1L))
+            .isInstanceOf(NotFoundException.class)
+            .satisfies(exception ->
+                Assertions.assertAll(
+                    () -> assertThat(exception.getMessage()).isEqualTo("Chat not found"),
+                    () -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
+                        "Chat associated with this id can't be founded")
+                )
+            );
     }
 
 }

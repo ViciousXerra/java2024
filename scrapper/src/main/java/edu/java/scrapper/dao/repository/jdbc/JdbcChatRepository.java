@@ -1,8 +1,11 @@
 package edu.java.scrapper.dao.repository.jdbc;
 
+import edu.java.scrapper.api.exceptions.ConflictException;
+import edu.java.scrapper.api.exceptions.NotFoundException;
 import edu.java.scrapper.dao.repository.interfaces.ChatRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -21,18 +24,25 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public void add(long chatId) {
-        jdbcClient
-            .sql(ADD_QUERY)
-            .param(chatId)
-            .update();
+        try {
+            jdbcClient
+                .sql(ADD_QUERY)
+                .param(chatId)
+                .update();
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("Chat already signed up", "Chat associated with this id already signed up");
+        }
     }
 
     @Override
     public void remove(long chatId) {
-        jdbcClient
+        int updates = jdbcClient
             .sql(REMOVE_QUERY)
             .param(chatId)
             .update();
+        if (updates == 0) {
+            throw new NotFoundException("Chat not found", "Chat associated with this id can't be founded");
+        }
     }
 
     @Override
