@@ -1,4 +1,4 @@
-package edu.java.scrapper;
+package edu.java.scrapper.integrationtests;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

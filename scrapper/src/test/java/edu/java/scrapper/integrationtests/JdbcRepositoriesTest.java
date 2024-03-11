@@ -1,17 +1,18 @@
-package edu.java.scrapper;
+package edu.java.scrapper.integrationtests;
 
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatIdLinkIdRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
 import java.util.List;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class JdbcRepositoriesTest extends IntegrationTest {
 
@@ -69,6 +70,18 @@ public class JdbcRepositoriesTest extends IntegrationTest {
         List<Long> actualIds = chatRepository.findAll();
         //Then
         assertThat(actualIds).containsOnlyOnceElementsOf(expectedIds);
+    }
+
+    @Test
+    @DisplayName("Test duplicate inserting")
+    @Transactional
+    @Rollback
+    void testDuplicateInserting() {
+        assertThatThrownBy(() -> {
+            chatRepository.add(1L);
+            chatRepository.add(1L);
+        })
+            .isInstanceOf(DuplicateKeyException.class);
     }
 
 }
