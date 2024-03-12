@@ -7,6 +7,7 @@ import edu.java.scrapper.integrationtests.IntegrationTest;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -41,13 +42,16 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         //Given
         List<String> expectedUrls = List.of("link1", "link2", "link3");
         //When
-        linkRepository.add("link1");
-        linkRepository.add("link2");
-        linkRepository.add("link3");
+        Optional<Link> optionalLink1 = linkRepository.add("link1");
+        Optional<Link> optionalLink2 = linkRepository.add("link2");
+        Optional<Link> optionalLink3 = linkRepository.add("link3");
         List<Link> actualLinks =
             jdbcClient.sql("SELECT * FROM Link").query(ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
+            () -> assertThat(optionalLink1).isPresent(),
+            () -> assertThat(optionalLink2).isPresent(),
+            () -> assertThat(optionalLink3).isPresent(),
             () -> assertThat(URL_CONVERT_LAMBDA.apply(actualLinks)).containsOnlyOnceElementsOf(expectedUrls),
             () -> assertThat(ID_CONVERT_LAMBDA.apply(actualLinks)).doesNotHaveDuplicates()
         );
@@ -62,11 +66,12 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         List<String> expectedUrls = List.of("link1", "link3");
         //When
         jdbcClient.sql("INSERT INTO Link (url) VALUES ('link1'), ('link2'), ('link3')").update();
-        linkRepository.remove("link2");
+        Optional<Link> optionalLink = linkRepository.remove("link2");
         List<Link> actualLinks =
             jdbcClient.sql("SELECT * FROM Link").query(ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
+            () -> assertThat(optionalLink).isPresent(),
             () -> assertThat(URL_CONVERT_LAMBDA.apply(actualLinks)).containsOnlyOnceElementsOf(expectedUrls),
             () -> assertThat(ID_CONVERT_LAMBDA.apply(actualLinks)).doesNotHaveDuplicates()
         );

@@ -3,12 +3,13 @@ package edu.java.scrapper.dao.repository.interfaces;
 import edu.java.scrapper.dao.repository.dto.Link;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface LinkRepository {
 
-    Link add(String url);
+    Optional<Link> add(String url);
 
-    Link remove(String url);
+    Optional<Link> remove(String url);
 
     List<Link> findAll();
 

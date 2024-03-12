@@ -6,6 +6,7 @@ import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -32,21 +33,21 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Link add(String url) {
+    public Optional<Link> add(String url) {
         return jdbcClient
             .sql(ADD_QUERY)
             .param(url)
             .query(ROW_MAPPER)
-            .single();
+            .optional();
     }
 
     @Override
-    public Link remove(String url) {
+    public Optional<Link> remove(String url) {
         return jdbcClient
             .sql(REMOVE_QUERY)
             .param(url)
             .query(ROW_MAPPER)
-            .single();
+            .optional();
     }
 
     @Override
