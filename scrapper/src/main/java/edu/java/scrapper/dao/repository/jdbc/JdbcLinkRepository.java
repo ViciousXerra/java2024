@@ -3,6 +3,7 @@ package edu.java.scrapper.dao.repository.jdbc;
 import edu.java.scrapper.dao.repository.dto.Link;
 import edu.java.scrapper.dao.repository.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcLinkRepository implements LinkRepository {
 
-    private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?)";
-    private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ?";
+    private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";
+    private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ? RETURNING *";
     private final static String FIND_ALL_QUERY = "SELECT * FROM Link";
     private final static String FIND_UP_TO_CHECK_QUERY = "SELECT * FROM Link ORDER BY checked_at LIMIT ?";
     private final static String MODIFY_UPDATED_AT_QUERY =
@@ -69,8 +70,8 @@ public class JdbcLinkRepository implements LinkRepository {
     public void modifyUpdatedAtTimestamp(String url, ZonedDateTime newCheckedAt, ZonedDateTime newUpdatedAt) {
         jdbcClient
             .sql(MODIFY_UPDATED_AT_QUERY)
-            .param(newCheckedAt)
-            .param(newUpdatedAt)
+            .param(Timestamp.from(newCheckedAt.toInstant()))
+            .param(Timestamp.from(newUpdatedAt.toInstant()))
             .param(url)
             .update();
     }
@@ -79,7 +80,7 @@ public class JdbcLinkRepository implements LinkRepository {
     public void modifyCheckedAtTimestamp(String url, ZonedDateTime newCheckedAt) {
         jdbcClient
             .sql(MODIFY_CHECKED_AT_QUERY)
-            .param(newCheckedAt)
+            .param(Timestamp.from(newCheckedAt.toInstant()))
             .param(url)
             .update();
     }

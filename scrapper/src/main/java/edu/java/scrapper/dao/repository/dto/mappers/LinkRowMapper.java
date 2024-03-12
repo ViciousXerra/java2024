@@ -13,8 +13,8 @@ public class LinkRowMapper implements RowMapper<Link> {
     public Link mapRow(ResultSet rs, int rowNum) throws SQLException {
         long linkId = rs.getLong("id");
         String url = rs.getString("url");
-        ZonedDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime().atZone(ZoneOffset.UTC);
-        ZonedDateTime checkedAt = rs.getTimestamp("checked_at").toLocalDateTime().atZone(ZoneOffset.UTC);
+        ZonedDateTime updatedAt = rs.getTimestamp("updated_at").toInstant().atZone(ZoneOffset.UTC);
+        ZonedDateTime checkedAt = rs.getTimestamp("checked_at").toInstant().atZone(ZoneOffset.UTC);
         return new Link(linkId, url, updatedAt, checkedAt);
     }
 

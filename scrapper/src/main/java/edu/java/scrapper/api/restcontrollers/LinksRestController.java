@@ -95,6 +95,13 @@ public class LinksRestController {
                 mediaType = "application/json",
                 schema = @Schema(implementation = ApiErrorResponse.class)
             )
+        ),
+        @ApiResponse(
+            responseCode = "409", description = "Link already tracked",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ApiErrorResponse.class)
+            )
         )
     })
     @PostMapping(consumes = "application/json", produces = "application/json")
