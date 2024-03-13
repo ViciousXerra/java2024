@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/scrapper/tg-chat")
 public class TelegramChatController {
 
-    @PostMapping("/{id}")
+    private final static String PATH_VAR_TEMPLATE = "/{id}";
+
+    @PostMapping(PATH_VAR_TEMPLATE)
     public ResponseEntity<?> chatSignUp(@PathVariable long id) {
         /*
         TODO
@@ -22,7 +24,7 @@ public class TelegramChatController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(PATH_VAR_TEMPLATE)
     public ResponseEntity<?> deleteChat(@PathVariable long id) {
         /*
         TODO
