@@ -51,7 +51,7 @@ public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
     }
 
     @Override
-    public List<ChatIdLinkId> findAll(long chatId) {
+    public List<ChatIdLinkId> findAllByChatId(long chatId) {
         return jdbcClient
             .sql(FIND_ALL_BY_CHAT_ID_QUERY)
             .param(chatId)

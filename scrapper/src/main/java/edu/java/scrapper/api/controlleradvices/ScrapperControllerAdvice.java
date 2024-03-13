@@ -4,6 +4,7 @@ import edu.java.scrapper.api.dto.errorresponses.ApiErrorResponse;
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
 import java.util.Arrays;
+import edu.java.scrapper.api.exceptions.UnhandledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +22,15 @@ public class ScrapperControllerAdvice {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
             HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(UnhandledException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(UnhandledException e) {
+        return new ResponseEntity<>(
+            createApiErrorResponse("Unable to correctly satisfy a request", HttpStatus.INTERNAL_SERVER_ERROR, e),
+            HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 

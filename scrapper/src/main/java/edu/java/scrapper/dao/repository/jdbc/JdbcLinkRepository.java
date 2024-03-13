@@ -1,13 +1,15 @@
 package edu.java.scrapper.dao.repository.jdbc;
 
+import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.dto.Link;
 import edu.java.scrapper.dao.repository.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -33,21 +35,29 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Optional<Link> add(String url) {
-        return jdbcClient
-            .sql(ADD_QUERY)
-            .param(url)
-            .query(ROW_MAPPER)
-            .optional();
+    public Link add(String url) {
+        try {
+            return jdbcClient
+                .sql(ADD_QUERY)
+                .param(url)
+                .query(ROW_MAPPER)
+                .single();
+        } catch (DuplicateKeyException e) {
+            throw new UnhandledException("URL must be unique", "Unable to insert url data");
+        }
     }
 
     @Override
-    public Optional<Link> remove(String url) {
-        return jdbcClient
-            .sql(REMOVE_QUERY)
-            .param(url)
-            .query(ROW_MAPPER)
-            .optional();
+    public Link remove(String url) {
+        try {
+            return jdbcClient
+                .sql(REMOVE_QUERY)
+                .param(url)
+                .query(ROW_MAPPER)
+                .single();
+        } catch (EmptyResultDataAccessException e) {
+            throw new UnhandledException("URL hasn't been founded", "Unable to delete url data");
+        }
     }
 
     @Override

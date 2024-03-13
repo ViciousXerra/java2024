@@ -11,6 +11,6 @@ public interface ChatIdLinkIdRepository {
 
     List<ChatIdLinkId> findAll();
 
-    List<ChatIdLinkId> findAll(long chatId);
+    List<ChatIdLinkId> findAllByChatId(long chatId);
 
 }
