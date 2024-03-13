@@ -1,10 +1,12 @@
 package edu.java.scrapper.dao.repository.jdbc;
 
+import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -26,20 +28,33 @@ public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
     @Override
     public void add(long chatId, long linkId) {
-        jdbcClient
-            .sql(ADD_QUERY)
-            .param(chatId)
-            .param(linkId)
-            .update();
+        try {
+            jdbcClient
+                .sql(ADD_QUERY)
+                .param(chatId)
+                .param(linkId)
+                .update();
+        } catch (DuplicateKeyException e) {
+            throw new UnhandledException(
+                "Reference table constraints violation",
+                "Unable to insert data. Constraints violation is presented"
+            );
+        }
     }
 
     @Override
     public void remove(long chatId, long linkId) {
-        jdbcClient
+        int updates = jdbcClient
             .sql(REMOVE_QUERY)
             .param(chatId)
             .param(linkId)
             .update();
+        if (updates == 0) {
+            throw new UnhandledException(
+                "Row hasn't been founded in reference table",
+                "Unable to delete data. Data is not presented"
+            );
+        }
     }
 
     @Override
