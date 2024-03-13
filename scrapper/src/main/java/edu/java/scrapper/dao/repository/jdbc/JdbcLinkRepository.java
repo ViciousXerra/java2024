@@ -1,8 +1,8 @@
 package edu.java.scrapper.dao.repository.jdbc;
 
 import edu.java.scrapper.api.exceptions.UnhandledException;
-import edu.java.scrapper.dao.repository.dto.Link;
-import edu.java.scrapper.dao.repository.dto.mappers.LinkRowMapper;
+import edu.java.scrapper.dao.dto.Link;
+import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;

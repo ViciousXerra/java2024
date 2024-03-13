@@ -1,4 +1,4 @@
-package edu.java.scrapper.dao.repository.dto;
+package edu.java.scrapper.dao.dto;
 
 import java.time.ZonedDateTime;
 

@@ -1,6 +1,6 @@
-package edu.java.scrapper.dao.repository.dto.mappers;
+package edu.java.scrapper.dao.dto.mappers;
 
-import edu.java.scrapper.dao.repository.dto.ChatIdLinkId;
+import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

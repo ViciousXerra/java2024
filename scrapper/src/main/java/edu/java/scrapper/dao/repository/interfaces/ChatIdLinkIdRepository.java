@@ -1,6 +1,6 @@
 package edu.java.scrapper.dao.repository.interfaces;
 
-import edu.java.scrapper.dao.repository.dto.ChatIdLinkId;
+import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import java.util.List;
 
 public interface ChatIdLinkIdRepository {

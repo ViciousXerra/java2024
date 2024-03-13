@@ -1,7 +1,7 @@
 package edu.java.scrapper.dao.repository.jdbc;
 
-import edu.java.scrapper.dao.repository.dto.ChatIdLinkId;
-import edu.java.scrapper.dao.repository.dto.mappers.ChatIdLinkIdRowMapper;
+import edu.java.scrapper.dao.dto.ChatIdLinkId;
+import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

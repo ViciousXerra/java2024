@@ -1,6 +1,6 @@
 package edu.java.scrapper.dao.repository.interfaces;
 
-import edu.java.scrapper.dao.repository.dto.Link;
+import edu.java.scrapper.dao.dto.Link;
 import java.time.ZonedDateTime;
 import java.util.List;
 
