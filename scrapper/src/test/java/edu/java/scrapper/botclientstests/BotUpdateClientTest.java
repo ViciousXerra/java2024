@@ -99,7 +99,7 @@ class BotUpdateClientTest {
             "desc", "400", "exception_name", "exception_message",
             List.of("frame", "another_frame")
         );
-        //Then
+        //The
         assertThatThrownBy(
             () -> botClient.postLinkUpdate(
                 new LinkUpdate(1L, "https://stackoverflow.com", "desc", List.of(1L, 2L, 3L))
