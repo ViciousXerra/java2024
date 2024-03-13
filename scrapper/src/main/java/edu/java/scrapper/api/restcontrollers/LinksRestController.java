@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/scrapper/links")
 public class LinksRestController {
 
+    private final static String HEADER_LABEL = "Tg-Chat-Id";
     private final static URI LINK_1 = URI.create("https://github.com/ViciousXerra");
     private final static URI LINK_2 = URI.create("https://stackoverflow.com");
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<ListLinkResponse> getAllLinks(@RequestHeader("Tg-Chat-Id") long id) {
+    public ResponseEntity<ListLinkResponse> getAllLinks(@RequestHeader(HEADER_LABEL) long id) {
         /*
         TODO
         Possible: throw new NotFoundException
@@ -45,7 +46,7 @@ public class LinksRestController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<LinkResponse> addLink(
-        @RequestHeader("Tg-Chat-Id") long id,
+        @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody AddLinkRequest addLinkRequest
     ) {
         /*
@@ -58,7 +59,7 @@ public class LinksRestController {
 
     @DeleteMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<LinkResponse> deleteLink(
-        @RequestHeader("Tg-Chat-Id") long id,
+        @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody RemoveLinkRequest removeLinkRequest
     ) {
         /*
