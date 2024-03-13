@@ -195,9 +195,7 @@ class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void removingNotExistedTest() {
-        assertThatThrownBy(() -> {
-            linkRepository.remove("link1");
-        })
+        assertThatThrownBy(() -> linkRepository.remove("link1"))
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
