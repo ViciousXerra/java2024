@@ -26,6 +26,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class BotUpdateClientTest {
 
+    private static final String CONVERTED_API_ERROR_RESPONSE_BODY =
+        """
+            {
+                "description": "desc",
+                "code": "400",
+                "exceptionName":"exception_name",
+                "exceptionMessage": "exception_message",
+                "stacktrace":[
+                    "frame",
+                    "another_frame"
+                ]
+            }
+            """;
     private static WireMockServer mockServer;
     @Autowired
     private BotUpdateClient botClient;
@@ -78,17 +91,7 @@ class BotUpdateClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)
-                    .withBody("""
-                        {
-                            "description": "desc",
-                            "code": "400",
-                            "exceptionName":"exception_name",
-                            "exceptionMessage": "exception_message",
-                            "stacktrace":[
-                                "frame",
-                                "another_frame"
-                            ]
-                        }""")
+                    .withBody(CONVERTED_API_ERROR_RESPONSE_BODY)
                 )
             );
         //Given

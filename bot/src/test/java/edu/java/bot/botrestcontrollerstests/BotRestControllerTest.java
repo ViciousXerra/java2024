@@ -15,6 +15,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BotRestController.class)
 class BotRestControllerTest {
 
+    private final static String VALID_REQUEST_BODY =
+        """
+        {
+            "id": 1,
+            "url": "https://github.com",
+            "description": "desc",
+            "tgChatIds": [
+                1,
+                2,
+                3
+            ]
+        }
+        """;
+    private final static String INVALID_REQUEST_BODY1 =
+        """
+        {
+            "id": 1,
+            "url": "not a link",
+            "description": "desc",
+            "tgChatIds": [
+                1,
+                2,
+                3
+            ]
+        }
+        """;
+    private final static String INVALID_REQUEST_BODY2 =
+        """
+        {
+            "id": 1,
+            "url": "http://github.com",
+            "description": "",
+            "tgChatIds": [
+                1,
+                2,
+                3
+            ]
+        }
+        """;
+    private final static String INVALID_REQUEST_BODY3 =
+        """
+        {
+            "id": 1,
+            "url": "http://github.com",
+            "description": "desc",
+            "tgChatIds": [
+            ]
+        }
+        """;
     /*
     TODO
     Add MockBeans in future
@@ -29,52 +78,15 @@ class BotRestControllerTest {
         mockMvc.perform(
             post("/bot/updates")
                 .contentType("application/json")
-                .content("""
-                    {
-                      "id": 1,
-                      "url": "https://github.com",
-                      "description": "desc",
-                      "tgChatIds": [
-                        1,
-                        2,
-                        3
-                      ]
-                    }""")
+                .content(VALID_REQUEST_BODY)
         ).andExpect(status().isOk());
     }
 
     private static String[] provideBadRequestBody() {
         return new String[] {
-            """
-                    {
-                      "id": 1,
-                      "url": "not a link",
-                      "description": "desc",
-                      "tgChatIds": [
-                        1,
-                        2,
-                        3
-                      ]
-                    }""",
-            """
-                    {
-                      "id": 1,
-                      "url": "http://github.com",
-                      "description": "",
-                      "tgChatIds": [
-                        1,
-                        2,
-                        3
-                      ]
-                    }""",
-            """
-                    {
-                      "id": 1,
-                      "url": "http://github.com",
-                      "description": "desc",
-                      "tgChatIds": [
-                      ]
-                    }"""
+            INVALID_REQUEST_BODY1,
+            INVALID_REQUEST_BODY2,
+            INVALID_REQUEST_BODY3
         };
     }
 
