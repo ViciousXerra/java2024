@@ -24,7 +24,6 @@ public class ScrapperControllerAdvice {
     }
 
     @ExceptionHandler(UnhandledException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(UnhandledException e) {
         return new ResponseEntity<>(
             createApiErrorResponse("Unable to correctly satisfy a request", HttpStatus.INTERNAL_SERVER_ERROR, e),
