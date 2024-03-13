@@ -58,7 +58,7 @@ public class ScrapperClientConfig {
     }
 
     private static boolean isInvalidBaseUrl(String url) {
-        return url == null || url.isEmpty() || url.isBlank();
+        return url.isBlank();
     }
 
 }

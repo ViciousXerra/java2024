@@ -7,14 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class BotControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
@@ -23,7 +21,6 @@ public class BotControllerAdvice {
     }
 
     @ExceptionHandler(ConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiErrorResponse> handleLinkUpdateConflict(ConflictException e) {
         return new ResponseEntity<>(
             createApiErrorResponse(e.getDescription(), HttpStatus.CONFLICT, e),
