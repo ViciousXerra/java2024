@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ChatClientTest {
 
     private static WireMockServer mockServer;
@@ -59,7 +58,6 @@ class ChatClientTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Test DELETE exchange")
     void testDeleteExchange() {
         //Set up
@@ -74,7 +72,6 @@ class ChatClientTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Test POST exchange")
     void testPostExchange() {
         //Set up
@@ -89,8 +86,6 @@ class ChatClientTest {
     }
 
     @Test
-    @Order(3)
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("Test 4xx http status handler")
     void testClientErrorHandler() {
         //Set up
