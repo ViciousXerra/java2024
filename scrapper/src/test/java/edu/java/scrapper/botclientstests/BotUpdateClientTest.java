@@ -11,14 +11,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -28,9 +24,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BotUpdateClientTest {
 
+    private static final String CONVERTED_API_ERROR_RESPONSE_BODY =
+        """
+            {
+                "description": "desc",
+                "code": "400",
+                "exceptionName":"exception_name",
+                "exceptionMessage": "exception_message",
+                "stacktrace":[
+                    "frame",
+                    "another_frame"
+                ]
+            }
+            """;
     private static WireMockServer mockServer;
     @Autowired
     private BotUpdateClient botClient;
@@ -59,7 +67,6 @@ class BotUpdateClientTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Test POST exchange")
     void testPostExchange() {
         //Set up
@@ -76,8 +83,6 @@ class BotUpdateClientTest {
     }
 
     @Test
-    @Order(2)
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("Test 4xx http status handler")
     void testClientErrorHandler() {
         //Set up
@@ -86,17 +91,7 @@ class BotUpdateClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)
-                    .withBody("""
-                        {
-                            "description": "desc",
-                            "code": "400",
-                            "exceptionName":"exception_name",
-                            "exceptionMessage": "exception_message",
-                            "stacktrace":[
-                                "frame",
-                                "another_frame"
-                            ]
-                        }""")
+                    .withBody(CONVERTED_API_ERROR_RESPONSE_BODY)
                 )
             );
         //Given

@@ -15,6 +15,47 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(LinksRestController.class)
 class LinksRestControllerTest {
 
+    private static final String GET_RESPONSE_BODY =
+        """
+        {
+            "links": [
+                {
+                    "id": 1,
+                    "url": "https://github.com/ViciousXerra"
+                },
+                {
+                    "id": 1,
+                    "url": "https://stackoverflow.com"
+                }
+            ],
+            "size": 2
+        }
+        """;
+    private static final String INVALID_LINK_REQUEST_BODY =
+        """
+        {
+            "link": "not a valid url link"
+        }
+        """;
+    public static final String VALID_LINK_REQUEST_BODY =
+        """
+        {
+            "link": "https://github.com/ViciousXerra"
+        }
+        """;
+    public static final String VALID_RESPONSE_BODY1 = """
+        {
+            "id": 1,
+            "url": "https://stackoverflow.com"
+        }
+        """;
+    public static final String VALID_RESPONSE_BODY2 = """
+        {
+            "id": 1,
+            "url": "https://github.com/ViciousXerra"
+        }
+        """;
+
     /*
     TODO
     Add MockBeans in future
@@ -31,20 +72,7 @@ class LinksRestControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(content().json("""
-                {
-                  "links": [
-                    {
-                      "id": 1,
-                      "url": "https://github.com/ViciousXerra"
-                    },
-                    {
-                      "id": 1,
-                      "url": "https://stackoverflow.com"
-                    }
-                  ],
-                  "size": 2
-                }""", false));
+            .andExpect(content().json(GET_RESPONSE_BODY, false));
     }
 
     @Test
@@ -64,18 +92,11 @@ class LinksRestControllerTest {
                 post("/scrapper/links")
                     .header("Tg-Chat-Id", 1L)
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "https://stackoverflow.com"
-                        }""")
+                    .content(VALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(content().json("""
-                {
-                  "id": 1,
-                  "url": "https://stackoverflow.com"
-                }""", false));
+            .andExpect(content().json(VALID_RESPONSE_BODY1, false));
     }
 
     @Test
@@ -84,10 +105,8 @@ class LinksRestControllerTest {
         mockMvc.perform(
                 post("/scrapper/links")
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "not a valid url link"
-                        }""")
+                    .content(
+                        INVALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType("application/json"));
@@ -100,10 +119,8 @@ class LinksRestControllerTest {
                 post("/scrapper/links")
                     .header("Tg-Chat-Id", 1L)
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "not a valid url link"
-                        }""")
+                    .content(
+                        INVALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType("application/json"));
@@ -116,18 +133,11 @@ class LinksRestControllerTest {
                 delete("/scrapper/links")
                     .header("Tg-Chat-Id", 1L)
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "https://github.com/ViciousXerra"
-                        }""")
+                    .content(VALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(content().json("""
-                {
-                  "id": 1,
-                  "url": "https://github.com/ViciousXerra"
-                }""", false));
+            .andExpect(content().json(VALID_RESPONSE_BODY2, false));
     }
 
     @Test
@@ -136,10 +146,8 @@ class LinksRestControllerTest {
         mockMvc.perform(
                 post("/scrapper/links")
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "https://github.com/ViciousXerra"
-                        }""")
+                    .content(
+                        VALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType("application/json"));
@@ -152,10 +160,8 @@ class LinksRestControllerTest {
                 post("/scrapper/links")
                     .header("Tg-Chat-Id", 1L)
                     .contentType("application/json")
-                    .content("""
-                        {
-                          "link": "not a valid url link"
-                        }""")
+                    .content(
+                        INVALID_LINK_REQUEST_BODY)
             )
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType("application/json"));

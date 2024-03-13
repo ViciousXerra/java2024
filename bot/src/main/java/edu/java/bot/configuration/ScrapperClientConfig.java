@@ -26,7 +26,7 @@ public class ScrapperClientConfig {
     @Bean
     public ChatClient chatClient() {
         String baseUrl = applicationConfig.scrapperSettings().baseUrl();
-        return isInvalidBaseUrl(baseUrl)
+        return baseUrl == null || isInvalidBaseUrl(baseUrl)
             ? createClient(ChatClient.class, applicationConfig.scrapperSettings().defaultBaseUrl())
             : createClient(ChatClient.class, baseUrl);
     }
@@ -34,7 +34,7 @@ public class ScrapperClientConfig {
     @Bean
     public LinksClient linksClient() {
         String baseUrl = applicationConfig.scrapperSettings().baseUrl();
-        return isInvalidBaseUrl(baseUrl)
+        return baseUrl == null || isInvalidBaseUrl(baseUrl)
             ? createClient(LinksClient.class, applicationConfig.scrapperSettings().defaultBaseUrl())
             : createClient(LinksClient.class, baseUrl);
     }
@@ -58,7 +58,7 @@ public class ScrapperClientConfig {
     }
 
     private static boolean isInvalidBaseUrl(String url) {
-        return url == null || url.isEmpty() || url.isBlank();
+        return url.isBlank();
     }
 
 }

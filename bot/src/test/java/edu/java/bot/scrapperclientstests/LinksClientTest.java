@@ -15,13 +15,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -34,9 +30,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LinksClientTest {
 
+    private static final String ADD_DELETE_RESPONSE_BODY =
+        """
+        {
+            "id":1,
+            "url":"https://github.com"
+        }
+        """;
+    private static final String CONVERTED_API_ERROR_RESPONSE_BODY =
+        """
+        {
+            "description": "desc",
+            "code": "400",
+            "exceptionName":"exception_name",
+            "exceptionMessage": "exception_message",
+            "stacktrace":[
+                "frame",
+                "another_frame"
+            ]
+        }
+        """;
+    private static final String GET_RESPONSE_BODY =
+        """
+        {
+            "links": [
+                {
+                    "id": 1,
+                    "url": "https://github.com"
+                },
+                {
+                    "id": 2,
+                    "url": "https://stackoverflow.com"
+                }
+            ],
+            "size": 2
+        }
+        """;
     private static WireMockServer mockServer;
     @Autowired
     private LinksClient linksClient;
@@ -65,7 +96,6 @@ class LinksClientTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Test DELETE exchange")
     void testDeleteExchange() {
         //Set up
@@ -75,11 +105,7 @@ class LinksClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(200)
-                    .withBody("""
-                        {
-                            "id":1,
-                            "url":"https://github.com"
-                        }""")));
+                    .withBody(ADD_DELETE_RESPONSE_BODY)));
         //Given
         LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
         //When
@@ -89,7 +115,6 @@ class LinksClientTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Test POST exchange")
     void testPostExchange() {
         //Set up
@@ -99,11 +124,8 @@ class LinksClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(200)
-                    .withBody("""
-                        {
-                            "id":1,
-                            "url":"https://github.com"
-                        }""")));
+                    .withBody(
+                        ADD_DELETE_RESPONSE_BODY)));
         //Given
         LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
         //When
@@ -113,7 +135,6 @@ class LinksClientTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("Test GET exchange")
     void testGetExchange() {
         //Set up
@@ -123,20 +144,7 @@ class LinksClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(200)
-                    .withBody("""
-                        {
-                          "links": [
-                            {
-                              "id": 1,
-                              "url": "https://github.com"
-                            },
-                            {
-                              "id": 2,
-                              "url": "https://stackoverflow.com"
-                            }
-                          ],
-                          "size": 2
-                        }""")));
+                    .withBody(GET_RESPONSE_BODY)));
         //Given
         ListLinkResponse expectedResponse = new ListLinkResponse(
             List.of(
@@ -152,8 +160,6 @@ class LinksClientTest {
     }
 
     @Test
-    @Order(4)
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("Test 4xx http status handler")
     void testClientErrorHandler() {
         //Set up
@@ -163,17 +169,7 @@ class LinksClientTest {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)
-                    .withBody("""
-                        {
-                            "description": "desc",
-                            "code": "400",
-                            "exceptionName":"exception_name",
-                            "exceptionMessage": "exception_message",
-                            "stacktrace":[
-                                "frame",
-                                "another_frame"
-                            ]
-                        }""")
+                    .withBody(CONVERTED_API_ERROR_RESPONSE_BODY)
                 )
             );
         //Given

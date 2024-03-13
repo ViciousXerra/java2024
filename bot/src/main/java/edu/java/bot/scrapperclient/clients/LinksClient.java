@@ -14,18 +14,20 @@ import org.springframework.web.service.annotation.PostExchange;
 @HttpExchange(url = "/links")
 public interface LinksClient {
 
+    String HEADER_LABEL = "Tg-Chat-Id";
+
     @GetExchange
-    ListLinkResponse getAllLinks(@RequestHeader("Tg-Chat-Id") long chatId);
+    ListLinkResponse getAllLinks(@RequestHeader(HEADER_LABEL) long chatId);
 
     @PostExchange
     LinkResponse addLink(
-        @RequestHeader("Tg-Chat-Id") long chatId,
+        @RequestHeader(HEADER_LABEL) long chatId,
         @RequestBody AddLinkRequest addLinkRequest
     );
 
     @DeleteExchange
     LinkResponse removeLink(
-        @RequestHeader("Tg-Chat-Id") long chatId,
+        @RequestHeader(HEADER_LABEL) long chatId,
         @RequestBody RemoveLinkRequest removeLinkRequest
     );
 
