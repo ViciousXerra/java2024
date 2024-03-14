@@ -1,11 +1,11 @@
 package edu.java.scrapper.dao.dto.mappers;
 
 import edu.java.scrapper.dao.dto.Link;
-import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import org.springframework.jdbc.core.RowMapper;
 
 public class LinkRowMapper implements RowMapper<Link> {
 

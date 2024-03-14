@@ -1,9 +1,9 @@
 package edu.java.scrapper.dao.dto.mappers;
 
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
-import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
 
 public class ChatIdLinkIdRowMapper implements RowMapper<ChatIdLinkId> {
 

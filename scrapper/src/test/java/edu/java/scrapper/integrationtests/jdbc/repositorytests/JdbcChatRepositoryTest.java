@@ -4,7 +4,6 @@ import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.integrationtests.IntegrationTest;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
