@@ -3,6 +3,7 @@ package edu.java.scrapper.dao.repository.jdbc;
 import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.interfaces.ChatRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -14,6 +15,7 @@ public class JdbcChatRepository implements ChatRepository {
     private final static String ADD_QUERY = "INSERT INTO Chat (id) VALUES (?)";
     private final static String REMOVE_QUERY = "DELETE FROM Chat WHERE id = ?";
     private final static String FIND_ALL_QUERY = "SELECT id FROM Chat";
+    private final static String FIND_BY_ID_QUERY = "SELECT id FROM Chat WHERE id = ?";
     private final JdbcClient jdbcClient;
 
     @Autowired
@@ -50,5 +52,14 @@ public class JdbcChatRepository implements ChatRepository {
             .sql(FIND_ALL_QUERY)
             .query((rs, rowCol) -> Long.valueOf(rs.getString("id")))
             .list();
+    }
+
+    @Override
+    public Optional<Long> findById(long chatId) {
+        return jdbcClient
+            .sql(FIND_BY_ID_QUERY)
+            .param(chatId)
+            .query((rs, rowCol) -> Long.valueOf(rs.getString("id")))
+            .optional();
     }
 }

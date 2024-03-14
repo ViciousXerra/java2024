@@ -8,6 +8,7 @@ import edu.java.scrapper.integrationtests.IntegrationTest;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -204,6 +205,24 @@ class JdbcLinkRepositoryTest extends IntegrationTest {
                         "Unable to delete url data")
                 )
             );
+    }
+
+    @Test
+    @DisplayName("Test \"find by id\" chat repository method")
+    @Transactional
+    @Rollback
+    void testFindById() {
+        //Given
+        String expectedUrl = "link1";
+        //When
+        Optional<Link> actualUrl1 = linkRepository.findByUrl(expectedUrl);
+        jdbcClient.sql("INSERT INTO Link (url) VALUES (?)").param(expectedUrl).update();
+        Optional<Link> actualUrl2 = linkRepository.findByUrl(expectedUrl);
+        //Then
+        Assertions.assertAll(
+            () -> assertThat(actualUrl1).isEmpty(),
+            () -> assertThat(actualUrl2).isPresent().matches(linkOptional -> expectedUrl.equals(linkOptional.get().url()))
+        );
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.java.scrapper.dao.repository.interfaces;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatRepository {
 
@@ -9,5 +10,7 @@ public interface ChatRepository {
     void remove(long chatId);
 
     List<Long> findAll();
+
+    Optional<Long> findById(long chatId);
 
 }

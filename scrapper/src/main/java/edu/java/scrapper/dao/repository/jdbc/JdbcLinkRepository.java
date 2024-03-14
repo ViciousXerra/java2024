@@ -7,6 +7,7 @@ import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,6 +21,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";
     private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ? RETURNING *";
     private final static String FIND_ALL_QUERY = "SELECT * FROM Link";
+    private final static String FIND_BY_URL_QUERY = "SELECT * FROM Link WHERE url = ?";
     private final static String FIND_UP_TO_CHECK_QUERY = "SELECT * FROM Link ORDER BY checked_at LIMIT ?";
     private final static String MODIFY_UPDATED_AT_QUERY =
         "UPDATE Link SET checked_at = ?, updated_at = ? WHERE url = ?";
@@ -58,6 +60,15 @@ public class JdbcLinkRepository implements LinkRepository {
         } catch (EmptyResultDataAccessException e) {
             throw new UnhandledException("URL hasn't been founded", "Unable to delete url data");
         }
+    }
+
+    @Override
+    public Optional<Link> findByUrl(String url) {
+        return jdbcClient
+            .sql(FIND_BY_URL_QUERY)
+            .param(url)
+            .query(ROW_MAPPER)
+            .optional();
     }
 
     @Override

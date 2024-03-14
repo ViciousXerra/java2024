@@ -6,8 +6,8 @@ import java.util.Collection;
 
 public interface LinkService {
 
-    Link add(long tgChatId, URI url);
-    Link remove(long tgChatId, URI url);
+    Link add(long tgChatId, String url);
+    Link remove(long tgChatId, String url);
     Collection<Link> listAll(long tgChatId);
 
 }

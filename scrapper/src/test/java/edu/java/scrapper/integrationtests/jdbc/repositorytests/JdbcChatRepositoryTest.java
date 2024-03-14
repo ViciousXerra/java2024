@@ -4,6 +4,7 @@ import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.integrationtests.IntegrationTest;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,24 @@ class JdbcChatRepositoryTest extends IntegrationTest {
                         "Chat associated with this id can't be founded")
                 )
             );
+    }
+
+    @Test
+    @DisplayName("Test \"find by id\" chat repository method")
+    @Transactional
+    @Rollback
+    void testFindById() {
+        //Given
+        Long expectedId = 1L;
+        //When
+        Optional<Long> actualId1 = chatRepository.findById(expectedId);
+        jdbcClient.sql("INSERT INTO Chat (id) VALUES (?)").param(expectedId).update();
+        Optional<Long> actualId2 = chatRepository.findById(expectedId);
+        //Then
+        Assertions.assertAll(
+            () -> assertThat(actualId1).isEmpty(),
+            () -> assertThat(actualId2).isPresent().contains(expectedId)
+        );
     }
 
 }

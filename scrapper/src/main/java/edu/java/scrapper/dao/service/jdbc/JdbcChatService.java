@@ -30,6 +30,7 @@ public class JdbcChatService implements ChatService {
     }
 
     @Override
+    @Transactional
     public void unregister(long chatId) {
         List<Long> allRegisteredIds = chatRepository.findAll();
         if (!allRegisteredIds.contains(chatId)) {
