@@ -1,9 +1,11 @@
 package edu.java.scrapper.configuration;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +24,13 @@ public record ApplicationConfig(
     BotSettings botSettings
 ) {
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    public record Scheduler(
+        boolean enable,
+        @NotNull Duration interval,
+        @NotNull Duration forceCheckDelay,
+        @Positive
+        int fetchLimit
+    ) {
     }
 
     public record BotSettings(@NotBlank String defaultBaseUrl, String baseUrl) {

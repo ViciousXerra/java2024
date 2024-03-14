@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 15s
     force-check-delay: 10s
+    fetch-limit: 2
   stack-over-flow-settings:
     default-base-url: https://api.stackexchange.com/2.3/
   git-hub-settings:
