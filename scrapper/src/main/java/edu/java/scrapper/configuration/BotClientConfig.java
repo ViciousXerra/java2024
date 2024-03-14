@@ -25,7 +25,7 @@ public class BotClientConfig {
     @Bean
     public BotUpdateClient botUpdateClient() {
         String baseUrl = applicationConfig.botSettings().baseUrl();
-        return isInvalidBaseUrl(baseUrl)
+        return baseUrl == null || isInvalidBaseUrl(baseUrl)
             ? createClient(BotUpdateClient.class, applicationConfig.botSettings().defaultBaseUrl())
             : createClient(BotUpdateClient.class, baseUrl);
     }
@@ -49,7 +49,7 @@ public class BotClientConfig {
     }
 
     private static boolean isInvalidBaseUrl(String url) {
-        return url == null || url.isEmpty() || url.isBlank();
+        return url.isBlank();
     }
 
 }
