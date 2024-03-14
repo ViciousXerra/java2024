@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class JdbcChatService implements ChatService {
 
     private final JdbcChatRepository chatRepository;
@@ -20,22 +21,21 @@ public class JdbcChatService implements ChatService {
     }
 
     @Override
-    @Transactional
     public void register(long chatId) {
         List<Long> allRegisteredIds = chatRepository.findAll();
         if (allRegisteredIds.contains(chatId)) {
-            throw new ConflictException("Chat already signed up", "Chat with this id already registered");
+            throw new ConflictException("Chat already signed up", "Chat associated with this id already signed up");
         }
         chatRepository.add(chatId);
     }
 
     @Override
-    @Transactional
     public void unregister(long chatId) {
         List<Long> allRegisteredIds = chatRepository.findAll();
         if (!allRegisteredIds.contains(chatId)) {
-            throw new NotFoundException("Can't find a chat", "Chat with this id does not exist");
+            throw new NotFoundException("Chat not found", "Chat associated with this id can't be founded");
         }
         chatRepository.remove(chatId);
     }
+
 }

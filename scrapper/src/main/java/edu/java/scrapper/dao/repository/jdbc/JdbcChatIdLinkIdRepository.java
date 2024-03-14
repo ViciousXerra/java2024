@@ -18,6 +18,7 @@ public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
     private final static String REMOVE_QUERY = "DELETE FROM ChatIdLinkId WHERE chat_id = ? AND link_id = ?";
     private final static String FIND_ALL_QUERY = "SELECT * FROM ChatIdLinkId";
     private final static String FIND_ALL_BY_CHAT_ID_QUERY = "SELECT * FROM ChatIdLinkId WHERE chat_id = ?";
+    private final static String FIND_ALL_BY_LINK_ID_QUERY = "SELECT * FROM ChatIdLinkId WHERE link_id = ?";
     private final static RowMapper<ChatIdLinkId> ROW_MAPPER = new ChatIdLinkIdRowMapper();
     private final JdbcClient jdbcClient;
 
@@ -70,6 +71,15 @@ public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
         return jdbcClient
             .sql(FIND_ALL_BY_CHAT_ID_QUERY)
             .param(chatId)
+            .query(ROW_MAPPER)
+            .list();
+    }
+
+    @Override
+    public List<ChatIdLinkId> findAllByLinkId(long linkId) {
+        return jdbcClient
+            .sql(FIND_ALL_BY_LINK_ID_QUERY)
+            .param(linkId)
             .query(ROW_MAPPER)
             .list();
     }

@@ -55,11 +55,12 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public Optional<Long> findById(long chatId) {
-        return jdbcClient
+    public boolean isPresent(long chatId) {
+        Optional<Long> chatOptional = jdbcClient
             .sql(FIND_BY_ID_QUERY)
             .param(chatId)
             .query((rs, rowCol) -> Long.valueOf(rs.getString("id")))
             .optional();
+        return chatOptional.isPresent();
     }
 }

@@ -112,13 +112,13 @@ class JdbcChatRepositoryTest extends IntegrationTest {
         //Given
         Long expectedId = 1L;
         //When
-        Optional<Long> actualId1 = chatRepository.findById(expectedId);
+        boolean actualIsPresent1 = chatRepository.isPresent(expectedId);
         jdbcClient.sql("INSERT INTO Chat (id) VALUES (?)").param(expectedId).update();
-        Optional<Long> actualId2 = chatRepository.findById(expectedId);
+        boolean actualIsPresent2 = chatRepository.isPresent(expectedId);
         //Then
         Assertions.assertAll(
-            () -> assertThat(actualId1).isEmpty(),
-            () -> assertThat(actualId2).isPresent().contains(expectedId)
+            () -> assertThat(actualIsPresent1).isFalse(),
+            () -> assertThat(actualIsPresent2).isTrue()
         );
     }
 
