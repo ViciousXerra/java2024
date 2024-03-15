@@ -1,10 +1,14 @@
 app:
   scheduler:
     enable: true
-    interval: 10s
+    interval: 15s
     force-check-delay: 10s
   bot-settings:
     default-base-url: http://localhost:8090/bot
+  stack-over-flow-settings:
+    default-base-url: https://api.stackexchange.com/2.3/
+  git-hub-settings:
+    default-base-url: https://api.github.com/
 
 spring:
   application:
