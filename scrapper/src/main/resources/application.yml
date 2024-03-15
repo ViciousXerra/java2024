@@ -4,12 +4,12 @@ app:
     interval: 15s
     force-check-delay: 10s
     fetch-limit: 2
+  bot-settings:
+    default-base-url: http://localhost:8090/bot
   stack-over-flow-settings:
     default-base-url: https://api.stackexchange.com/2.3/
   git-hub-settings:
     default-base-url: https://api.github.com/
-  bot-settings:
-    default-base-url: http://localhost:8090/bot
 
 spring:
   application:
