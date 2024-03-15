@@ -208,10 +208,10 @@ class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("Test \"find by id\" chat repository method")
+    @DisplayName("Test \"find by url\" link repository method")
     @Transactional
     @Rollback
-    void testFindById() {
+    void testFindByUrl() {
         //Given
         String expectedUrl = "link1";
         //When
@@ -221,8 +221,29 @@ class JdbcLinkRepositoryTest extends IntegrationTest {
         //Then
         Assertions.assertAll(
             () -> assertThat(actualUrl1).isEmpty(),
-            () -> assertThat(actualUrl2).isPresent().matches(linkOptional -> expectedUrl.equals(linkOptional.get().url()))
+            () -> assertThat(actualUrl2).isPresent()
+                .matches(linkOptional -> expectedUrl.equals(linkOptional.get().url()))
         );
+    }
+
+    @Test
+    @DisplayName("Test \"remove by IDs\" link repository method")
+    @Transactional
+    @Rollback
+    void testRemoveByIds() {
+        //Given
+        String expectedUrl1 = "link1";
+        String expectedRemovedUrl2 = "link2";
+        String expectedUrl3 = "link3";
+        List<String> expectedUrls = List.of(expectedUrl1, expectedUrl3);
+        //When
+        Link link1 = linkRepository.add(expectedUrl1);
+        Link link2 = linkRepository.add(expectedRemovedUrl2);
+        Link link3 = linkRepository.add(expectedUrl3);
+        linkRepository.removeByIds(link2.linkId());
+        List<String> actualUrls = linkRepository.findAll().stream().map(Link::url).toList();
+        //Then
+        assertThat(actualUrls).containsOnlyOnceElementsOf(expectedUrls);
     }
 
 }

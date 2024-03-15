@@ -6,6 +6,7 @@ import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";
     private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ? RETURNING *";
+    private final static String REMOVE_BY_ID_QUERY_TEMPLATE = "DELETE FROM Link WHERE id IN (%s)";
     private final static String FIND_ALL_QUERY = "SELECT * FROM Link";
     private final static String FIND_BY_URL_QUERY = "SELECT * FROM Link WHERE url = ?";
     private final static String FIND_UP_TO_CHECK_QUERY = "SELECT * FROM Link ORDER BY checked_at LIMIT ?";
@@ -60,6 +62,18 @@ public class JdbcLinkRepository implements LinkRepository {
         } catch (EmptyResultDataAccessException e) {
             throw new UnhandledException("URL hasn't been founded", "Unable to delete url data");
         }
+    }
+
+    @Override
+    public void removeByIds(long... linkIds) {
+        if (linkIds.length == 0) {
+            return;
+        }
+        String ids = Arrays.toString(linkIds);
+        String sql = String.format(REMOVE_BY_ID_QUERY_TEMPLATE, ids.substring(1, ids.length() - 1));
+        jdbcClient
+            .sql(sql)
+            .update();
     }
 
     @Override

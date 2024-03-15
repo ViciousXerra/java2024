@@ -11,6 +11,8 @@ public interface LinkRepository {
 
     Link remove(String url);
 
+    void removeByIds(long... linkIds);
+
     Optional<Link> findByUrl(String url);
 
     List<Link> findAll();

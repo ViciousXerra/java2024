@@ -63,4 +63,5 @@ public class JdbcChatRepository implements ChatRepository {
             .optional();
         return chatOptional.isPresent();
     }
+
 }
