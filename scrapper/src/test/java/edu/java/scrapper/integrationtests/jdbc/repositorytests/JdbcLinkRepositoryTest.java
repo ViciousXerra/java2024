@@ -147,29 +147,21 @@ class JdbcLinkRepositoryTest extends IntegrationTest {
     @Rollback
     void modifyUpdatedAtTest() {
         //Given
-        ZonedDateTime expectedCheckedAtDateTime = ZonedDateTime.parse("2004-10-23T08:23:54Z");
         ZonedDateTime expectedUpdatedAtDateTime = ZonedDateTime.parse("2004-10-23T07:23:54Z");
         //When
         jdbcClient.sql(
-            "INSERT INTO Link (url, checked_at, updated_at) VALUES ('link1', '2004-10-16 11:23:54+03', '2004-10-16 08:23:54+01')"
+            "INSERT INTO Link (url, updated_at) VALUES ('link1', '2004-10-16 08:23:54+01')"
         ).update();
         linkRepository.modifyUpdatedAtTimestamp(
             "link1",
-            ZonedDateTime.parse("2004-10-23T08:23:54Z"),
             ZonedDateTime.parse("2004-10-23T07:23:54Z")
         );
-        ZonedDateTime[] actualDateTimes =
-            jdbcClient.sql("SELECT checked_at, updated_at FROM Link").query(
-                (rs, rowCol) -> new ZonedDateTime[] {
-                    rs.getTimestamp("checked_at").toInstant().atZone(ZoneOffset.UTC),
-                    rs.getTimestamp("updated_at").toInstant().atZone(ZoneOffset.UTC)
-                }
+        ZonedDateTime actualUpdatedAtDateTime =
+            jdbcClient.sql("SELECT updated_at FROM Link").query(
+                (rs, rowCol) -> rs.getTimestamp("updated_at").toInstant().atZone(ZoneOffset.UTC)
             ).single();
         //Then
-        Assertions.assertAll(
-            () -> assertThat(actualDateTimes[0]).isEqualTo(expectedCheckedAtDateTime),
-            () -> assertThat(actualDateTimes[1]).isEqualTo(expectedUpdatedAtDateTime)
-        );
+        assertThat(actualUpdatedAtDateTime).isEqualTo(expectedUpdatedAtDateTime);
     }
 
     @Test

@@ -19,7 +19,7 @@ public interface LinkRepository {
 
     List<Link> findUpToCheck(int limit);
 
-    void modifyUpdatedAtTimestamp(String url, ZonedDateTime newCheckedAt, ZonedDateTime newUpdatedAt);
+    void modifyUpdatedAtTimestamp(String url, ZonedDateTime newUpdatedAt);
 
     void modifyCheckedAtTimestamp(String url, ZonedDateTime newCheckedAt);
 

@@ -26,7 +26,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private final static String FIND_BY_URL_QUERY = "SELECT * FROM Link WHERE url = ?";
     private final static String FIND_UP_TO_CHECK_QUERY = "SELECT * FROM Link ORDER BY checked_at LIMIT ?";
     private final static String MODIFY_UPDATED_AT_QUERY =
-        "UPDATE Link SET checked_at = ?, updated_at = ? WHERE url = ?";
+        "UPDATE Link SET updated_at = ? WHERE url = ?";
     private final static String MODIFY_CHECKED_AT_QUERY =
         "UPDATE Link SET checked_at = ? WHERE url = ?";
 
@@ -95,18 +95,20 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<Link> findUpToCheck(int limit) {
-        return jdbcClient
+        List<Link> checkedLinks = jdbcClient
             .sql(FIND_UP_TO_CHECK_QUERY)
             .param(limit)
             .query(ROW_MAPPER)
             .list();
+        ZonedDateTime currentCheckDateTime = ZonedDateTime.now();
+        checkedLinks.forEach(link -> modifyCheckedAtTimestamp(link.url(), currentCheckDateTime));
+        return checkedLinks;
     }
 
     @Override
-    public void modifyUpdatedAtTimestamp(String url, ZonedDateTime newCheckedAt, ZonedDateTime newUpdatedAt) {
+    public void modifyUpdatedAtTimestamp(String url, ZonedDateTime newUpdatedAt) {
         jdbcClient
             .sql(MODIFY_UPDATED_AT_QUERY)
-            .param(Timestamp.from(newCheckedAt.toInstant()))
             .param(Timestamp.from(newUpdatedAt.toInstant()))
             .param(url)
             .update();
