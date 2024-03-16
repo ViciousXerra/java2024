@@ -48,6 +48,7 @@ class JdbcLinkUpdaterTest extends IntegrationTest {
         List<String> actualLinkList2 = jdbcLinkUpdater.update().stream().map(Link::url).toList();
         //Then
         Assertions.assertAll(
+            () -> assertThat(update).isNotZero(),
             () -> assertThat(actualLinkList1).containsOnlyOnceElementsOf(expectedLinkList1),
             () -> assertThat(actualLinkList2).containsOnlyOnceElementsOf(expectedLinkList2)
         );

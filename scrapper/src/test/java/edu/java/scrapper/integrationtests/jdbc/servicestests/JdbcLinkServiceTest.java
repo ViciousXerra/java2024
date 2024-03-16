@@ -245,6 +245,8 @@ class JdbcLinkServiceTest extends IntegrationTest {
         Collection<Link> actualLinksCollection2 = jdbcLinkService.listAll(expectedChatId2);
         //Then
         Assertions.assertAll(
+            () -> assertThat(update1).isNotZero(),
+            () -> assertThat(update2).isNotZero(),
             () -> assertThat(actualLinksCollection1).asList().containsOnlyOnceElementsOf(expectedLinksList1),
             () -> assertThat(actualLinksCollection2).asList().containsOnlyOnceElementsOf(expectedLinksList2)
         );
