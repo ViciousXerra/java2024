@@ -1,5 +1,7 @@
 package edu.java.scrapper.scrapperrestcontrollerstests;
 
+import edu.java.scrapper.api.exceptions.ConflictException;
+import edu.java.scrapper.api.exceptions.NotFoundException;
 import edu.java.scrapper.api.restcontrollers.TelegramChatController;
 import edu.java.scrapper.dao.service.interfaces.ChatService;
 import org.junit.jupiter.api.DisplayName;
@@ -8,53 +10,63 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TelegramChatController.class)
 class TelegramChatControllerTest {
 
+    private static final String ERROR_RESPONSE_DESC_PATH = "$.description";
+    private static final String ERROR_RESPONSE_EXCEPTION_MESSAGE_PATH = "$.exceptionMessage";
+    private static final String ERROR_RESPONSE_CODE_PATH = "$.code";
+    private static final String ERROR_RESPONSE_EXCEPTION_NAME_PATH = "$.exceptionName";
+    private static final String EXCEPTION_MESSAGE_STUB = "message";
+    private static final String EXCEPTION_DESCRIPTION_STUB = "description";
     @MockBean
-    ChatService chatService;
-
+    private ChatService chatService;
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @DisplayName("Test POST \"chat sign up\" 200 OK")
     void testPostSuccess() throws Exception {
-        Mockito.doNothing().when(chatService).register(1L);
         mockMvc.perform(
             post("/scrapper/tg-chat/{id}", 1L)
         ).andExpect(status().isOk());
     }
 
-   // @Test
+    @Test
     @DisplayName("Test POST \"chat sign up\" 400 BadRequest")
     void testPostBadRequest() throws Exception {
         mockMvc.perform(
-            post("/scrapper/tg-chat/{id}")
-        )
+                post("/scrapper/tg-chat/{id}", "testPathVarNotLong")
+            )
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(content().json("""
-                {
-                  "links": [
-                    {
-                      "id": 1,
-                      "url": "https://github.com/ViciousXerra"
-                    },
-                    {
-                      "id": 1,
-                      "url": "https://stackoverflow.com"
-                    }
-                  ],
-                  "size": 2
-                }""", false));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath(ERROR_RESPONSE_DESC_PATH).value("Invalid or incorrect request parameters"))
+            .andExpect(jsonPath(ERROR_RESPONSE_CODE_PATH).value("400"))
+            .andExpect(jsonPath(ERROR_RESPONSE_EXCEPTION_NAME_PATH).value("MethodArgumentTypeMismatchException"));
+    }
+
+    @Test
+    @DisplayName("Test POST \"chat sign up\" 409 Conflict")
+    void testPostConflict() throws Exception {
+        Mockito.doThrow(new ConflictException(EXCEPTION_MESSAGE_STUB, EXCEPTION_DESCRIPTION_STUB)).when(chatService)
+            .register(1L);
+        mockMvc.perform(
+                post("/scrapper/tg-chat/{id}", 1L)
+            )
+            .andExpect(status().is(409))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath(ERROR_RESPONSE_DESC_PATH).value(EXCEPTION_DESCRIPTION_STUB))
+            .andExpect(jsonPath(ERROR_RESPONSE_EXCEPTION_MESSAGE_PATH).value(EXCEPTION_MESSAGE_STUB))
+            .andExpect(jsonPath(ERROR_RESPONSE_CODE_PATH).value("409"))
+            .andExpect(jsonPath(ERROR_RESPONSE_EXCEPTION_NAME_PATH).value("ConflictException"));
     }
 
     @Test
@@ -63,6 +75,22 @@ class TelegramChatControllerTest {
         mockMvc.perform(
             delete("/scrapper/tg-chat/{id}", 1L)
         ).andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Test DELETE \"chat deletion\" 404 Not Found")
+    void testDeleteNotFound() throws Exception {
+        Mockito.doThrow(new NotFoundException(EXCEPTION_MESSAGE_STUB, EXCEPTION_DESCRIPTION_STUB)).when(chatService)
+            .unregister(1L);
+        mockMvc.perform(
+                delete("/scrapper/tg-chat/{id}", 1L)
+            )
+            .andExpect(status().is(404))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath(ERROR_RESPONSE_DESC_PATH).value(EXCEPTION_DESCRIPTION_STUB))
+            .andExpect(jsonPath(ERROR_RESPONSE_EXCEPTION_MESSAGE_PATH).value(EXCEPTION_MESSAGE_STUB))
+            .andExpect(jsonPath(ERROR_RESPONSE_CODE_PATH).value("404"))
+            .andExpect(jsonPath(ERROR_RESPONSE_EXCEPTION_NAME_PATH).value("NotFoundException"));
     }
 
 }

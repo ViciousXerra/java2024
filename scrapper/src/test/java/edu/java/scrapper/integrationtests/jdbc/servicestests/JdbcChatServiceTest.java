@@ -22,6 +22,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JdbcChatServiceTest extends IntegrationTest {
 
+    private static final String SELECT_FROM_CHAT_QUERY = "SELECT id FROM Chat";
+    private static final String INSERT_INTO_CHAT_QUERY = "INSERT INTO Chat (id) VALUES (?), (?)";
+    private static final String INSERT_INTO_LINK_QUERY = "INSERT INTO Link (url) VALUES (?), (?) RETURNING *";
+    private static final String INSERT_INTO_CHATID_LINKID_QUERY =
+        "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?), (?, ?)";
+    private static final String SELECT_FROM_LINK_QUERY = "SELECT * FROM Link";
+    private static final String SELECT_FROM_CHATID_LINKID_QUERY = "SELECT * FROM ChatIdLinkId";
     @Autowired
     private JdbcChatService jdbcChatService;
     @Autowired
@@ -41,7 +48,8 @@ class JdbcChatServiceTest extends IntegrationTest {
         //When
         jdbcChatService.register(expectedChatId1);
         jdbcChatService.register(expectedChatId2);
-        List<Long> actualChatIds = jdbcClient.sql("SELECT id FROM Chat").query((rs, rowCol) -> rs.getLong("id")).list();
+        List<Long> actualChatIds =
+            jdbcClient.sql(SELECT_FROM_CHAT_QUERY).query((rs, rowCol) -> rs.getLong("id")).list();
         //Then
         assertThat(actualChatIds).containsOnlyOnceElementsOf(expectedChatIds);
     }
@@ -57,9 +65,10 @@ class JdbcChatServiceTest extends IntegrationTest {
         List<Long> expectedChatIds = List.of(expectedChatId2);
         //When
         int update =
-            jdbcClient.sql("INSERT INTO Chat (id) VALUES (?), (?)").params(expectedChatId1, expectedChatId2).update();
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY).params(expectedChatId1, expectedChatId2).update();
         jdbcChatService.unregister(expectedChatId1);
-        List<Long> actualChatIds = jdbcClient.sql("SELECT id FROM Chat").query((rs, rowCol) -> rs.getLong("id")).list();
+        List<Long> actualChatIds =
+            jdbcClient.sql(SELECT_FROM_CHAT_QUERY).query((rs, rowCol) -> rs.getLong("id")).list();
         //Then
         Assertions.assertAll(
             () -> assertThat(update).isNotZero(),
@@ -106,12 +115,12 @@ class JdbcChatServiceTest extends IntegrationTest {
         String expectedLink1 = "link1";
         String expectedLink2 = "link2";
         int update1 =
-            jdbcClient.sql("INSERT INTO Chat (id) VALUES (?), (?)").params(expectedChatId1, expectedChatId2).update();
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY).params(expectedChatId1, expectedChatId2).update();
         List<Link> links =
-            jdbcClient.sql("INSERT INTO Link (url) VALUES (?), (?) RETURNING *").params(expectedLink1, expectedLink2)
+            jdbcClient.sql(INSERT_INTO_LINK_QUERY).params(expectedLink1, expectedLink2)
                 .query(LINK_ROW_MAPPER).list();
         int update2 = jdbcClient
-            .sql("INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?), (?, ?)")
+            .sql(INSERT_INTO_CHATID_LINKID_QUERY)
             .params(
                 expectedChatId1, links.getFirst().linkId(),
                 expectedChatId1, links.getLast().linkId(),
@@ -121,8 +130,9 @@ class JdbcChatServiceTest extends IntegrationTest {
         List<ChatIdLinkId> expectedRelations = List.of(new ChatIdLinkId(2L, links.getLast().linkId()));
         //When
         jdbcChatService.unregister(expectedChatId1);
-        List<Link> actualLinks = jdbcClient.sql("SELECT * FROM Link").query(LINK_ROW_MAPPER).list();
-        List<ChatIdLinkId> actualRelations = jdbcClient.sql("SELECT * FROM ChatIdLinkId").query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
+        List<Link> actualLinks = jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
+        List<ChatIdLinkId> actualRelations =
+            jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
             () -> assertThat(update1).isNotZero(),

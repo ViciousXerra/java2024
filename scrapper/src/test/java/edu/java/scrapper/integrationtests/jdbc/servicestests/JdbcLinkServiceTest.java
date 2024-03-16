@@ -8,6 +8,8 @@ import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.service.jdbc.JdbcLinkService;
 import edu.java.scrapper.integrationtests.IntegrationTest;
+import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +18,20 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JdbcLinkServiceTest extends IntegrationTest {
 
+    private static final String INSERT_INTO_CHAT_QUERY1 = "INSERT INTO Chat (id) VALUES (?), (?)";
+    private static final String INSERT_INTO_CHAT_QUERY2 = "INSERT INTO Chat (id) VALUES (?)";
+    private static final String INSERT_INTO_LINK_QUERY = "INSERT INTO Link (url) VALUES (?), (?) RETURNING *";
+    private static final String INSERT_INTO_CHATID_LINK_ID_QUERY1 =
+        "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?), (?, ?)";
+    private static final String INSERT_INTO_CHATID_LINKID_QUERY2 =
+        "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?)";
+    private static final String SELECT_FROM_CHATID_LINKID_QUERY = "SELECT * FROM ChatIdLinkId";
+    private static final String SELECT_FROM_LINK_QUERY = "SELECT * FROM Link";
     @Autowired
     private JdbcLinkService jdbcLinkService;
     @Autowired
@@ -61,7 +71,7 @@ class JdbcLinkServiceTest extends IntegrationTest {
         long expectedChatId1 = 1L;
         long expectedChatId2 = 2L;
         int update =
-            jdbcClient.sql("INSERT INTO Chat (id) VALUES (?), (?)").params(expectedChatId1, expectedChatId2).update();
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY1).params(expectedChatId1, expectedChatId2).update();
         //When
         Link returnedLink1 = jdbcLinkService.add(expectedChatId1, "link1");
         Link returnedLink2 = jdbcLinkService.add(expectedChatId1, "link2");
@@ -74,9 +84,9 @@ class JdbcLinkServiceTest extends IntegrationTest {
             new ChatIdLinkId(expectedChatId2, returnedLink3.linkId())
         );
         List<ChatIdLinkId> actualChatIdLinkIdList =
-            jdbcClient.sql("SELECT * FROM ChatIdLinkId").query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList =
-            jdbcClient.sql("SELECT * FROM Link").query(LINK_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
             () -> assertThat(update).isNotZero(),
@@ -92,7 +102,7 @@ class JdbcLinkServiceTest extends IntegrationTest {
     void testLinkRegistrationViolation() {
         //Given
         long expectedChatId = 1L;
-        int update = jdbcClient.sql("INSERT INTO Chat (id) VALUES (?)").param(expectedChatId).update();
+        int update = jdbcClient.sql(INSERT_INTO_CHAT_QUERY2).param(expectedChatId).update();
         //Then
         Assertions.assertAll(
             () -> assertThat(update).isNotZero(),
@@ -118,11 +128,11 @@ class JdbcLinkServiceTest extends IntegrationTest {
         long expectedChatId1 = 1L;
         long expectedChatId2 = 2L;
         int update1 =
-            jdbcClient.sql("INSERT INTO Chat (id) VALUES (?), (?)").params(expectedChatId1, expectedChatId2).update();
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY1).params(expectedChatId1, expectedChatId2).update();
         List<Link> returnedLinksList =
-            jdbcClient.sql("INSERT INTO Link (url) VALUES (?), (?) RETURNING *").params("link1", "link2")
+            jdbcClient.sql(INSERT_INTO_LINK_QUERY).params("link1", "link2")
                 .query(LINK_ROW_MAPPER).list();
-        int update2 = jdbcClient.sql("INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?), (?, ?)")
+        int update2 = jdbcClient.sql(INSERT_INTO_CHATID_LINK_ID_QUERY1)
             .params(
                 expectedChatId1, returnedLinksList.getFirst().linkId(),
                 expectedChatId1, returnedLinksList.getLast().linkId(),
@@ -136,25 +146,25 @@ class JdbcLinkServiceTest extends IntegrationTest {
         List<Link> expectedLinksList1 = List.of(returnedLinksList.getFirst(), returnedLinksList.getLast());
         jdbcLinkService.remove(expectedChatId2, "link2");
         List<ChatIdLinkId> actualRelationsList1 =
-            jdbcClient.sql("SELECT * FROM ChatIdLinkId").query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList1 =
-            jdbcClient.sql("SELECT * FROM Link").query(LINK_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         List<ChatIdLinkId> expectedRelationsList2 = List.of(
             new ChatIdLinkId(expectedChatId1, returnedLinksList.getFirst().linkId())
         );
         List<Link> expectedLinksList2 = List.of(returnedLinksList.getFirst());
         jdbcLinkService.remove(expectedChatId1, "link2");
         List<ChatIdLinkId> actualRelationsList2 =
-            jdbcClient.sql("SELECT * FROM ChatIdLinkId").query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList2 =
-            jdbcClient.sql("SELECT * FROM Link").query(LINK_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         List<ChatIdLinkId> expectedRelationsList3 = List.of();
         List<Link> expectedLinksList3 = List.of();
         jdbcLinkService.remove(expectedChatId1, "link1");
         List<ChatIdLinkId> actualRelationsList3 =
-            jdbcClient.sql("SELECT * FROM ChatIdLinkId").query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList3 =
-            jdbcClient.sql("SELECT * FROM Link").query(LINK_ROW_MAPPER).list();
+            jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
             () -> assertThat(update1).isNotZero(),
@@ -173,7 +183,71 @@ class JdbcLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testLinkDeletionViolation() {
+        //Given
+        long expectedChatId1 = 1L;
+        long expectedChatId2 = 2L;
+        int update1 =
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY1).params(expectedChatId1, expectedChatId2).update();
+        List<Link> returnedLinkList =
+            jdbcClient.sql(INSERT_INTO_LINK_QUERY).params("link1", "link2")
+                .query(LINK_ROW_MAPPER)
+                .list();
+        int update2 = jdbcClient.sql(INSERT_INTO_CHATID_LINKID_QUERY2)
+            .params(
+                expectedChatId1, returnedLinkList.getFirst().linkId(),
+                expectedChatId2, returnedLinkList.getLast().linkId()
+            ).update();
+        //Then
+        Assertions.assertAll(
+            () -> assertThat(update1).isNotZero(),
+            () -> assertThat(update2).isNotZero(),
+            () -> assertThatThrownBy(
+                () -> jdbcLinkService.remove(expectedChatId1, "notExistedLink")).isInstanceOf(NotFoundException.class)
+                .hasMessage("URL hasn't been registered")
+                .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
+                        "Unable to delete url data"
+                    )
+                ),
+            () -> assertThatThrownBy(
+                () -> jdbcLinkService.remove(expectedChatId1, returnedLinkList.getLast().url())).isInstanceOf(
+                    NotFoundException.class)
+                .hasMessage("URL hasn't been founded")
+                .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
+                        "Unable to delete url data because this chat didn't track given URL"
+                    )
+                )
+        );
+    }
 
+    @Test
+    @DisplayName("Test list all method")
+    @Transactional
+    @Rollback
+    void testListAll() {
+        //Given
+        long expectedChatId1 = 1L;
+        long expectedChatId2 = 2L;
+        int update1 =
+            jdbcClient.sql(INSERT_INTO_CHAT_QUERY1).params(expectedChatId1, expectedChatId2).update();
+        List<Link> returnedLinksList =
+            jdbcClient.sql(INSERT_INTO_LINK_QUERY).params("link1", "link2")
+                .query(LINK_ROW_MAPPER).list();
+        int update2 = jdbcClient.sql(INSERT_INTO_CHATID_LINK_ID_QUERY1)
+            .params(
+                expectedChatId1, returnedLinksList.getFirst().linkId(),
+                expectedChatId1, returnedLinksList.getLast().linkId(),
+                expectedChatId2, returnedLinksList.getLast().linkId()
+            ).update();
+        List<Link> expectedLinksList1 = List.of(returnedLinksList.getFirst(), returnedLinksList.getLast());
+        List<Link> expectedLinksList2 = List.of(returnedLinksList.getLast());
+        //When
+        Collection<Link> actualLinksCollection1 = jdbcLinkService.listAll(expectedChatId1);
+        Collection<Link> actualLinksCollection2 = jdbcLinkService.listAll(expectedChatId2);
+        //Then
+        Assertions.assertAll(
+            () -> assertThat(actualLinksCollection1).asList().containsOnlyOnceElementsOf(expectedLinksList1),
+            () -> assertThat(actualLinksCollection2).asList().containsOnlyOnceElementsOf(expectedLinksList2)
+        );
     }
 
 }

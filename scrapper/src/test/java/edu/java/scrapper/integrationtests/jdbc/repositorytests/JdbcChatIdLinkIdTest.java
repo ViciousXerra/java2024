@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JdbcChatIdLinkIdTest extends IntegrationTest {
     private final static RowMapper<ChatIdLinkId> ROW_MAPPER = new ChatIdLinkIdRowMapper();
-    public static final String INSERT_QUERY1 = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";
-    public static final String INSERT_QUERY2 = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?)";
+    private static final String INSERT_QUERY1 = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";
+    private static final String INSERT_QUERY2 = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?), (?, ?)";
 
     @Autowired
     private JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
