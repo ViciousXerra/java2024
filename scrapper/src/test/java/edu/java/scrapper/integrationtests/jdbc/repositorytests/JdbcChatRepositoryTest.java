@@ -109,7 +109,7 @@ class JdbcChatRepositoryTest extends IntegrationTest {
     @Rollback
     void testFindById() {
         //Given
-        Long expectedId = 1L;
+        long expectedId = 1L;
         //When
         boolean actualIsPresent1 = chatRepository.isPresent(expectedId);
         jdbcClient.sql("INSERT INTO Chat (id) VALUES (?)").param(expectedId).update();
