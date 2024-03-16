@@ -1,9 +1,9 @@
-package edu.java.scrapper.schedulers;
+package edu.java.scrapper.schedulers.linkresourceupdaters;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class LinkUpdaterUtils {
+public final class LinkUpdaterUtils {
 
     public final static String RESOURCE_SLICER_REGEX =
         "^(https|git)(://|@)([^/:]+)[/:]([^/:]+)/([^/:]+)(.+)$";
@@ -36,7 +36,8 @@ final class LinkUpdaterUtils {
     }
 
     public enum Activity {
-        DEFAULT,
+        NO_ACTIVITY,
+        NEW_UPDATE,
         GITHUB_PUSH,
         GITHUB_BRANCH_CREATION
     }
