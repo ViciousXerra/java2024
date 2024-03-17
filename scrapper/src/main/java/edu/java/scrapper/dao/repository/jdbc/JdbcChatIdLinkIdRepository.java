@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("jdbc-chatidlinkid-repo")
 public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
     private final static String ADD_QUERY = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";

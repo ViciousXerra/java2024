@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("jdbc-link-repo")
 public class JdbcLinkRepository implements LinkRepository {
 
     private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";

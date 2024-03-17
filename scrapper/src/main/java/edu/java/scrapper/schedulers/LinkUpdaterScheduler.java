@@ -16,6 +16,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,9 @@ public class LinkUpdaterScheduler {
     @Autowired
     public LinkUpdaterScheduler(
         LinkUpdater linkUpdater,
+        @Qualifier("jdbc-link-repo")
         LinkRepository linkRepository,
+        @Qualifier("jdbc-chatidlinkid-repo")
         ChatIdLinkIdRepository chatIdLinkIdRepository,
         AbstractLinkResourceUpdater abstractLinkResourceUpdater,
         BotUpdateClient botUpdateClient
