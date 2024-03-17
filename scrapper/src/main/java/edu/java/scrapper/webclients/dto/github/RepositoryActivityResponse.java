@@ -1,8 +1,8 @@
 package edu.java.scrapper.webclients.dto.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
 import java.time.OffsetDateTime;
+import org.jetbrains.annotations.NotNull;
 
 public record RepositoryActivityResponse(
     long id,
