@@ -2,7 +2,9 @@ package edu.java.scrapper.dao.repository.interfaces;
 
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChatIdLinkIdRepository {
 
     void add(long chatId, long linkId);

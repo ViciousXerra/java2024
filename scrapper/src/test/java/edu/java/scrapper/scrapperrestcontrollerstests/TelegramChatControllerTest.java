@@ -33,7 +33,7 @@ class TelegramChatControllerTest {
     private static final String URL_PATH_VAR_NOT_LONG = "testPathVarNotLong";
     private static final String URL_TEMPLATE = "/scrapper/tg-chat/{id}";
     private static final long URL_PATH_VAR_LONG = 1L;
-    @MockBean
+    @MockBean(name = "jdbc-chat-service")
     private ChatService chatService;
     @Autowired
     private MockMvc mockMvc;
