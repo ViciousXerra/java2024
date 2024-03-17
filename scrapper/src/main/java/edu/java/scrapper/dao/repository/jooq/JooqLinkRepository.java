@@ -104,7 +104,7 @@ public class JooqLinkRepository implements LinkRepository {
     @Override
     public List<Link> findUpToCheck(int limit) {
         try {
-            return dslContext
+            List<Link> checkedLinks = dslContext
                 .select().from(LINK)
                 .orderBy(LINK.CHECKED_AT)
                 .limit(limit)
@@ -112,6 +112,9 @@ public class JooqLinkRepository implements LinkRepository {
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
+            ZonedDateTime currentCheckDateTime = ZonedDateTime.now();
+            checkedLinks.forEach(link -> modifyCheckedAtTimestamp(link.url(), currentCheckDateTime));
+            return checkedLinks;
         } catch (NullPointerException e) {
             return List.of();
         }

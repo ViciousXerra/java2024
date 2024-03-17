@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +30,7 @@ public class LinksRestController {
     private final LinkService linkService;
 
     @Autowired
-    public LinksRestController(LinkService linkService) {
+    public LinksRestController(@Qualifier("jdbc-link-service") LinkService linkService) {
         this.linkService = linkService;
     }
 

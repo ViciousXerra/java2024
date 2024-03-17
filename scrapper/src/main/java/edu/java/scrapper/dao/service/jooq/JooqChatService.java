@@ -1,30 +1,30 @@
-package edu.java.scrapper.dao.service.jdbc;
+package edu.java.scrapper.dao.service.jooq;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
-import edu.java.scrapper.dao.repository.jdbc.JdbcChatIdLinkIdRepository;
-import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
-import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqChatIdLinkIdRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqChatRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqLinkRepository;
 import edu.java.scrapper.dao.service.interfaces.ChatService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-chat-service")
+@Service
 @Transactional(rollbackFor = Exception.class)
-public class JdbcChatService implements ChatService {
+public class JooqChatService implements ChatService {
 
-    private final JdbcChatRepository chatRepository;
-    private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
-    private final JdbcLinkRepository linkRepository;
+    private final JooqChatRepository chatRepository;
+    private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
+    private final JooqLinkRepository linkRepository;
 
     @Autowired
-    public JdbcChatService(
-        JdbcChatRepository chatRepository,
-        JdbcChatIdLinkIdRepository chatIdLinkIdRepository,
-        JdbcLinkRepository linkRepository
+    public JooqChatService(
+        JooqChatRepository chatRepository,
+        JooqChatIdLinkIdRepository chatIdLinkIdRepository,
+        JooqLinkRepository linkRepository
     ) {
         this.chatRepository = chatRepository;
         this.chatIdLinkIdRepository = chatIdLinkIdRepository;

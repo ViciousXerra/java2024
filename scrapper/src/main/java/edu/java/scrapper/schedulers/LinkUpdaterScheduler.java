@@ -33,6 +33,7 @@ public class LinkUpdaterScheduler {
 
     @Autowired
     public LinkUpdaterScheduler(
+        @Qualifier("jdbc-link-updater-service")
         LinkUpdater linkUpdater,
         @Qualifier("jdbc-link-repo")
         LinkRepository linkRepository,

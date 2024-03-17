@@ -1,12 +1,12 @@
-package edu.java.scrapper.dao.service.jdbc;
+package edu.java.scrapper.dao.service.jooq;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.Link;
-import edu.java.scrapper.dao.repository.jdbc.JdbcChatIdLinkIdRepository;
-import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
-import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqChatIdLinkIdRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqChatRepository;
+import edu.java.scrapper.dao.repository.jooq.JooqLinkRepository;
 import edu.java.scrapper.dao.service.interfaces.LinkService;
 import java.util.Collection;
 import java.util.List;
@@ -14,19 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-link-service")
+@Service
 @Transactional(rollbackFor = Exception.class)
-public class JdbcLinkService implements LinkService {
+public class JooqLinkService implements LinkService {
 
-    private final JdbcChatRepository chatRepository;
-    private final JdbcLinkRepository linkRepository;
-    private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
+    private final JooqChatRepository chatRepository;
+    private final JooqLinkRepository linkRepository;
+    private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
 
     @Autowired
-    public JdbcLinkService(
-        JdbcChatRepository chatRepository,
-        JdbcLinkRepository linkRepository,
-        JdbcChatIdLinkIdRepository chatIdLinkIdRepository
+    public JooqLinkService(
+        JooqChatRepository chatRepository,
+        JooqLinkRepository linkRepository,
+        JooqChatIdLinkIdRepository chatIdLinkIdRepository
     ) {
         this.chatRepository = chatRepository;
         this.linkRepository = linkRepository;

@@ -2,6 +2,7 @@ package edu.java.scrapper.api.restcontrollers;
 
 import edu.java.scrapper.dao.service.interfaces.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,7 @@ public class TelegramChatController {
     private final ChatService chatService;
 
     @Autowired
-    public TelegramChatController(ChatService chatService) {
+    public TelegramChatController(@Qualifier("jdbc-chat-service") ChatService chatService) {
         this.chatService = chatService;
     }
 
