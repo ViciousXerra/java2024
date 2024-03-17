@@ -53,12 +53,13 @@ public class LinkUpdaterScheduler {
     public void update() {
         List<Link> linkList = linkUpdater.update();
         Map<Link, ZonedDateTime> linkZonedDateTimeMap = new HashMap<>();
-        Map<Link, LinkUpdaterUtils.Activity> linkActivityMap = new HashMap<>();
+        Map<Link, String> linkActivityMap = new HashMap<>();
         linkList.forEach(link -> {
             try {
-                LinkUpdaterUtils.Activity activity = abstractLinkResourceUpdater.process(link, linkZonedDateTimeMap);
-                if (!activity.equals(LinkUpdaterUtils.Activity.NO_ACTIVITY)) {
-                    linkActivityMap.put(link, activity);
+                Map.Entry<LinkUpdaterUtils.Activity, String> result =
+                    abstractLinkResourceUpdater.process(link, linkZonedDateTimeMap);
+                if (!result.getKey().equals(LinkUpdaterUtils.Activity.NO_ACTIVITY)) {
+                    linkActivityMap.put(link, result.getValue());
                 }
             } catch (IllegalArgumentException e) {
                 LOGGER.error(e.getMessage());
@@ -80,21 +81,12 @@ public class LinkUpdaterScheduler {
         return chatIdLinkIdRepository.findAll();
     }
 
-    private void startMessaging(List<ChatIdLinkId> relations, Map<Link, LinkUpdaterUtils.Activity> linkActivityMap) {
-        linkActivityMap.forEach((key, value) -> {
-            List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == key.linkId())
+    private void startMessaging(List<ChatIdLinkId> relations, Map<Link, String> linkActivityMap) {
+        linkActivityMap.forEach((link, activityDescription) -> {
+            List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId())
                 .map(ChatIdLinkId::chatId).toList();
-            String desc = buildDescription(value);
-            botUpdateClient.postLinkUpdate(new LinkUpdate(key.linkId(), key.url(), desc, chatIds));
+            botUpdateClient.postLinkUpdate(new LinkUpdate(link.linkId(), link.url(), activityDescription, chatIds));
         });
-    }
-
-    private static String buildDescription(LinkUpdaterUtils.Activity activity) {
-        return switch (activity) {
-            case GITHUB_PUSH -> "The repository branch was updated by push";
-            case GITHUB_BRANCH_CREATION -> "A new branch has been created in the repository";
-            default -> "There is a new update";
-        };
     }
 
 }

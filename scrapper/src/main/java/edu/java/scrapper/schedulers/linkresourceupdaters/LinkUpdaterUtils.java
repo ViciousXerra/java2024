@@ -17,9 +17,7 @@ public final class LinkUpdaterUtils {
 
     public enum Activity {
         NO_ACTIVITY,
-        NEW_UPDATE,
-        GITHUB_PUSH,
-        GITHUB_BRANCH_CREATION
+        NEW_UPDATE
     }
 
 }

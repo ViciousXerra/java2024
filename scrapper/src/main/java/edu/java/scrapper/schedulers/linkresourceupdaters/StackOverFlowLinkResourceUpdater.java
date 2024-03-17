@@ -6,6 +6,7 @@ import edu.java.scrapper.webclients.dto.stackoverflow.QuestionInfo;
 import edu.java.scrapper.webclients.dto.stackoverflow.StackOverFlowQuestionResponse;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.AbstractMap;
 import java.util.Map;
 import static edu.java.scrapper.schedulers.linkresourceupdaters.LinkUpdaterUtils.DOMAIN_NAME_GROUP;
 
@@ -22,7 +23,7 @@ public final class StackOverFlowLinkResourceUpdater extends AbstractLinkResource
     }
 
     @Override
-    protected LinkUpdaterUtils.Activity processPossibleLinkResourceUpdate(
+    protected Map.Entry<LinkUpdaterUtils.Activity, String> processPossibleLinkResourceUpdate(
         Link link,
         Map<Link, ZonedDateTime> linkZonedDateTimeMap
     ) {
@@ -34,9 +35,12 @@ public final class StackOverFlowLinkResourceUpdater extends AbstractLinkResource
             questionInfo.items().getFirst().lastActivityTime().atZoneSameInstant(ZoneOffset.UTC);
         if (lastActivityDateTime.isAfter(link.updatedAt())) {
             linkZonedDateTimeMap.put(link, lastActivityDateTime);
-            return LinkUpdaterUtils.Activity.NEW_UPDATE;
+            return new AbstractMap.SimpleEntry<>(
+                LinkUpdaterUtils.Activity.NEW_UPDATE,
+                "There is new activity in the question thread"
+            );
         } else {
-            return LinkUpdaterUtils.Activity.NO_ACTIVITY;
+            return new AbstractMap.SimpleEntry<>(LinkUpdaterUtils.Activity.NO_ACTIVITY, null);
         }
     }
 

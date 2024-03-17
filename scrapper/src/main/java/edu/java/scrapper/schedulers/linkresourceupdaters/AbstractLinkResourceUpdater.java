@@ -16,7 +16,7 @@ public abstract class AbstractLinkResourceUpdater {
         this.nextUpdater = nextUpdater;
     }
 
-    public final LinkUpdaterUtils.Activity process(
+    public final Map.Entry<LinkUpdaterUtils.Activity, String> process(
         Link link,
         Map<Link, ZonedDateTime> linkZonedDateTimeMap
     ) {
@@ -28,14 +28,14 @@ public abstract class AbstractLinkResourceUpdater {
         }
     }
 
-    protected abstract LinkUpdaterUtils.Activity processPossibleLinkResourceUpdate(
+    protected abstract Map.Entry<LinkUpdaterUtils.Activity, String> processPossibleLinkResourceUpdate(
         Link link,
         Map<Link, ZonedDateTime> linkZonedDateTimeMap
     );
 
     protected abstract boolean isSupported();
 
-    private LinkUpdaterUtils.Activity processWithMatcher(
+    private Map.Entry<LinkUpdaterUtils.Activity, String> processWithMatcher(
         Link link,
         Map<Link, ZonedDateTime> linkZonedDateTimeMap
     ) {
