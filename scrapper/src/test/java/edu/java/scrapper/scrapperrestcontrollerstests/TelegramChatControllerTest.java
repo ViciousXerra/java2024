@@ -51,6 +51,7 @@ class TelegramChatControllerTest {
     void testPostConflict() throws Exception {
         Mockito.doThrow(new ConflictException(EXCEPTION_MESSAGE_STUB, EXCEPTION_DESCRIPTION_STUB)).when(chatService)
             .register(URL_PATH_VAR_LONG);
+        //Then
         mockMvc.perform(
                 post(URL_TEMPLATE, URL_PATH_VAR_LONG)
             )
@@ -65,6 +66,7 @@ class TelegramChatControllerTest {
     @Test
     @DisplayName("Test DELETE \"chat deletion\" 200 OK")
     void testDeleteSuccess() throws Exception {
+        //Then
         mockMvc.perform(
             delete(URL_TEMPLATE, URL_PATH_VAR_LONG)
         ).andExpect(status().isOk());
@@ -75,6 +77,7 @@ class TelegramChatControllerTest {
     void testDeleteNotFound() throws Exception {
         Mockito.doThrow(new NotFoundException(EXCEPTION_MESSAGE_STUB, EXCEPTION_DESCRIPTION_STUB)).when(chatService)
             .unregister(URL_PATH_VAR_LONG);
+        //Then
         mockMvc.perform(
                 delete(URL_TEMPLATE, URL_PATH_VAR_LONG)
             )
@@ -90,6 +93,7 @@ class TelegramChatControllerTest {
     @MethodSource("provideMocks")
     @DisplayName("Test POST \"chat sign up\" and DELETE \"chat deletion\" 400 BadRequest")
     void testPostBadRequest(MockHttpServletRequestBuilder builder) throws Exception {
+        //Then
         mockMvc.perform(builder)
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
