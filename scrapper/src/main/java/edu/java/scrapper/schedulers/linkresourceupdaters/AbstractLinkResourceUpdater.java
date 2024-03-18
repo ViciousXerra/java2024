@@ -10,7 +10,7 @@ import static edu.java.scrapper.schedulers.linkresourceupdaters.LinkUpdaterUtils
 public abstract class AbstractLinkResourceUpdater {
 
     private final AbstractLinkResourceUpdater nextUpdater;
-    protected Matcher linkMatcher;
+    protected static Matcher linkMatcher;
 
     public AbstractLinkResourceUpdater(AbstractLinkResourceUpdater nextUpdater) {
         this.nextUpdater = nextUpdater;
@@ -21,10 +21,10 @@ public abstract class AbstractLinkResourceUpdater {
         Map<Link, ZonedDateTime> linkZonedDateTimeMap
     ) {
         linkMatcher = RESOURCE_PATTERN.matcher(link.url());
-        if (linkMatcher.find()) {
+        if (linkMatcher.matches()) {
             return processWithMatcher(link, linkZonedDateTimeMap);
         } else {
-            throw new IllegalArgumentException("Unable to recognize URL pattern: %s".formatted(link.toString()));
+            throw new IllegalArgumentException("Unable to recognize URL pattern: %s".formatted(link.url()));
         }
     }
 

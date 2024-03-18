@@ -15,8 +15,8 @@ public final class StackOverFlowLinkResourceUpdater extends AbstractLinkResource
     private final StackOverFlowClient stackOverFlowClient;
 
     public StackOverFlowLinkResourceUpdater(
-        AbstractLinkResourceUpdater nextUpdater,
-        StackOverFlowClient stackOverFlowClient
+        StackOverFlowClient stackOverFlowClient,
+        AbstractLinkResourceUpdater nextUpdater
     ) {
         super(nextUpdater);
         this.stackOverFlowClient = stackOverFlowClient;
@@ -31,13 +31,13 @@ public final class StackOverFlowLinkResourceUpdater extends AbstractLinkResource
             stackOverFlowClient.getQuestionInfoResponse(
                 Long.parseLong(linkMatcher.group(LinkUpdaterUtils.STACKOVERFLOW_QUESTION_ID_GROUP))
             );
-        ZonedDateTime lastActivityDateTime =
-            questionInfo.items().getFirst().lastActivityTime().atZoneSameInstant(ZoneOffset.UTC);
+        QuestionInfo info = questionInfo.items().getFirst();
+        ZonedDateTime lastActivityDateTime = info.lastActivityTime().atZoneSameInstant(ZoneOffset.UTC);
         if (lastActivityDateTime.isAfter(link.updatedAt())) {
             linkZonedDateTimeMap.put(link, lastActivityDateTime);
             return new AbstractMap.SimpleEntry<>(
                 LinkUpdaterUtils.Activity.NEW_UPDATE,
-                "There is new activity in the question thread"
+                "There is new activity in \"%s\" question thread".formatted(info.title())
             );
         } else {
             return new AbstractMap.SimpleEntry<>(LinkUpdaterUtils.Activity.NO_ACTIVITY, null);

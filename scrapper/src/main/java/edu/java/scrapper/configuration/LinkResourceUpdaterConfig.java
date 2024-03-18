@@ -12,23 +12,17 @@ import org.springframework.context.annotation.Configuration;
 public class LinkResourceUpdaterConfig {
 
     @Bean
-    AbstractLinkResourceUpdater abstractLinkResourceUpdater(GitHubLinkResourceUpdater gitHubLinkResourceUpdater) {
-        return gitHubLinkResourceUpdater;
-    }
-
-    @Bean
-    GitHubLinkResourceUpdater gitHubLinkResourceUpdater(
-        StackOverFlowLinkResourceUpdater stackOverFlowResourceUpdater,
-        GitHubClient gitHubClient
-    ) {
-        return new GitHubLinkResourceUpdater(stackOverFlowResourceUpdater, gitHubClient);
-    }
-
-    @Bean
-    StackOverFlowLinkResourceUpdater stackOverFlowResourceUpdater(
+    AbstractLinkResourceUpdater abstractLinkResourceUpdater(
+        GitHubClient gitHubClient,
         StackOverFlowClient stackOverFlowClient
     ) {
-        return new StackOverFlowLinkResourceUpdater(null, stackOverFlowClient);
+        return new GitHubLinkResourceUpdater(
+            gitHubClient,
+            new StackOverFlowLinkResourceUpdater(
+                stackOverFlowClient,
+                null
+            )
+        );
     }
 
 }

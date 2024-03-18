@@ -24,7 +24,7 @@ public final class GitHubLinkResourceUpdater extends AbstractLinkResourceUpdater
     private final GitHubClient gitHubClient;
     private final StringBuilder stringBuilder;
 
-    public GitHubLinkResourceUpdater(AbstractLinkResourceUpdater nextUpdater, GitHubClient gitHubClient) {
+    public GitHubLinkResourceUpdater(GitHubClient gitHubClient, AbstractLinkResourceUpdater nextUpdater) {
         super(nextUpdater);
         this.gitHubClient = gitHubClient;
         stringBuilder = new StringBuilder();
@@ -43,6 +43,7 @@ public final class GitHubLinkResourceUpdater extends AbstractLinkResourceUpdater
         ZonedDateTime lastActivityDateTime = ZONED_DATE_TIME_CONVERTER_LAMBDA.apply(lastActivityResponse.timestamp());
         if (lastActivityDateTime.isAfter(link.updatedAt())) {
             linkZonedDateTimeMap.put(link, lastActivityDateTime);
+            stringBuilder.append(link.url()).append(LINE_SEPARATOR);
             activityList
                 .stream()
                 .filter(activity -> ZONED_DATE_TIME_CONVERTER_LAMBDA.apply(activity.timestamp())
@@ -77,6 +78,7 @@ public final class GitHubLinkResourceUpdater extends AbstractLinkResourceUpdater
         }
         stringBuilder.append(LINE_SEPARATOR);
         stringBuilder.append(AVAILABLE_ON_TEMPLATE.formatted(response.ref())).append(LINE_SEPARATOR);
+        stringBuilder.append(LINE_SEPARATOR);
     }
 
 }
