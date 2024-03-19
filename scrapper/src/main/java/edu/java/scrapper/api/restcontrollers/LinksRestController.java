@@ -26,7 +26,8 @@ import static java.net.URI.create;
 @RequestMapping("/scrapper/links")
 public class LinksRestController {
 
-    private final static String HEADER_LABEL = "Tg-Chat-Id";
+    private static final String HEADER_LABEL = "Tg-Chat-Id";
+    private static final String MEDIA_TYPE = "application/json";
     private final LinkService linkService;
 
     @Autowired
@@ -34,7 +35,7 @@ public class LinksRestController {
         this.linkService = linkService;
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = MEDIA_TYPE)
     public ResponseEntity<ListLinkResponse> getAllLinks(@RequestHeader(HEADER_LABEL) long id) {
         Collection<Link> links = linkService.listAll(id);
         List<LinkResponse> linkResponses =
@@ -48,7 +49,7 @@ public class LinksRestController {
         );
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping(consumes = MEDIA_TYPE, produces = MEDIA_TYPE)
     public ResponseEntity<LinkResponse> addLink(
         @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody AddLinkRequest addLinkRequest
@@ -57,7 +58,7 @@ public class LinksRestController {
         return new ResponseEntity<>(new LinkResponse(link.linkId(), create(link.url())), HttpStatus.OK);
     }
 
-    @DeleteMapping(consumes = "application/json", produces = "application/json")
+    @DeleteMapping(consumes = MEDIA_TYPE, produces = MEDIA_TYPE)
     public ResponseEntity<LinkResponse> deleteLink(
         @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody RemoveLinkRequest removeLinkRequest
