@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -195,9 +194,11 @@ class LinkResourceUpdaterTest {
             resourceUpdater.process(link, linkZonedDateTimeMap);
         //Then
         Assertions.assertAll(
-            () -> assertThat(linkZonedDateTimeMap.containsKey(link)),
+            () -> assertThat(linkZonedDateTimeMap.containsKey(link)).isTrue(),
             () -> assertThat(actualResult.getKey()).isEqualTo(expectedResult.getKey()),
-            () -> assertThat(StringContains.containsString(actualResult.getValue()).matches(expectedResult))
+            () -> assertThat(actualResult.getValue().replaceAll("[\r\n]", "")).isEqualTo(
+                expectedResult.getValue().replaceAll("[\r\n]", "")
+            )
         );
     }
 
@@ -231,7 +232,7 @@ class LinkResourceUpdaterTest {
             resourceUpdater.process(link, linkZonedDateTimeMap);
         //Then
         Assertions.assertAll(
-            () -> assertThat(linkZonedDateTimeMap.containsKey(link)),
+            () -> assertThat(linkZonedDateTimeMap.containsKey(link)).isTrue(),
             () -> assertThat(actualResult.getKey()).isEqualTo(LinkUpdaterUtils.Activity.NEW_UPDATE),
             () -> assertThat(actualResult.getValue()).isEqualTo("There is new activity in \"title1\" question thread")
         );
