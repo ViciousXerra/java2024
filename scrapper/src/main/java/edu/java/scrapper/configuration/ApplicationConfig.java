@@ -17,10 +17,15 @@ public record ApplicationConfig(
     @NotNull
     StackOverFlowSettings stackOverFlowSettings,
     @NotNull
+    BotSettings botSettings,
+    @NotNull
     GitHubSettings gitHubSettings
 ) {
 
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    }
+
+    public record BotSettings(@NotBlank String defaultBaseUrl, String baseUrl) {
     }
 
     public record StackOverFlowSettings(
