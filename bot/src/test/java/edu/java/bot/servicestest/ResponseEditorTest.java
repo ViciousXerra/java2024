@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.TestUtils;
 import edu.java.bot.applisteners.BotInitializationListener;
 import edu.java.bot.commands.Command;
-import edu.java.bot.services.ResponseService;
+import edu.java.bot.messageservices.ResponseService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResponseEditorTest {
 
     @MockBean
-    TelegramBot bot;
+    private TelegramBot bot;
 
     @TestConfiguration
     static class TestingConfig {

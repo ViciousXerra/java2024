@@ -1,6 +1,7 @@
 package edu.java.bot.commands;
 
 import edu.java.bot.memoryuserrepository.UserRepository;
+import edu.java.bot.scrapperclient.clients.ChatClient;
 import edu.java.bot.users.User;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
