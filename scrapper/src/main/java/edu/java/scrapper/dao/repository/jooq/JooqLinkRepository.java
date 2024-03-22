@@ -43,7 +43,7 @@ public class JooqLinkRepository implements LinkRepository {
                     .fetchOneInto(edu.java.scrapper.domain.jooq.tables.pojos.Link.class)
             );
         } catch (DataAccessException e) {
-            throw new UnhandledException("URL must be unique", "Unable to insert url data");
+            throw new UnhandledException("URL must be unique.", "Unable to insert url data.");
         }
     }
 
@@ -58,7 +58,7 @@ public class JooqLinkRepository implements LinkRepository {
                     .fetchOneInto(edu.java.scrapper.domain.jooq.tables.pojos.Link.class)
             );
         } catch (NullPointerException e) {
-            throw new UnhandledException("URL hasn't been founded", "Unable to delete url data");
+            throw new UnhandledException("URL hasn't been founded.", "Unable to delete url data.");
         }
     }
 

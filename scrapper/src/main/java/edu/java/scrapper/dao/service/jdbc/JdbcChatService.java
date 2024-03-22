@@ -35,7 +35,7 @@ public class JdbcChatService implements ChatService {
     public void register(long chatId) {
         List<Long> allRegisteredIds = chatRepository.findAll();
         if (allRegisteredIds.contains(chatId)) {
-            throw new ConflictException("Chat already signed up", "Chat associated with this id already signed up");
+            throw new ConflictException("Chat already signed up.", "Chat associated with this id already signed up.");
         }
         chatRepository.add(chatId);
     }
@@ -44,7 +44,7 @@ public class JdbcChatService implements ChatService {
     public void unregister(long chatId) {
         List<Long> allRegisteredIds = chatRepository.findAll();
         if (!allRegisteredIds.contains(chatId)) {
-            throw new NotFoundException("Chat not found", "Chat associated with this id can't be founded");
+            throw new NotFoundException("Chat not found.", "Chat associated with this id can't be founded.");
         }
         List<ChatIdLinkId> relationsList = chatIdLinkIdRepository.findAll();
         List<Long> chatRelativeLinkIds =

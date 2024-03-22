@@ -2,8 +2,6 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.users.User;
-import java.util.Optional;
 
 public interface Command {
 
@@ -11,10 +9,10 @@ public interface Command {
 
     String description();
 
-    String createMessage(Optional<User> optionalUser, String username, long id);
+    String createMessage(String text, String username, long id);
 
     default boolean isSupport(Update update) {
-        return command().equals(update.message().text());
+        return update.message().text().startsWith(command());
     }
 
     default BotCommand toBotCommand() {

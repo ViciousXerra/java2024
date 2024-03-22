@@ -37,8 +37,8 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
                 .execute();
         } catch (DataAccessException e) {
             throw new UnhandledException(
-                "Reference table constraints violation",
-                "Unable to insert data. Constraints violation is presented"
+                "Reference table constraints violation.",
+                "Unable to insert data. Constraints violation is presented."
             );
         }
     }
@@ -51,8 +51,8 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
             .execute();
         if (updates == 0) {
             throw new UnhandledException(
-                "Row hasn't been founded in reference table",
-                "Unable to delete data. Data is not presented"
+                "Row hasn't been founded in reference table.",
+                "Unable to delete data. Data is not presented."
             );
         }
     }

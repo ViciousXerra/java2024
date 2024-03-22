@@ -47,7 +47,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 .query(ROW_MAPPER)
                 .single();
         } catch (DuplicateKeyException e) {
-            throw new UnhandledException("URL must be unique", "Unable to insert url data");
+            throw new UnhandledException("URL must be unique.", "Unable to insert url data.");
         }
     }
 
@@ -60,7 +60,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 .query(ROW_MAPPER)
                 .single();
         } catch (EmptyResultDataAccessException e) {
-            throw new UnhandledException("URL hasn't been founded", "Unable to delete url data");
+            throw new UnhandledException("URL hasn't been founded.", "Unable to delete url data.");
         }
     }
 

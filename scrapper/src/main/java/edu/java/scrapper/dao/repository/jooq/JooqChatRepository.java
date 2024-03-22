@@ -27,7 +27,7 @@ public class JooqChatRepository implements ChatRepository {
                 .set(CHAT.ID, chatId)
                 .execute();
         } catch (DataAccessException e) {
-            throw new UnhandledException("Chat already signed up", "Chat associated with this id already signed up");
+            throw new UnhandledException("Chat already signed up.", "Chat associated with this id already signed up.");
         }
     }
 
@@ -39,7 +39,7 @@ public class JooqChatRepository implements ChatRepository {
                 .where(CHAT.ID.eq(chatId))
                 .execute();
         if (updates == 0) {
-            throw new UnhandledException("Chat not found", "Chat associated with this id can't be founded");
+            throw new UnhandledException("Chat not found.", "Chat associated with this id can't be founded.");
         }
     }
 

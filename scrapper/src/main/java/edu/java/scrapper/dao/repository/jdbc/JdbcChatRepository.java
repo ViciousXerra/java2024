@@ -31,7 +31,7 @@ public class JdbcChatRepository implements ChatRepository {
                 .param(chatId)
                 .update();
         } catch (DuplicateKeyException e) {
-            throw new UnhandledException("Chat already signed up", "Chat associated with this id already signed up");
+            throw new UnhandledException("Chat already signed up.", "Chat associated with this id already signed up.");
         }
     }
 
@@ -42,7 +42,7 @@ public class JdbcChatRepository implements ChatRepository {
             .param(chatId)
             .update();
         if (updates == 0) {
-            throw new UnhandledException("Chat not found", "Chat associated with this id can't be founded");
+            throw new UnhandledException("Chat not found.", "Chat associated with this id can't be founded.");
         }
     }
 

@@ -40,7 +40,7 @@ public class JooqLinkService implements LinkService {
         boolean isAlreadyTracking = chatIdLinkIdRepository.findAllByChatId(tgChatId).stream()
             .anyMatch(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId());
         if (isAlreadyTracking) {
-            throw new ConflictException("URL must be unique", "Unable to insert url data");
+            throw new ConflictException("URL must be unique.", "Unable to insert url data.");
         }
         chatIdLinkIdRepository.add(tgChatId, link.linkId());
         return link;
@@ -50,7 +50,7 @@ public class JooqLinkService implements LinkService {
     public Link remove(long tgChatId, String url) {
         isIdVerified(tgChatId);
         Link link = linkRepository.findByUrl(url)
-            .orElseThrow(() -> new NotFoundException("URL hasn't been registered", "Unable to delete url data"));
+            .orElseThrow(() -> new NotFoundException("URL hasn't been registered.", "Unable to delete url data."));
         List<ChatIdLinkId> chatIdLinkIdList = chatIdLinkIdRepository.findAllByLinkId(link.linkId());
         boolean isTracking = chatIdLinkIdList.stream().anyMatch(chatIdLinkId -> tgChatId == chatIdLinkId.chatId());
         if (isTracking && chatIdLinkIdList.size() == 1) {
@@ -59,8 +59,8 @@ public class JooqLinkService implements LinkService {
             chatIdLinkIdRepository.remove(tgChatId, link.linkId());
         } else {
             throw new NotFoundException(
-                "URL hasn't been founded",
-                "Unable to delete url data because this chat didn't track given URL"
+                "URL hasn't been founded.",
+                "Unable to delete url data because this chat didn't track given URL."
             );
         }
         return link;
@@ -80,8 +80,8 @@ public class JooqLinkService implements LinkService {
     private void isIdVerified(long tgChatId) {
         if (!chatRepository.isPresent(tgChatId)) {
             throw new NotFoundException(
-                "Links not found",
-                "Registration required for managing links for tracking"
+                "Links not found.",
+                "Registration required for managing links for tracking."
             );
         }
     }
