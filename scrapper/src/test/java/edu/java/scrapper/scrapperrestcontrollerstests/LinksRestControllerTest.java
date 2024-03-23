@@ -62,7 +62,7 @@ class LinksRestControllerTest {
             }
             """;
 
-    @MockBean(name = "jdbc-link-service")
+    @MockBean
     private LinkService linkService;
     @Autowired
     private MockMvc mockMvc;

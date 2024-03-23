@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-chatidlinkid-repo")
 public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
     private final static String ADD_QUERY = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";
@@ -22,7 +21,6 @@ public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
     private final static RowMapper<ChatIdLinkId> ROW_MAPPER = new ChatIdLinkIdRowMapper();
     private final JdbcClient jdbcClient;
 
-    @Autowired
     public JdbcChatIdLinkIdRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }

@@ -4,7 +4,7 @@ import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
 import edu.java.scrapper.dao.repository.jooq.JooqLinkRepository;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JooqLinkRepositoryTest extends IntegrationTest {
+class JooqLinkRepositoryTest extends JooqIntegrationTest {
 
     private final static RowMapper<Link> ROW_MAPPER = new LinkRowMapper();
     private final static Function<List<Link>, List<String>> URL_CONVERT_LAMBDA =

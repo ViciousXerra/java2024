@@ -2,7 +2,7 @@ package edu.java.scrapper.integrationtests.jdbc.repositorytests;
 
 import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jdbc.JdbcIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JdbcChatRepositoryTest extends IntegrationTest {
+class JdbcChatRepositoryTest extends JdbcIntegrationTest {
 
     @Autowired
     private JdbcChatRepository chatRepository;

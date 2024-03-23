@@ -9,7 +9,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-chat-repo")
 public class JdbcChatRepository implements ChatRepository {
 
     private final static String ADD_QUERY = "INSERT INTO Chat (id) VALUES (?)";
@@ -18,7 +17,6 @@ public class JdbcChatRepository implements ChatRepository {
     private final static String FIND_BY_ID_QUERY = "SELECT id FROM Chat WHERE id = ?";
     private final JdbcClient jdbcClient;
 
-    @Autowired
     public JdbcChatRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }

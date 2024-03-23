@@ -2,7 +2,8 @@ package edu.java.scrapper.integrationtests.jooq.repositorytests;
 
 import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.jooq.JooqChatRepository;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JooqChatRepositoryTest extends IntegrationTest {
+class JooqChatRepositoryTest extends JooqIntegrationTest {
 
     @Autowired
     private JooqChatRepository chatRepository;

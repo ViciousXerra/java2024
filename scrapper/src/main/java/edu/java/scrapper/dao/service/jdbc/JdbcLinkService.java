@@ -14,23 +14,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-link-service")
 @Transactional(rollbackFor = Exception.class)
 public class JdbcLinkService implements LinkService {
 
     private final JdbcChatRepository chatRepository;
-    private final JdbcLinkRepository linkRepository;
     private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
+    private final JdbcLinkRepository linkRepository;
 
-    @Autowired
     public JdbcLinkService(
         JdbcChatRepository chatRepository,
-        JdbcLinkRepository linkRepository,
-        JdbcChatIdLinkIdRepository chatIdLinkIdRepository
+        JdbcChatIdLinkIdRepository chatIdLinkIdRepository,
+        JdbcLinkRepository linkRepository
     ) {
         this.chatRepository = chatRepository;
-        this.linkRepository = linkRepository;
         this.chatIdLinkIdRepository = chatIdLinkIdRepository;
+        this.linkRepository = linkRepository;
     }
 
     @Override

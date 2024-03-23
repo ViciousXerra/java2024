@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooq-chat-service")
 @Transactional(rollbackFor = Exception.class)
 public class JooqChatService implements ChatService {
 
@@ -20,7 +19,6 @@ public class JooqChatService implements ChatService {
     private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
     private final JooqLinkRepository linkRepository;
 
-    @Autowired
     public JooqChatService(
         JooqChatRepository chatRepository,
         JooqChatIdLinkIdRepository chatIdLinkIdRepository,

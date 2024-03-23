@@ -20,7 +20,9 @@ public record ApplicationConfig(
     @NotNull
     GitHubSettings gitHubSettings,
     @NotNull
-    BotSettings botSettings
+    BotSettings botSettings,
+    @NotNull
+    AccessType databaseAccessType
 ) {
 
     public record Scheduler(
@@ -51,6 +53,10 @@ public record ApplicationConfig(
         String defaultBaseUrl,
         String baseUrl
     ) {
+    }
+
+    public enum AccessType {
+        JDBC, JOOQ, JPA
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-chat-service")
 @Transactional(rollbackFor = Exception.class)
 public class JdbcChatService implements ChatService {
 
@@ -20,7 +19,6 @@ public class JdbcChatService implements ChatService {
     private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
     private final JdbcLinkRepository linkRepository;
 
-    @Autowired
     public JdbcChatService(
         JdbcChatRepository chatRepository,
         JdbcChatIdLinkIdRepository chatIdLinkIdRepository,

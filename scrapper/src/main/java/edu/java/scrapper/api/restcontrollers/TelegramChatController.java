@@ -19,7 +19,7 @@ public class TelegramChatController {
     private final ChatService chatService;
 
     @Autowired
-    public TelegramChatController(@Qualifier("jdbc-chat-service") ChatService chatService) {
+    public TelegramChatController(ChatService chatService) {
         this.chatService = chatService;
     }
 

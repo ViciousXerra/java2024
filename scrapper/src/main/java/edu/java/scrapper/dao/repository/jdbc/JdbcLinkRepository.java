@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-link-repo")
 public class JdbcLinkRepository implements LinkRepository {
 
     private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";
@@ -33,7 +32,6 @@ public class JdbcLinkRepository implements LinkRepository {
     private final static RowMapper<Link> ROW_MAPPER = new LinkRowMapper();
     private final JdbcClient jdbcClient;
 
-    @Autowired
     public JdbcLinkRepository(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }

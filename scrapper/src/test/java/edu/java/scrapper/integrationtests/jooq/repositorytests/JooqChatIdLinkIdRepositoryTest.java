@@ -7,7 +7,7 @@ import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.repository.jooq.JooqChatIdLinkIdRepository;
 import edu.java.scrapper.dao.repository.jooq.JooqChatRepository;
 import edu.java.scrapper.dao.repository.jooq.JooqLinkRepository;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JooqChatIdLinkIdRepositoryTest extends IntegrationTest {
+class JooqChatIdLinkIdRepositoryTest extends JooqIntegrationTest {
 
     private final static RowMapper<ChatIdLinkId> ROW_MAPPER = new ChatIdLinkIdRowMapper();
     private static final String INSERT_QUERY1 = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";

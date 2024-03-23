@@ -2,7 +2,7 @@ package edu.java.scrapper.integrationtests.jdbc.servicestests;
 
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.jdbc.JdbcLinkUpdater;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jdbc.JdbcIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JdbcLinkUpdaterTest extends IntegrationTest {
+class JdbcLinkUpdaterTest extends JdbcIntegrationTest {
 
     @Autowired
     private JdbcLinkUpdater jdbcLinkUpdater;

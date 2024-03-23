@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq.Tables.CHAT;
 
-@Repository
 public class JooqChatRepository implements ChatRepository {
 
     private final DefaultDSLContext dslContext;
 
-    @Autowired
     public JooqChatRepository(DefaultDSLContext dslContext) {
         this.dslContext = dslContext;
     }

@@ -2,7 +2,7 @@ package edu.java.scrapper.integrationtests.jooq.servicestests;
 
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.jooq.JooqLinkUpdater;
-import edu.java.scrapper.integrationtests.IntegrationTest;
+import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JooqLinkUpdaterTest extends IntegrationTest {
+public class JooqLinkUpdaterTest extends JooqIntegrationTest {
 
     @Autowired
     private JooqLinkUpdater jdbcLinkUpdater;

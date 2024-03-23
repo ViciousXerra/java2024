@@ -14,19 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooq-link-service")
 @Transactional(rollbackFor = Exception.class)
 public class JooqLinkService implements LinkService {
 
     private final JooqChatRepository chatRepository;
-    private final JooqLinkRepository linkRepository;
     private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
+    private final JooqLinkRepository linkRepository;
 
-    @Autowired
     public JooqLinkService(
         JooqChatRepository chatRepository,
-        JooqLinkRepository linkRepository,
-        JooqChatIdLinkIdRepository chatIdLinkIdRepository
+        JooqChatIdLinkIdRepository chatIdLinkIdRepository,
+        JooqLinkRepository linkRepository
     ) {
         this.chatRepository = chatRepository;
         this.linkRepository = linkRepository;

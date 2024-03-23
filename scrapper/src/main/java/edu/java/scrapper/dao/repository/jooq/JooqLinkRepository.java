@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq.Tables.LINK;
 
-@Repository
 public class JooqLinkRepository implements LinkRepository {
 
     private final static Function<edu.java.scrapper.domain.jooq.tables.pojos.Link, Link> DTO_CONVERTER_LAMBDA =
@@ -27,7 +26,6 @@ public class JooqLinkRepository implements LinkRepository {
         );
     private final DefaultDSLContext dslContext;
 
-    @Autowired
     public JooqLinkRepository(DefaultDSLContext dslContext) {
         this.dslContext = dslContext;
     }

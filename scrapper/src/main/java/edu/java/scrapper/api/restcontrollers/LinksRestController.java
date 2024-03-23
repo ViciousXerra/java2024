@@ -31,7 +31,7 @@ public class LinksRestController {
     private final LinkService linkService;
 
     @Autowired
-    public LinksRestController(@Qualifier("jdbc-link-service") LinkService linkService) {
+    public LinksRestController(LinkService linkService) {
         this.linkService = linkService;
     }
 

@@ -9,14 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-link-updater-service")
 @Transactional
 public class JdbcLinkUpdater implements LinkUpdater {
 
     private final JdbcLinkRepository linkRepository;
     private final int fetchLimit;
 
-    @Autowired
     public JdbcLinkUpdater(JdbcLinkRepository linkRepository, ApplicationConfig applicationConfig) {
         this.linkRepository = linkRepository;
         this.fetchLimit = applicationConfig.scheduler().fetchLimit();
