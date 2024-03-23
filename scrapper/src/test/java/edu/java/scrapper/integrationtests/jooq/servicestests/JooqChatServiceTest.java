@@ -86,9 +86,9 @@ class JooqChatServiceTest extends IntegrationTest {
             jdbcChatService.register(1L);
             jdbcChatService.register(1L);
         }).isInstanceOf(ConflictException.class)
-            .hasMessage("Chat already signed up")
+            .hasMessage("Chat already signed up.")
             .satisfies(exception -> assertThat(((ConflictException) exception).getDescription()).isEqualTo(
-                "Chat associated with this id already signed up"));
+                "Chat associated with this id already signed up."));
     }
 
     @Test
@@ -99,9 +99,9 @@ class JooqChatServiceTest extends IntegrationTest {
         //Then
         assertThatThrownBy(() -> jdbcChatService.unregister(1L))
             .isInstanceOf(NotFoundException.class)
-            .hasMessage("Chat not found")
+            .hasMessage("Chat not found.")
             .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
-                "Chat associated with this id can't be founded"));
+                "Chat associated with this id can't be founded."));
     }
 
     @Test

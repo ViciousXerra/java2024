@@ -80,9 +80,9 @@ class JooqChatRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("Chat already signed up"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("Chat already signed up."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Chat associated with this id already signed up")
+                        "Chat associated with this id already signed up.")
                 )
             );
     }
@@ -96,9 +96,9 @@ class JooqChatRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("Chat not found"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("Chat not found."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Chat associated with this id can't be founded")
+                        "Chat associated with this id can't be founded.")
                 )
             );
     }

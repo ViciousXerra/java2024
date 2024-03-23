@@ -10,6 +10,8 @@ import jakarta.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
+import org.hibernate.annotations.Cascade;
+import static org.hibernate.annotations.CascadeType.DELETE_ORPHAN;
 
 @Entity
 @Getter
@@ -18,7 +20,7 @@ public class Chat {
     @Id
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
         name = "ChatIdLinkId",
         joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", nullable = false, updatable = false),
@@ -27,6 +29,7 @@ public class Chat {
                                          nullable = false,
                                          updatable = false)
     )
+    @Cascade(DELETE_ORPHAN)
     private Set<Link> registeredLinks = new HashSet<>();
 
     public Chat(Long id) {

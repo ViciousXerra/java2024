@@ -40,7 +40,7 @@ public class JooqLinkService implements LinkService {
         boolean isAlreadyTracking = chatIdLinkIdRepository.findAllByChatId(tgChatId).stream()
             .anyMatch(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId());
         if (isAlreadyTracking) {
-            throw new ConflictException("URL must be unique.", "Unable to insert url data.");
+            throw new ConflictException("Unable to insert url data.", "URL must be unique.");
         }
         chatIdLinkIdRepository.add(tgChatId, link.linkId());
         return link;
@@ -50,7 +50,7 @@ public class JooqLinkService implements LinkService {
     public Link remove(long tgChatId, String url) {
         isIdVerified(tgChatId);
         Link link = linkRepository.findByUrl(url)
-            .orElseThrow(() -> new NotFoundException("URL hasn't been registered.", "Unable to delete url data."));
+            .orElseThrow(() -> new NotFoundException("Unable to delete url data.", "URL hasn't been registered."));
         List<ChatIdLinkId> chatIdLinkIdList = chatIdLinkIdRepository.findAllByLinkId(link.linkId());
         boolean isTracking = chatIdLinkIdList.stream().anyMatch(chatIdLinkId -> tgChatId == chatIdLinkId.chatId());
         if (isTracking && chatIdLinkIdList.size() == 1) {
@@ -58,10 +58,7 @@ public class JooqLinkService implements LinkService {
         } else if (isTracking) {
             chatIdLinkIdRepository.remove(tgChatId, link.linkId());
         } else {
-            throw new NotFoundException(
-                "URL hasn't been founded.",
-                "Unable to delete url data because this chat didn't track given URL."
-            );
+            throw new NotFoundException("Unable to delete url data.", "URL hasn't been founded.");
         }
         return link;
     }

@@ -47,16 +47,16 @@ public class JooqLinkServiceTest extends IntegrationTest {
         Assertions.assertAll(
             () -> assertThatThrownBy(
                 () -> jdbcLinkService.add(1L, "link1")).isInstanceOf(NotFoundException.class)
-                .hasMessage("Links not found")
+                .hasMessage("Links not found.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
-                        "Registration required for managing links for tracking"
+                        "Registration required for managing links for tracking."
                     )
                 ),
             () -> assertThatThrownBy(
                 () -> jdbcLinkService.remove(1L, "link1")).isInstanceOf(NotFoundException.class)
-                .hasMessage("Links not found")
+                .hasMessage("Links not found.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
-                        "Registration required for managing links for tracking"
+                        "Registration required for managing links for tracking."
                     )
                 )
         );
@@ -111,9 +111,9 @@ public class JooqLinkServiceTest extends IntegrationTest {
                     jdbcLinkService.add(1L, "link1");
                     jdbcLinkService.add(1L, "link1");
                 }).isInstanceOf(ConflictException.class)
-                .hasMessage("URL must be unique")
+                .hasMessage("Unable to insert url data.")
                 .satisfies(exception -> assertThat(((ConflictException) exception).getDescription()).isEqualTo(
-                        "Unable to insert url data"
+                        "URL must be unique."
                     )
                 )
         );
@@ -203,17 +203,17 @@ public class JooqLinkServiceTest extends IntegrationTest {
             () -> assertThat(update2).isNotZero(),
             () -> assertThatThrownBy(
                 () -> jdbcLinkService.remove(expectedChatId1, "notExistedLink")).isInstanceOf(NotFoundException.class)
-                .hasMessage("URL hasn't been registered")
+                .hasMessage("Unable to delete url data.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
-                        "Unable to delete url data"
+                        "URL hasn't been registered."
                     )
                 ),
             () -> assertThatThrownBy(
                 () -> jdbcLinkService.remove(expectedChatId1, returnedLinkList.getLast().url())).isInstanceOf(
                     NotFoundException.class)
-                .hasMessage("URL hasn't been founded")
+                .hasMessage("Unable to delete url data.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
-                        "Unable to delete url data because this chat didn't track given URL"
+                        "URL hasn't been founded."
                     )
                 )
         );

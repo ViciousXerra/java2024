@@ -180,9 +180,9 @@ class JooqChatIdLinkIdRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("Reference table constraints violation"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("Reference table constraints violation."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Unable to insert data. Constraints violation is presented")
+                        "Unable to insert data. Constraints violation is presented.")
                 )
             );
     }
@@ -196,9 +196,9 @@ class JooqChatIdLinkIdRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("Row hasn't been founded in reference table"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("Row hasn't been founded in reference table."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Unable to delete data. Data is not presented")
+                        "Unable to delete data. Data is not presented.")
                 )
             );
     }

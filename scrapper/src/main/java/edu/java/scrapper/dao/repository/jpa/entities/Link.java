@@ -1,5 +1,6 @@
 package edu.java.scrapper.dao.repository.jpa.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,7 +33,7 @@ public class Link {
     @Column(name = "checked_at", nullable = false, columnDefinition = DEFAULT_TIMESTAMP_DEFINITION)
     private Timestamp checkedAt;
 
-    @ManyToMany(mappedBy = "registeredLinks", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "registeredLinks", cascade = CascadeType.MERGE)
     private Set<Chat> relatedChats = new HashSet<>();
 
     public Link(String url) {

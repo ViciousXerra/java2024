@@ -175,9 +175,9 @@ class JooqLinkRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("URL must be unique"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("URL must be unique."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Unable to insert url data")
+                        "Unable to insert url data.")
                 )
             );
     }
@@ -191,9 +191,9 @@ class JooqLinkRepositoryTest extends IntegrationTest {
             .isInstanceOf(UnhandledException.class)
             .satisfies(exception ->
                 Assertions.assertAll(
-                    () -> assertThat(exception.getMessage()).isEqualTo("URL hasn't been founded"),
+                    () -> assertThat(exception.getMessage()).isEqualTo("URL hasn't been founded."),
                     () -> assertThat(((UnhandledException) exception).getDescription()).isEqualTo(
-                        "Unable to delete url data")
+                        "Unable to delete url data.")
                 )
             );
     }
