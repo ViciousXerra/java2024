@@ -4,10 +4,8 @@ import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.repository.interfaces.ChatRepository;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
 public class JdbcChatRepository implements ChatRepository {
 

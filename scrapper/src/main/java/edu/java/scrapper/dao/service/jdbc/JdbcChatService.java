@@ -8,8 +8,6 @@ import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.dao.service.interfaces.ChatService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)

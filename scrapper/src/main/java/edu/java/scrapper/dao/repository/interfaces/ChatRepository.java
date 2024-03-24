@@ -1,7 +1,6 @@
 package edu.java.scrapper.dao.repository.interfaces;
 
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
 public interface ChatRepository {
 

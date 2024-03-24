@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.function.Function;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq.Tables.CHATIDLINKID;
 
 public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {

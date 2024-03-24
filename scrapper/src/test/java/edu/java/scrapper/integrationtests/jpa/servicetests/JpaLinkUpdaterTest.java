@@ -1,8 +1,8 @@
-package edu.java.scrapper.integrationtests.jooq.servicestests;
+package edu.java.scrapper.integrationtests.jpa.servicetests;
 
 import edu.java.scrapper.dao.dto.Link;
-import edu.java.scrapper.dao.service.jooq.JooqLinkUpdater;
-import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
+import edu.java.scrapper.dao.service.jpa.JpaLinkUpdater;
+import edu.java.scrapper.integrationtests.jpa.JpaIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +15,10 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JooqLinkUpdaterTest extends JooqIntegrationTest {
+class JpaLinkUpdaterTest extends JpaIntegrationTest {
 
     @Autowired
-    private JooqLinkUpdater jooqLinkUpdater;
+    private JpaLinkUpdater jpaLinkUpdater;
     @Autowired
     private JdbcClient jdbcClient;
 
@@ -44,8 +44,8 @@ class JooqLinkUpdaterTest extends JooqIntegrationTest {
         List<String> expectedLinkList1 = List.of("link2", "link3");
         List<String> expectedLinkList2 = List.of("link1", "link4");
         //When
-        List<String> actualLinkList1 = jooqLinkUpdater.update().stream().map(Link::url).toList();
-        List<String> actualLinkList2 = jooqLinkUpdater.update().stream().map(Link::url).toList();
+        List<String> actualLinkList1 = jpaLinkUpdater.update().stream().map(Link::url).toList();
+        List<String> actualLinkList2 = jpaLinkUpdater.update().stream().map(Link::url).toList();
         //Then
         Assertions.assertAll(
             () -> assertThat(update).isNotZero(),

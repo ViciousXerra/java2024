@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq.Tables.LINK;
 
 public class JooqLinkRepository implements LinkRepository {

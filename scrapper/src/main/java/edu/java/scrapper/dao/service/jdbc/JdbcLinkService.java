@@ -10,13 +10,12 @@ import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.dao.service.interfaces.LinkService;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
 public class JdbcLinkService implements LinkService {
 
+    private static final String DELETION_EXCEPTION_MESSAGE = "Unable to delete url data.";
     private final JdbcChatRepository chatRepository;
     private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
     private final JdbcLinkRepository linkRepository;
@@ -48,7 +47,7 @@ public class JdbcLinkService implements LinkService {
     public Link remove(long tgChatId, String url) {
         isIdVerified(tgChatId);
         Link link = linkRepository.findByUrl(url)
-            .orElseThrow(() -> new NotFoundException("Unable to delete url data.", "URL hasn't been registered."));
+            .orElseThrow(() -> new NotFoundException(DELETION_EXCEPTION_MESSAGE, "URL hasn't been registered."));
         List<ChatIdLinkId> chatIdLinkIdList = chatIdLinkIdRepository.findAllByLinkId(link.linkId());
         boolean isTracking = chatIdLinkIdList.stream().anyMatch(chatIdLinkId -> tgChatId == chatIdLinkId.chatId());
         if (isTracking && chatIdLinkIdList.size() == 1) {
@@ -56,7 +55,7 @@ public class JdbcLinkService implements LinkService {
         } else if (isTracking) {
             chatIdLinkIdRepository.remove(tgChatId, link.linkId());
         } else {
-            throw new NotFoundException("Unable to delete url data.", "URL hasn't been founded.");
+            throw new NotFoundException(DELETION_EXCEPTION_MESSAGE, "URL hasn't been founded.");
         }
         return link;
     }

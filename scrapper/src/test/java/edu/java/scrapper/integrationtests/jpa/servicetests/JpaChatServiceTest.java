@@ -1,4 +1,4 @@
-package edu.java.scrapper.integrationtests.jooq.servicestests;
+package edu.java.scrapper.integrationtests.jpa.servicetests;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
@@ -6,8 +6,8 @@ import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
-import edu.java.scrapper.dao.service.jooq.JooqChatService;
-import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
+import edu.java.scrapper.dao.service.jpa.JpaChatService;
+import edu.java.scrapper.integrationtests.jpa.JpaIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JooqChatServiceTest extends JooqIntegrationTest {
+class JpaChatServiceTest extends JpaIntegrationTest {
 
     private static final String SELECT_FROM_CHAT_QUERY = "SELECT id FROM Chat";
     private static final String INSERT_INTO_CHAT_QUERY = "INSERT INTO Chat (id) VALUES (?), (?)";
@@ -30,7 +30,7 @@ class JooqChatServiceTest extends JooqIntegrationTest {
     private static final String SELECT_FROM_LINK_QUERY = "SELECT * FROM Link";
     private static final String SELECT_FROM_CHATID_LINKID_QUERY = "SELECT * FROM ChatIdLinkId";
     @Autowired
-    private JooqChatService jooqChatService;
+    private JpaChatService jpaChatService;
     @Autowired
     private JdbcClient jdbcClient;
     private final static RowMapper<Link> LINK_ROW_MAPPER = new LinkRowMapper();
@@ -46,8 +46,8 @@ class JooqChatServiceTest extends JooqIntegrationTest {
         long expectedChatId2 = 63L;
         List<Long> expectedChatIds = List.of(expectedChatId1, expectedChatId2);
         //When
-        jooqChatService.register(expectedChatId1);
-        jooqChatService.register(expectedChatId2);
+        jpaChatService.register(expectedChatId1);
+        jpaChatService.register(expectedChatId2);
         List<Long> actualChatIds =
             jdbcClient.sql(SELECT_FROM_CHAT_QUERY).query((rs, rowCol) -> rs.getLong("id")).list();
         //Then
@@ -66,7 +66,7 @@ class JooqChatServiceTest extends JooqIntegrationTest {
         //When
         int update =
             jdbcClient.sql(INSERT_INTO_CHAT_QUERY).params(expectedChatId1, expectedChatId2).update();
-        jooqChatService.unregister(expectedChatId1);
+        jpaChatService.unregister(expectedChatId1);
         List<Long> actualChatIds =
             jdbcClient.sql(SELECT_FROM_CHAT_QUERY).query((rs, rowCol) -> rs.getLong("id")).list();
         //Then
@@ -83,8 +83,8 @@ class JooqChatServiceTest extends JooqIntegrationTest {
     void testRegistrationViolation() {
         //Then
         assertThatThrownBy(() -> {
-            jooqChatService.register(1L);
-            jooqChatService.register(1L);
+            jpaChatService.register(1L);
+            jpaChatService.register(1L);
         }).isInstanceOf(ConflictException.class)
             .hasMessage("Chat already signed up.")
             .satisfies(exception -> assertThat(((ConflictException) exception).getDescription()).isEqualTo(
@@ -97,7 +97,7 @@ class JooqChatServiceTest extends JooqIntegrationTest {
     @Rollback
     void testDeletionViolation() {
         //Then
-        assertThatThrownBy(() -> jooqChatService.unregister(1L))
+        assertThatThrownBy(() -> jpaChatService.unregister(1L))
             .isInstanceOf(NotFoundException.class)
             .hasMessage("Chat not found.")
             .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
@@ -129,7 +129,7 @@ class JooqChatServiceTest extends JooqIntegrationTest {
         List<Link> expectedLinks = List.of(links.getLast());
         List<ChatIdLinkId> expectedRelations = List.of(new ChatIdLinkId(2L, links.getLast().linkId()));
         //When
-        jooqChatService.unregister(expectedChatId1);
+        jpaChatService.unregister(expectedChatId1);
         List<Link> actualLinks = jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         List<ChatIdLinkId> actualRelations =
             jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();

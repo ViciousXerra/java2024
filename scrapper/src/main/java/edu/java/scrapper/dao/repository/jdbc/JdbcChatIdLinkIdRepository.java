@@ -5,11 +5,9 @@ import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
 public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 

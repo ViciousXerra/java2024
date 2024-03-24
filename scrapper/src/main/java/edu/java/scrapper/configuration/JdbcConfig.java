@@ -1,8 +1,5 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
-import edu.java.scrapper.dao.repository.interfaces.ChatRepository;
-import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatIdLinkIdRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.dao.repository.jdbc.JdbcLinkRepository;
@@ -85,9 +82,13 @@ public class JdbcConfig {
     }
 
     @Bean
-    public LinkUpdater jdbcLinkUpdater(JdbcLinkRepository linkRepository) {
+    public LinkUpdater jdbcLinkUpdater(
+        JdbcLinkRepository linkRepository,
+        JdbcChatIdLinkIdRepository chatIdLinkIdRepository
+    ) {
         return new JdbcLinkUpdater(
             linkRepository,
+            chatIdLinkIdRepository,
             applicationConfig
         );
     }

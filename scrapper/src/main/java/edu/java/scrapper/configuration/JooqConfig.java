@@ -107,9 +107,13 @@ public class JooqConfig {
     }
 
     @Bean
-    public LinkUpdater jooqLinkUpdater(JooqLinkRepository linkRepository) {
+    public LinkUpdater jooqLinkUpdater(
+        JooqLinkRepository linkRepository,
+        JooqChatIdLinkIdRepository chatIdLinkIdRepository
+    ) {
         return new JooqLinkUpdater(
             linkRepository,
+            chatIdLinkIdRepository,
             applicationConfig
         );
     }

@@ -2,8 +2,6 @@ package edu.java.scrapper.schedulers;
 
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.Link;
-import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
-import edu.java.scrapper.dao.repository.interfaces.LinkRepository;
 import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.AbstractLinkResourceUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.LinkUpdaterUtils;
@@ -16,32 +14,24 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class LinkUpdaterScheduler {
 
     private final static Logger LOGGER = LogManager.getLogger(LinkUpdaterScheduler.class);
     private final LinkUpdater linkUpdater;
-    private final LinkRepository linkRepository;
-    private final ChatIdLinkIdRepository chatIdLinkIdRepository;
     private final AbstractLinkResourceUpdater abstractLinkResourceUpdater;
     private final BotUpdateClient botUpdateClient;
 
     @Autowired
     public LinkUpdaterScheduler(
         LinkUpdater linkUpdater,
-        LinkRepository linkRepository,
-        ChatIdLinkIdRepository chatIdLinkIdRepository,
         AbstractLinkResourceUpdater abstractLinkResourceUpdater,
         BotUpdateClient botUpdateClient
     ) {
         this.linkUpdater = linkUpdater;
-        this.linkRepository = linkRepository;
-        this.chatIdLinkIdRepository = chatIdLinkIdRepository;
         this.abstractLinkResourceUpdater = abstractLinkResourceUpdater;
         this.botUpdateClient = botUpdateClient;
     }
@@ -65,17 +55,8 @@ public class LinkUpdaterScheduler {
         if (linkZonedDateTimeMap.isEmpty()) {
             return;
         }
-        List<ChatIdLinkId> relationsList = modifyUpdatedAtAndReturnRelations(linkZonedDateTimeMap);
+        List<ChatIdLinkId> relationsList = linkUpdater.modifyUpdatedAtAndReturnRelations(linkZonedDateTimeMap);
         startMessaging(relationsList, linkActivityMap);
-    }
-
-    @Transactional
-    public List<ChatIdLinkId> modifyUpdatedAtAndReturnRelations(Map<Link, ZonedDateTime> linkZonedDateTimeMap) {
-        linkZonedDateTimeMap.forEach((key, value) -> linkRepository.modifyUpdatedAtTimestamp(
-            key.url(),
-            value
-        ));
-        return chatIdLinkIdRepository.findAll();
     }
 
     private void startMessaging(List<ChatIdLinkId> relations, Map<Link, String> linkActivityMap) {

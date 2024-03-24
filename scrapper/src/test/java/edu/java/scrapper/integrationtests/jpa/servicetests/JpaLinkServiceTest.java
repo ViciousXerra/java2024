@@ -1,4 +1,4 @@
-package edu.java.scrapper.integrationtests.jooq.servicestests;
+package edu.java.scrapper.integrationtests.jpa.servicetests;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
@@ -6,8 +6,8 @@ import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.dto.mappers.ChatIdLinkIdRowMapper;
 import edu.java.scrapper.dao.dto.mappers.LinkRowMapper;
-import edu.java.scrapper.dao.service.jooq.JooqLinkService;
-import edu.java.scrapper.integrationtests.jooq.JooqIntegrationTest;
+import edu.java.scrapper.dao.service.jpa.JpaLinkService;
+import edu.java.scrapper.integrationtests.jpa.JpaIntegrationTest;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JooqLinkServiceTest extends JooqIntegrationTest {
+class JpaLinkServiceTest extends JpaIntegrationTest {
 
     private static final String INSERT_INTO_CHAT_QUERY1 = "INSERT INTO Chat (id) VALUES (?), (?)";
     private static final String INSERT_INTO_CHAT_QUERY2 = "INSERT INTO Chat (id) VALUES (?)";
@@ -33,7 +33,7 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
     private static final String SELECT_FROM_CHATID_LINKID_QUERY = "SELECT * FROM ChatIdLinkId";
     private static final String SELECT_FROM_LINK_QUERY = "SELECT * FROM Link";
     @Autowired
-    private JooqLinkService jooqLinkService;
+    private JpaLinkService jpaLinkService;
     @Autowired
     private JdbcClient jdbcClient;
     private final static RowMapper<Link> LINK_ROW_MAPPER = new LinkRowMapper();
@@ -46,14 +46,14 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
     void testUnauthorizedLinkManagement() {
         Assertions.assertAll(
             () -> assertThatThrownBy(
-                () -> jooqLinkService.add(1L, "link1")).isInstanceOf(NotFoundException.class)
+                () -> jpaLinkService.add(1L, "link1")).isInstanceOf(NotFoundException.class)
                 .hasMessage("Links not found.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
                         "Registration required for managing links for tracking."
                     )
                 ),
             () -> assertThatThrownBy(
-                () -> jooqLinkService.remove(1L, "link1")).isInstanceOf(NotFoundException.class)
+                () -> jpaLinkService.remove(1L, "link1")).isInstanceOf(NotFoundException.class)
                 .hasMessage("Links not found.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
                         "Registration required for managing links for tracking."
@@ -73,10 +73,10 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
         int update =
             jdbcClient.sql(INSERT_INTO_CHAT_QUERY1).params(expectedChatId1, expectedChatId2).update();
         //When
-        Link returnedLink1 = jooqLinkService.add(expectedChatId1, "link1");
-        Link returnedLink2 = jooqLinkService.add(expectedChatId1, "link2");
-        Link returnedLink3 = jooqLinkService.add(expectedChatId2, "link2");
-        List<Link> expectedLinksList = List.of(returnedLink1, returnedLink2, returnedLink3);
+        Link returnedLink1 = jpaLinkService.add(expectedChatId1, "link1");
+        Link returnedLink2 = jpaLinkService.add(expectedChatId1, "link2");
+        Link returnedLink3 = jpaLinkService.add(expectedChatId2, "link2");
+        List<String> expectedLinksList = List.of("link1", "link2");
 
         List<ChatIdLinkId> expectedChatIdLinkIdList = List.of(
             new ChatIdLinkId(expectedChatId1, returnedLink1.linkId()),
@@ -91,7 +91,7 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
         Assertions.assertAll(
             () -> assertThat(update).isNotZero(),
             () -> assertThat(actualChatIdLinkIdList).containsOnlyOnceElementsOf(expectedChatIdLinkIdList),
-            () -> assertThat(actualLinksList).containsOnlyOnceElementsOf(expectedLinksList)
+            () -> assertThat(actualLinksList.stream().map(Link::url).toList()).containsOnlyOnceElementsOf(expectedLinksList)
         );
     }
 
@@ -108,8 +108,8 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
             () -> assertThat(update).isNotZero(),
             () -> assertThatThrownBy(
                 () -> {
-                    jooqLinkService.add(1L, "link1");
-                    jooqLinkService.add(1L, "link1");
+                    jpaLinkService.add(1L, "link1");
+                    jpaLinkService.add(1L, "link1");
                 }).isInstanceOf(ConflictException.class)
                 .hasMessage("Unable to insert url data.")
                 .satisfies(exception -> assertThat(((ConflictException) exception).getDescription()).isEqualTo(
@@ -144,7 +144,7 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
             new ChatIdLinkId(expectedChatId1, returnedLinksList.getLast().linkId())
         );
         List<Link> expectedLinksList1 = List.of(returnedLinksList.getFirst(), returnedLinksList.getLast());
-        jooqLinkService.remove(expectedChatId2, "link2");
+        jpaLinkService.remove(expectedChatId2, "link2");
         List<ChatIdLinkId> actualRelationsList1 =
             jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList1 =
@@ -153,18 +153,15 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
             new ChatIdLinkId(expectedChatId1, returnedLinksList.getFirst().linkId())
         );
         List<Link> expectedLinksList2 = List.of(returnedLinksList.getFirst());
-        jooqLinkService.remove(expectedChatId1, "link2");
+        jpaLinkService.remove(expectedChatId1, "link2");
         List<ChatIdLinkId> actualRelationsList2 =
             jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
         List<Link> actualLinksList2 =
             jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         List<ChatIdLinkId> expectedRelationsList3 = List.of();
-        List<Link> expectedLinksList3 = List.of();
-        jooqLinkService.remove(expectedChatId1, "link1");
+        jpaLinkService.remove(expectedChatId1, "link1");
         List<ChatIdLinkId> actualRelationsList3 =
             jdbcClient.sql(SELECT_FROM_CHATID_LINKID_QUERY).query(CHAT_ID_LINK_ID_ROW_MAPPER).list();
-        List<Link> actualLinksList3 =
-            jdbcClient.sql(SELECT_FROM_LINK_QUERY).query(LINK_ROW_MAPPER).list();
         //Then
         Assertions.assertAll(
             () -> assertThat(update1).isNotZero(),
@@ -173,8 +170,7 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
             () -> assertThat(actualRelationsList2).containsOnlyOnceElementsOf(expectedRelationsList2),
             () -> assertThat(actualRelationsList3).containsOnlyOnceElementsOf(expectedRelationsList3),
             () -> assertThat(actualLinksList1).containsOnlyOnceElementsOf(expectedLinksList1),
-            () -> assertThat(actualLinksList2).containsOnlyOnceElementsOf(expectedLinksList2),
-            () -> assertThat(actualLinksList3).containsOnlyOnceElementsOf(expectedLinksList3)
+            () -> assertThat(actualLinksList2).containsOnlyOnceElementsOf(expectedLinksList2)
         );
     }
 
@@ -202,14 +198,14 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
             () -> assertThat(update1).isNotZero(),
             () -> assertThat(update2).isNotZero(),
             () -> assertThatThrownBy(
-                () -> jooqLinkService.remove(expectedChatId1, "notExistedLink")).isInstanceOf(NotFoundException.class)
+                () -> jpaLinkService.remove(expectedChatId1, "notExistedLink")).isInstanceOf(NotFoundException.class)
                 .hasMessage("Unable to delete url data.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
                         "URL hasn't been registered."
                     )
                 ),
             () -> assertThatThrownBy(
-                () -> jooqLinkService.remove(expectedChatId1, returnedLinkList.getLast().url())).isInstanceOf(
+                () -> jpaLinkService.remove(expectedChatId1, returnedLinkList.getLast().url())).isInstanceOf(
                     NotFoundException.class)
                 .hasMessage("Unable to delete url data.")
                 .satisfies(exception -> assertThat(((NotFoundException) exception).getDescription()).isEqualTo(
@@ -241,8 +237,8 @@ class JooqLinkServiceTest extends JooqIntegrationTest {
         List<Link> expectedLinksList1 = List.of(returnedLinksList.getFirst(), returnedLinksList.getLast());
         List<Link> expectedLinksList2 = List.of(returnedLinksList.getLast());
         //When
-        Collection<Link> actualLinksCollection1 = jooqLinkService.listAll(expectedChatId1);
-        Collection<Link> actualLinksCollection2 = jooqLinkService.listAll(expectedChatId2);
+        Collection<Link> actualLinksCollection1 = jpaLinkService.listAll(expectedChatId1);
+        Collection<Link> actualLinksCollection2 = jpaLinkService.listAll(expectedChatId2);
         //Then
         Assertions.assertAll(
             () -> assertThat(update1).isNotZero(),
