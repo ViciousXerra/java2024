@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress XmlUnusedNamespaceDeclaration -->
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+       http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="2024-03-04T10:00:30+00:00 - add 'Chat' table" author="ViciousXerra">
+        <sqlFile path="01-Chat.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-04T10:00:35+00:00 - add 'Link' table" author="ViciousXerra">
+        <sqlFile path="02-Link.sql"/>
+    </changeSet>
+    <changeSet id="2024-03-04T10:00:40+00:00 - add 'ChatIdLinkId' table" author="ViciousXerra">
+        <sqlFile path="03-ChatIdLinkId.sql"/>
+    </changeSet>
+
+</databaseChangeLog>

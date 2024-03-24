@@ -1,7 +1,6 @@
 package edu.java.bot.api.controlleradvices;
 
 import edu.java.bot.api.dto.errorresponses.ApiErrorResponse;
-import edu.java.bot.api.exceptions.ConflictException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +16,6 @@ public class BotControllerAdvice {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
             HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiErrorResponse> handleLinkUpdateConflict(ConflictException e) {
-        return new ResponseEntity<>(
-            createApiErrorResponse(e.getDescription(), HttpStatus.CONFLICT, e),
-            HttpStatus.CONFLICT
         );
     }
 

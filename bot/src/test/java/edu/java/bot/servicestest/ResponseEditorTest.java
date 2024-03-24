@@ -6,8 +6,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.TestUtils;
 import edu.java.bot.applisteners.BotInitializationListener;
 import edu.java.bot.commands.Command;
-import edu.java.bot.services.ResponseService;
+import edu.java.bot.messageservices.ResponseService;
+import edu.java.bot.scrapperservices.ScrapperService;
 import java.util.List;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,8 +25,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class ResponseEditorTest {
 
+    private static final long CHAT_ID = 1L;
+    private static final String URL = "https://github.com";
+    private static final String TRACK_TEXT = "/track https://github.com";
+    private static final String UNTRACK_TEXT = "/untrack https://github.com";
+    private static final String USERNAME = "user";
+    private static final String TEST_DESC = "TEST_DESC";
+
     @MockBean
-    TelegramBot bot;
+    private TelegramBot bot;
 
     @TestConfiguration
     static class TestingConfig {
@@ -39,134 +48,75 @@ class ResponseEditorTest {
 
     }
 
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    @MockBean
+    private ScrapperService scrapperService;
 
     @Autowired
-    private ResponseService responseServiceBean;
-
-    private static Object[][] provideTestWithData() {
-        return new Object[][] {
-            {
-                "First you need to register by entering the command /start.",
-                TestUtils.createMockUpdate("/list", "username", 1L)
-            },
-            {
-                "First you need to register by entering the command /start.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "First you need to register by entering the command /start.",
-                TestUtils.createMockUpdate("/untrack", "username", 1L)
-            },
-            {
-                "First you need to register by entering the command /start.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "Nice to meet you, username.",
-                TestUtils.createMockUpdate("/start", "username", 1L)
-            },
-            {
-                "Hello again, username. Shall we continue?",
-                TestUtils.createMockUpdate("/start", "username", 1L)
-            },
-            {
-                "Waiting for a link to be entered.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "The link to save is already expected.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "OK, now the link sent in the next message will be deleted.",
-                TestUtils.createMockUpdate("/untrack", "username", 1L)
-            },
-            {
-                "The link to delete is already expected.",
-                TestUtils.createMockUpdate("/untrack", "username", 1L)
-            },
-            {
-                "OK, now the link sent in the next message will be saved.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "The link was successfully saved.",
-                TestUtils.createMockUpdate("https://github.com/ViciousXerra", "username", 1L)
-            },
-            {
-                "Invalid command.",
-                TestUtils.createMockUpdate(
-                    "https://stackoverflow.com/questions/35531661/using-env-variable-in-spring-boots-application-properties",
-                    "username",
-                    1L
-                )
-            },
-            {
-                "Waiting for a link to be entered.",
-                TestUtils.createMockUpdate("/untrack", "username", 1L)
-            },
-            {
-                "The link was successfully deleted.",
-                TestUtils.createMockUpdate("https://github.com/ViciousXerra", "username", 1L)
-            },
-            {
-                "You are not tracking any links.",
-                TestUtils.createMockUpdate("/list", "username", 1L)
-            },
-            {
-                "Waiting for a link to be entered.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "The link was successfully saved.",
-                TestUtils.createMockUpdate("https://github.com/ViciousXerra", "username", 1L)
-            },
-            {
-                "Waiting for a link to be entered.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "The link was successfully saved.",
-                TestUtils.createMockUpdate(
-                    "https://stackoverflow.com/questions/35531661/using-env-variable-in-spring-boots-application-properties",
-                    "username",
-                    1L
-                )
-            },
-            {
-                "Waiting for a link to be entered.",
-                TestUtils.createMockUpdate("/track", "username", 1L)
-            },
-            {
-                "The link is not in the correct format or the resource is not supported.",
-                TestUtils.createMockUpdate(
-                    "https://javarush.com/login",
-                    "username",
-                    1L
-                )
-            },
-            {
-                "https://github.com/ViciousXerra" +
-                LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "https://stackoverflow.com/questions/35531661/using-env-variable-in-spring-boots-application-properties" +
-                LINE_SEPARATOR +
-                LINE_SEPARATOR,
-                TestUtils.createMockUpdate("/list", "username", 1L)
-            },
-        };
-    }
+    private ResponseService responseService;
 
     @ParameterizedTest
-    @DisplayName("Test response editor.")
-    @MethodSource("provideTestWithData")
-    void testResponseEditor(String expectedOutput, Update update) {
+    @MethodSource("provideTest")
+    @DisplayName("Test response editor")
+    void testResponseEditor(
+        Consumer<ScrapperService> scrapperServiceConsumer,
+        Update mockUpdate,
+        String expectedMessageContent
+    ) {
         //When
-        SendMessage actualOutputObj = responseServiceBean.prepareResponse(update);
-        String actualOutputString = (String) actualOutputObj.getParameters().get("text");
+        scrapperServiceConsumer.accept(scrapperService);
+        SendMessage preparedMessage = responseService.prepareResponse(mockUpdate);
         //Then
-        assertThat(actualOutputString).isEqualTo(expectedOutput);
+        assertThat(preparedMessage.getParameters().get("text")).isEqualTo(expectedMessageContent);
+    }
+
+    private static Object[][] provideTest() {
+        return new Object[][] {
+            {
+                TestUtils.createResetMockConsumer(),
+                TestUtils.createMockUpdate("not a valid command", USERNAME, CHAT_ID),
+                "Unknown command."
+            },
+            {
+                TestUtils.createAddChatSuccessMockConsumer(CHAT_ID),
+                TestUtils.createMockUpdate("/start", USERNAME, CHAT_ID),
+                "Nice to meet you, %s.".formatted(USERNAME)
+            },
+            {
+                TestUtils.createAddChatErrorMockConsumer(TEST_DESC, CHAT_ID),
+                TestUtils.createMockUpdate("/start", USERNAME, CHAT_ID),
+                TEST_DESC
+            },
+            {
+                TestUtils.createRemoveChatSuccessMockConsumer(CHAT_ID),
+                TestUtils.createMockUpdate("/stop", USERNAME, CHAT_ID),
+                "Thank you for using this service, %s.".formatted(USERNAME)
+            },
+            {
+                TestUtils.createRemoveChatErrorMockConsumer(TEST_DESC, CHAT_ID),
+                TestUtils.createMockUpdate("/stop", USERNAME, CHAT_ID),
+                TEST_DESC
+            },
+            {
+                TestUtils.createAddLinkSuccessMockConsumer(CHAT_ID, URL),
+                TestUtils.createMockUpdate(TRACK_TEXT, USERNAME, CHAT_ID),
+                "Saved."
+            },
+            {
+                TestUtils.createAddLinkErrorMockConsumer(TEST_DESC, CHAT_ID, URL),
+                TestUtils.createMockUpdate(TRACK_TEXT, USERNAME, CHAT_ID),
+                TEST_DESC
+            },
+            {
+                TestUtils.createRemoveLinkSuccessMockConsumer(CHAT_ID, URL),
+                TestUtils.createMockUpdate(UNTRACK_TEXT, USERNAME, CHAT_ID),
+                "Deleted."
+            },
+            {
+                TestUtils.createRemoveLinkErrorMockConsumer(TEST_DESC, CHAT_ID, URL),
+                TestUtils.createMockUpdate(UNTRACK_TEXT, USERNAME, CHAT_ID),
+                TEST_DESC
+            }
+        };
     }
 
 }
