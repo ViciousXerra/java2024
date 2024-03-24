@@ -1,3 +1,4 @@
+
 app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-settings:

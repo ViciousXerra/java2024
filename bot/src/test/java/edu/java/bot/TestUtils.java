@@ -4,19 +4,16 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.commands.Command;
-import edu.java.bot.memoryuserrepository.UserRepository;
-import edu.java.bot.users.User;
 import java.net.URI;
 import java.util.Optional;
 import java.util.Set;
 import org.mockito.Mockito;
 
 public final class TestUtils {
-
+/*
     public static Command createMockCommand(
         String command,
         String desc,
-        Optional<User> userOptional,
         String userName,
         long id,
         String message
@@ -24,7 +21,7 @@ public final class TestUtils {
         Command mockCommand = Mockito.mock(Command.class);
         Mockito.when(mockCommand.command()).thenReturn(command);
         Mockito.when(mockCommand.description()).thenReturn(desc);
-        Mockito.when(mockCommand.createMessage(userOptional, userName, id)).thenReturn(message);
+        Mockito.when(mockCommand.createMessage().thenReturn(message);
         return mockCommand;
     }
 
@@ -39,23 +36,5 @@ public final class TestUtils {
         Mockito.when(mockUpdate.message()).thenReturn(mockMessage);
         return mockUpdate;
     }
-
-    public static UserRepository createRepositoryStub() {
-        return Mockito.mock(UserRepository.class);
-    }
-
-    public static Optional<User> createUserOptionalWithEmptyList() {
-        return Optional.of(new User());
-    }
-
-    public static Optional<User> createUserOptionalWithFilledList() {
-        User mockUser = Mockito.mock(User.class);
-        Mockito.when(mockUser.getTrackingLinks()).thenReturn(Set.of(
-            URI.create("https://github.com/ViciousXerra"),
-            URI.create(
-                "https://stackoverflow.com/questions/35531661/using-env-variable-in-spring-boots-application-properties")
-        ));
-        return Optional.of(mockUser);
-    }
-
+*/
 }

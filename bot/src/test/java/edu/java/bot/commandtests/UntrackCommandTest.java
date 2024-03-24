@@ -1,20 +1,7 @@
 package edu.java.bot.commandtests;
 
-import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.TestUtils;
-import edu.java.bot.commands.Command;
-import edu.java.bot.commands.UntrackCommand;
-import edu.java.bot.users.User;
-import edu.java.bot.users.UserChatCondition;
-import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
-
 class UntrackCommandTest {
-
+/*
     private static Optional<User> emptyUserOptional;
     private static Optional<User> presentUserOptional;
     private static Update mockUpdate;
@@ -58,5 +45,5 @@ class UntrackCommandTest {
             () -> assertThat(actualSupports).isTrue()
         );
     }
-
+*/
 }

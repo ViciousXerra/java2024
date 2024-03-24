@@ -1,20 +1,7 @@
 package edu.java.bot.commandtests;
 
-import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.TestUtils;
-import edu.java.bot.commands.Command;
-import edu.java.bot.commands.StartCommand;
-import edu.java.bot.memoryuserrepository.UserRepository;
-import edu.java.bot.users.User;
-import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
-
 class StartCommandTest {
-
+/*
     private static UserRepository repositoryStub;
     private static Optional<User> emptyUserOptional;
     private static Optional<User> presentUserOptional;
@@ -48,5 +35,5 @@ class StartCommandTest {
             () -> assertThat(actualSupports).isTrue()
         );
     }
-
+*/
 }

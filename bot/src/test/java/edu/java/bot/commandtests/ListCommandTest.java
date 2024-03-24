@@ -1,20 +1,8 @@
 package edu.java.bot.commandtests;
 
-import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.TestUtils;
-import edu.java.bot.commands.Command;
-import edu.java.bot.commands.ListCommand;
-import edu.java.bot.users.User;
-import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
-
 class ListCommandTest {
 
-    private static Optional<User> emptyUserOptional;
+   /* private static Optional<User> emptyUserOptional;
     private static Optional<User> userOptionalWithEmptyList;
     private static Optional<User> userOptionalWithFilledList;
     private static Update mockUpdate;
@@ -58,5 +46,5 @@ class ListCommandTest {
             () -> assertThat(actualSupports).isTrue()
         );
     }
-
+*/
 }

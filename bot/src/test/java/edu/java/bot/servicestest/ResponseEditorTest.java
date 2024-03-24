@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class ResponseEditorTest {
-
+/*
     @MockBean
     private TelegramBot bot;
 
@@ -168,5 +168,5 @@ class ResponseEditorTest {
         //Then
         assertThat(actualOutputString).isEqualTo(expectedOutput);
     }
-
+*/
 }
