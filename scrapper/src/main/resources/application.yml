@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 15s
     force-check-delay: 10s
+    fetch-limit: 2
   bot-settings:
     default-base-url: http://localhost:8090/bot
   stack-over-flow-settings:
@@ -13,6 +14,13 @@ app:
 spring:
   application:
     name: scrapper
+  liquibase:
+    enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 springdoc:
   swagger-ui:

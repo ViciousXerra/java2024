@@ -1,13 +1,13 @@
 package edu.java.scrapper.webclientstest;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.scrapper.clients.StackOverFlowClient;
+import edu.java.scrapper.webclients.clients.StackOverFlowClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.configuration.WebClientConfig;
-import edu.java.scrapper.dto.stackoverflow.AnswerInfo;
-import edu.java.scrapper.dto.stackoverflow.QuestionInfo;
-import edu.java.scrapper.dto.stackoverflow.StackOverFlowQuestionResponse;
-import edu.java.scrapper.dto.stackoverflow.StackOverFlowUser;
+import edu.java.scrapper.webclients.dto.stackoverflow.AnswerInfo;
+import edu.java.scrapper.webclients.dto.stackoverflow.QuestionInfo;
+import edu.java.scrapper.webclients.dto.stackoverflow.StackOverFlowQuestionResponse;
+import edu.java.scrapper.webclients.dto.stackoverflow.StackOverFlowUser;
 import java.time.ZoneOffset;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

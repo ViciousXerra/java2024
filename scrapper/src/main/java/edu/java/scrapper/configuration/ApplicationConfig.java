@@ -3,6 +3,7 @@ package edu.java.scrapper.configuration;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +18,18 @@ public record ApplicationConfig(
     @NotNull
     StackOverFlowSettings stackOverFlowSettings,
     @NotNull
-    BotSettings botSettings,
+    GitHubSettings gitHubSettings,
     @NotNull
-    GitHubSettings gitHubSettings
+    BotSettings botSettings
 ) {
 
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    public record Scheduler(
+        boolean enable,
+        @NotNull Duration interval,
+        @NotNull Duration forceCheckDelay,
+        @Positive
+        int fetchLimit
+    ) {
     }
 
     public record BotSettings(@NotBlank String defaultBaseUrl, String baseUrl) {
