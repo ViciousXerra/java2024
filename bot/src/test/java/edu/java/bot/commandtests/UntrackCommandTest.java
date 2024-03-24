@@ -22,8 +22,8 @@ class UntrackCommandTest extends CommandTest {
     private ScrapperService scrapperService;
 
     @Test
-    @DisplayName("Test /track command.")
-    void testTrackCommand() {
+    @DisplayName("Test /untrack command.")
+    void testUnTrackCommand() {
         //Given
         long chatId = 1L;
         String text1 = "text";

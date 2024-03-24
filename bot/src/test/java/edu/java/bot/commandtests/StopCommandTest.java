@@ -1,17 +1,16 @@
 package edu.java.bot.commandtests;
 
-import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.StopCommand;
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
 import edu.java.bot.scrapperservices.ScrapperService;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StopCommandTest extends CommandTest {
