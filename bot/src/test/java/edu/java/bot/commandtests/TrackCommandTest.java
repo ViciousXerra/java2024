@@ -1,49 +1,74 @@
 package edu.java.bot.commandtests;
 
-class TrackCommandTest {
-/*
-    private static Optional<User> emptyUserOptional;
-    private static Optional<User> presentUserOptional;
-    private static Update mockUpdate;
+import edu.java.bot.commands.TrackCommand;
+import edu.java.bot.scrapperclient.ClientException;
+import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
+import edu.java.bot.scrapperservices.ScrapperService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @BeforeAll
-    public static void setup() {
-        emptyUserOptional = Optional.empty();
-        presentUserOptional = TestUtils.createUserOptionalWithEmptyList();
-        mockUpdate = TestUtils.createMockUpdate("/track", "username", 0L);
-    }
+class TrackCommandTest extends CommandTest {
+
+    @Autowired
+    private TrackCommand trackCommand;
+
+    @MockBean
+    private ScrapperService scrapperService;
 
     @Test
     @DisplayName("Test /track command.")
     void testTrackCommand() {
         //Given
-        Command trackCommand = new TrackCommand();
+        long chatId = 1L;
+        String text1 = "text";
+        String text2 = "/track";
+        String text3 = "/track ";
+        String text4 = "/track not a link";
+        String text5 = "/track https://github.com";
+        String text6 = "/track https://stackoverflow.com";
+        String username = "user";
+        String expectedMessage123 =
+            "Please, pass link after \"/track\" command. Command and link must be delimited with whitespace.";
+        String expectedMessage4 =
+            "The link does not satisfy the URI pattern requirements or the given resource is not supported.";
+        String expectedMessage56 = "Saved.";
+        String expectedMessage7 = "Already tracking";
         //When
-        String actualCommand = trackCommand.command();
-        String actualDescription = trackCommand.description();
-        String actualNewUserMessage = trackCommand.createMessage(emptyUserOptional, "username1", 1L);
-        String actualDefaultConditionMessage = trackCommand.createMessage(presentUserOptional, "username2", 2L);
-        String actualAwaitingToTrackMessage = trackCommand.createMessage(presentUserOptional, "username2", 2L);
-        //Setting to UNTRACK condition
-        presentUserOptional.get().setCondition(UserChatCondition.AWAITING_LINK_TO_UNTRACK);
-        String actualAwaitingToUntrackMessage = trackCommand.createMessage(presentUserOptional, "username2", 2L);
-        boolean actualSupports = trackCommand.isSupport(mockUpdate);
+        String actualMessage1 = trackCommand.createMessage(text1, username, chatId);
+        String actualMessage2 = trackCommand.createMessage(text2, username, chatId);
+        String actualMessage3 = trackCommand.createMessage(text3, username, chatId);
+        String actualMessage4 = trackCommand.createMessage(text4, username, chatId);
+        Mockito.doNothing().when(scrapperService).addLink(chatId, "https://github.com");
+        String actualMessage5 = trackCommand.createMessage(text5, username, chatId);
+        Mockito.doNothing().when(scrapperService).addLink(chatId, "https://stackoverflow.com");
+        String actualMessage6 = trackCommand.createMessage(text6, username, chatId);
+        Mockito.doThrow(new ClientException(new ScrapperApiErrorResponse(
+            "Already tracking",
+            "400",
+            "exception",
+            "exception_message",
+            List.of("frame1", "frame2")
+        ))).when(scrapperService).addLink(chatId, "https://github.com");
+        String actualMessage7 = trackCommand.createMessage(text5, username, chatId);
         //Then
         Assertions.assertAll(
-            () -> assertThat(actualCommand)
-                .isEqualTo("/track"),
-            () -> assertThat(actualDescription)
-                .isEqualTo("Allows you to indicate interesting links by next message."),
-            () -> assertThat(actualNewUserMessage)
-                .isEqualTo("First you need to register by entering the command /start."),
-            () -> assertThat(actualDefaultConditionMessage)
-                .isEqualTo("Waiting for a link to be entered."),
-            () -> assertThat(actualAwaitingToTrackMessage)
-                .isEqualTo("The link to save is already expected."),
-            () -> assertThat(actualAwaitingToUntrackMessage)
-                .isEqualTo("OK, now the link sent in the next message will be saved."),
-            () -> assertThat(actualSupports).isTrue()
+            () -> assertThat(trackCommand.command()).isEqualTo("/track"),
+            () -> assertThat(trackCommand.description()).isEqualTo(
+                "Allows you to indicate interesting links by passing link after whitespace."),
+            () -> assertThat(actualMessage1).isEqualTo(expectedMessage123),
+            () -> assertThat(actualMessage2).isEqualTo(expectedMessage123),
+            () -> assertThat(actualMessage3).isEqualTo(expectedMessage123),
+            () -> assertThat(actualMessage4).isEqualTo(expectedMessage4),
+            () -> assertThat(actualMessage5).isEqualTo(expectedMessage56),
+            () -> assertThat(actualMessage6).isEqualTo(expectedMessage56),
+            () -> assertThat(actualMessage7).isEqualTo(expectedMessage7)
         );
     }
-*/
+
 }

@@ -8,16 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class HelpCommandTest {
+class HelpCommandTest extends CommandTest {
 
-    private static final String HELP_COMMAND_MESSAGE =
-        """
-            This bot allows you to track links and sends responses when the resource is updated.
-            Currently supports:
-            GitHub repositories updates;
-            StackOverFlow questions updates;
-            """;
     private static final String COMMAND_DESC_TEMPLATE = "%s: %s";
 
     @Autowired
@@ -31,8 +23,6 @@ class HelpCommandTest {
             () -> assertThat(helpCommand.command()).isEqualTo("/help"),
             () -> assertThat(helpCommand.description()).isEqualTo("Shows a list of all commands."),
             () -> assertThat(helpCommand.createMessage("text", "user", 1L)).contains(
-                HELP_COMMAND_MESSAGE,
-                COMMAND_DESC_TEMPLATE.formatted("/help", "Shows a list of all commands."),
                 COMMAND_DESC_TEMPLATE.formatted("/list", "Shows a list of all tracking links."),
                 COMMAND_DESC_TEMPLATE.formatted(
                     "/start",
