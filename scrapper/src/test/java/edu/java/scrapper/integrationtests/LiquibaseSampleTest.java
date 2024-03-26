@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
@@ -168,7 +167,7 @@ class LiquibaseSampleTest extends IntegrationTest {
             () -> assertThat(actualChatIdLinkId.chatId()).isEqualTo(expectedChatId),
             () -> assertThat(actualChatIdLinkId.linkId()).isEqualTo(expectedLinkId),
             () -> assertThatThrownBy(() -> jdbcClient.sql(INSERT_CHAT_ID_LINK_ID_QUERY)
-                .params(expectedChatId, expectedLink.linkId()).update()).isInstanceOf(PreparedStatementCallback.class)
+                .params(expectedChatId, expectedLink.linkId()).update()).isInstanceOf(DuplicateKeyException.class)
         );
     }
 
