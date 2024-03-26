@@ -1,13 +1,24 @@
 package edu.java.bot.commands;
 
-import edu.java.bot.users.User;
+import edu.java.bot.scrapperclient.ClientException;
+import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
+import edu.java.bot.scrapperservices.ScrapperService;
 import java.net.URI;
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
+
+    private static final String LINK_TEMPLATE = "link %d: %s";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private final ScrapperService scrapperService;
+
+    @Autowired
+    public ListCommand(ScrapperService scrapperService) {
+        this.scrapperService = scrapperService;
+    }
 
     @Override
     public String command() {
@@ -20,23 +31,22 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public String createMessage(Optional<User> optionalUser, String username, long id) {
-        if (optionalUser.isPresent()) {
-            Set<URI> links = optionalUser.get().getTrackingLinks();
-            if (links.isEmpty()) {
+    public String createMessage(String text, String username, long id) {
+        try {
+            List<URI> linksList = scrapperService.getAllLinks(id);
+            if (linksList.isEmpty()) {
                 return "You are not tracking any links.";
             }
-            StringBuilder sb = new StringBuilder();
-            links.forEach(
-                link ->
-                    sb
-                        .append(link)
-                        .append(System.lineSeparator())
-                        .append(System.lineSeparator())
-            );
-            return sb.toString();
+            int counter = 1;
+            StringBuilder builder = new StringBuilder();
+            for (URI link : linksList) {
+                builder.append(LINK_TEMPLATE.formatted(counter++, link.toString())).append(LINE_SEPARATOR);
+            }
+            return builder.toString();
+        } catch (ClientException e) {
+            ScrapperApiErrorResponse errorResponse = e.getClientErrorResponseBody();
+            return errorResponse.description();
         }
-        return "First you need to register by entering the command /start.";
     }
 
 }

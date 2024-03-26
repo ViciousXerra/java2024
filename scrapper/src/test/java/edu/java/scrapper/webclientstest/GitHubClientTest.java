@@ -1,14 +1,14 @@
 package edu.java.scrapper.webclientstest;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.scrapper.clients.GitHubClient;
+import edu.java.scrapper.webclients.clients.GitHubClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.configuration.WebClientConfig;
-import edu.java.scrapper.dto.github.GitHubUser;
-import edu.java.scrapper.dto.github.RepositoryActivityResponse;
-import edu.java.scrapper.dto.github.RepositoryActivityType;
-import edu.java.scrapper.dto.github.RepositoryGeneralInfoResponse;
-import edu.java.scrapper.dto.github.RepositoryVisibility;
+import edu.java.scrapper.webclients.dto.github.GitHubUser;
+import edu.java.scrapper.webclients.dto.github.RepositoryActivityResponse;
+import edu.java.scrapper.webclients.dto.github.RepositoryActivityType;
+import edu.java.scrapper.webclients.dto.github.RepositoryGeneralInfoResponse;
+import edu.java.scrapper.webclients.dto.github.RepositoryVisibility;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

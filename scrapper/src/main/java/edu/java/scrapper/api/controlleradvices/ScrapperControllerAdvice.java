@@ -3,6 +3,7 @@ package edu.java.scrapper.api.controlleradvices;
 import edu.java.scrapper.api.dto.errorresponses.ApiErrorResponse;
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
+import edu.java.scrapper.api.exceptions.UnhandledException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ScrapperControllerAdvice {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, MissingRequestHeaderException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
+        MissingRequestHeaderException.class})
     public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(Exception e) {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
@@ -38,10 +41,18 @@ public class ScrapperControllerAdvice {
         );
     }
 
+    @ExceptionHandler(UnhandledException.class)
+    public ResponseEntity<ApiErrorResponse> handleLinkUpdateBadRequest(UnhandledException e) {
+        return new ResponseEntity<>(
+            createApiErrorResponse("Unable to correctly satisfy a request", HttpStatus.INTERNAL_SERVER_ERROR, e),
+            HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
     private static ApiErrorResponse createApiErrorResponse(String description, HttpStatus httpStatus, Exception e) {
         return new ApiErrorResponse(
             description,
-            httpStatus.toString(),
+            String.valueOf(httpStatus.value()),
             e.getClass().getSimpleName(),
             e.getMessage(),
             Arrays.stream(e.getStackTrace())
