@@ -33,14 +33,18 @@ class LinearRetry extends Retry {
     }
 
     public Publisher<?> processLinearRetryUnit(LinearRetryUnit unit) {
-        if (throwablePredicate == null || throwablePredicate.test(unit.getRetrySignal().failure())) {
-            return increaseDelay(unit);
-        } else {
-            return Mono.error(unit.getRetrySignal().failure());
+        try {
+            if (throwablePredicate == null || throwablePredicate.test(unit.getRetrySignal().failure())) {
+                return increaseDelay(unit);
+            } else {
+                return Mono.error(unit.getRetrySignal().failure());
+            }
+        } catch (Throwable e) {
+            return Mono.error(e);
         }
     }
 
-    public Publisher<?> increaseDelay(LinearRetryUnit unit) {
+    public Publisher<?> increaseDelay(LinearRetryUnit unit) throws Throwable {
         if (doBeforeRetry != null) {
             doBeforeRetry.accept(unit.getRetrySignal());
         }
@@ -54,10 +58,7 @@ class LinearRetry extends Retry {
             return Mono.delay(maxDelay);
         } else {
             if (throwableGenerator != null) {
-                throw new RetryExhaustedException(
-                    "Retry attempts exhausted",
-                    throwableGenerator.apply(this, unit.getRetrySignal())
-                );
+                throw throwableGenerator.apply(this, unit.getRetrySignal());
             }
             return Mono.error(unit.getRetrySignal().failure());
         }
