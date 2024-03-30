@@ -28,6 +28,7 @@
         <!-- Other -->
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
         <java-telegram-bot-api.version>7.0.1</java-telegram-bot-api.version>
+        <bucket4j.version>8.1.0</bucket4j.version>
 
         <!-- JOOQ -->
         <jooq.version>3.18.9</jooq.version>
