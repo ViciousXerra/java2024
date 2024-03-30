@@ -2,6 +2,16 @@ app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-settings:
     default-base-url: http://localhost:8080/scrapper
+  client-retry-settings:
+    backoff-type: linear
+    attempts-limit: 3
+    attempt-delay: 2s
+    attempt-delay-limit: 60s
+    retry-codes:
+      - 500
+      - 502
+      - 503
+      - 504
 
 spring:
   application:
