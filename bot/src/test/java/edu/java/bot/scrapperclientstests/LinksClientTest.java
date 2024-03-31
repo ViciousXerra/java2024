@@ -72,7 +72,8 @@ class LinksClientTest {
     private static final String HEADER_VALUE = "1";
     private static final String CONTENT_HEADER_LABEL = "Content-Type";
     private static final String CONTENT_HEADER_VALUE = "application/json";
-    private static final String LINK = "https://github.com";
+    private static final String LINK1 = "https://github.com";
+    private static final String LINK2 = "https://stackoverflow.com";
     private static final String URL_PATH = "/links";
     private static WireMockServer mockServer;
     @Autowired
@@ -113,9 +114,9 @@ class LinksClientTest {
                     .withStatus(200)
                     .withBody(ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK1));
         //When
-        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest(LINK));
+        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest(LINK1));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -133,9 +134,9 @@ class LinksClientTest {
                     .withBody(
                         ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK1));
         //When
-        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest(LINK));
+        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest(LINK1));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -154,8 +155,8 @@ class LinksClientTest {
         //Given
         ListLinkResponse expectedResponse = new ListLinkResponse(
             List.of(
-                new LinkResponse(1L, URI.create(LINK)),
-                new LinkResponse(2L, URI.create("https://stackoverflow.com"))
+                new LinkResponse(1L, URI.create(LINK1)),
+                new LinkResponse(2L, URI.create(LINK2))
             ),
             2
         );
