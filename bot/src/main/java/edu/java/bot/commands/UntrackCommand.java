@@ -3,11 +3,13 @@ package edu.java.bot.commands;
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperservices.ScrapperService;
 import edu.java.bot.urlparsers.AbstractUrlParser;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@Log4j2
 public class UntrackCommand implements Command {
 
     private static final String VALID_SYNTAX_PATTERN = "^/untrack .+$";
@@ -50,6 +52,7 @@ public class UntrackCommand implements Command {
         } catch (ClientException e) {
             return e.getClientErrorResponseBody().description();
         } catch (WebClientResponseException e) {
+            log.error("Service unavailable: {}", e.getMessage());
             return "Unavailable to reach service.";
         }
     }

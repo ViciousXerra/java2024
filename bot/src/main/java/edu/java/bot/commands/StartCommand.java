@@ -2,11 +2,13 @@ package edu.java.bot.commands;
 
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperservices.ScrapperService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@Log4j2
 public class StartCommand implements Command {
 
     private static final String NEW_USER_GREETINGS_TEMPLATE = "Nice to meet you, %s.";
@@ -35,6 +37,7 @@ public class StartCommand implements Command {
         } catch (ClientException e) {
             return e.getClientErrorResponseBody().description();
         } catch (WebClientResponseException e) {
+            log.error("Service unavailable: {}", e.getMessage());
             return "Unavailable to reach service.";
         }
     }
