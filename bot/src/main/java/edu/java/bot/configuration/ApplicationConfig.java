@@ -19,7 +19,9 @@ public record ApplicationConfig(
     @NotNull
     ScrapperSettings scrapperSettings,
     @NotNull
-    ClientRetrySettings clientRetrySettings
+    ClientRetrySettings clientRetrySettings,
+    @NotNull
+    ApiRateLimitSettings apiRateLimitSettings
 ) {
 
     public record ScrapperSettings(@NotBlank String defaultBaseUrl, String baseUrl) {
@@ -37,6 +39,18 @@ public record ApplicationConfig(
         Duration attemptDelayLimit,
         @NotEmpty
         List<Integer> retryCodes
+    ) {
+    }
+
+    public record ApiRateLimitSettings(
+        @Positive
+        @Max(2000)
+        Integer limit,
+        @Positive
+        @Max(200)
+        Integer refillLimit,
+        @NotNull
+        Duration refillDelay
     ) {
     }
 

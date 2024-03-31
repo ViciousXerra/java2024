@@ -15,19 +15,22 @@ import reactor.util.retry.RetryBackoffSpec;
 @Log4j2
 public class RetryFixedConfig {
 
-    private ApplicationConfig.ClientRetrySettings clientRetrySettings;
+    private ApplicationConfig applicationConfig;
 
     @Autowired
     public RetryFixedConfig(ApplicationConfig applicationConfig) {
-        this.clientRetrySettings = applicationConfig.clientRetrySettings();
+        this.applicationConfig = applicationConfig;
     }
 
     @Bean
     public RetryBackoffSpec retryBackoffSpec() {
-        return Retry.fixedDelay(clientRetrySettings.attemptsLimit(), clientRetrySettings.attemptDelay())
+        return Retry.fixedDelay(
+                applicationConfig.clientRetrySettings().attemptsLimit(),
+                applicationConfig.clientRetrySettings().attemptDelay()
+            )
             .filter(throwable -> {
                 if (throwable instanceof WebClientResponseException) {
-                    return clientRetrySettings.retryCodes()
+                    return applicationConfig.clientRetrySettings().retryCodes()
                         .contains(((WebClientResponseException) throwable).getStatusCode().value());
                 }
                 return false;

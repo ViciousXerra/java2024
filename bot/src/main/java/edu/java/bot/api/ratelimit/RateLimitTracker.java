@@ -1,4 +1,4 @@
-package edu.java.bot.configuration.ratelimit;
+package edu.java.bot.api.ratelimit;
 
 import io.github.bucket4j.Bucket;
 

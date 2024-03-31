@@ -5,6 +5,7 @@ import edu.java.bot.scrapperservices.ScrapperService;
 import edu.java.bot.urlparsers.AbstractUrlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 public class TrackCommand implements Command {
@@ -39,6 +40,8 @@ public class TrackCommand implements Command {
                 return "Saved.";
             } catch (ClientException e) {
                 return e.getClientErrorResponseBody().description();
+            } catch (WebClientResponseException e) {
+                return "Unavailable to reach service.";
             }
         } else if (syntaxMatches) {
             return "The link does not satisfy the URI pattern requirements or the given resource is not supported.";

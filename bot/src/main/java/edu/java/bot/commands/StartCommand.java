@@ -4,6 +4,7 @@ import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperservices.ScrapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 public class StartCommand implements Command {
@@ -33,6 +34,8 @@ public class StartCommand implements Command {
             return NEW_USER_GREETINGS_TEMPLATE.formatted(username);
         } catch (ClientException e) {
             return e.getClientErrorResponseBody().description();
+        } catch (WebClientResponseException e) {
+            return "Unavailable to reach service.";
         }
     }
 

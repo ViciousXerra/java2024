@@ -2,6 +2,7 @@ package edu.java.bot.api.controlleradvices;
 
 import edu.java.bot.api.dto.errorresponses.ApiErrorResponse;
 import java.util.Arrays;
+import edu.java.bot.api.exceptions.RateLimitException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,14 @@ public class BotControllerAdvice {
         return new ResponseEntity<>(
             createApiErrorResponse("Invalid or incorrect request parameters", HttpStatus.BAD_REQUEST, e),
             HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<ApiErrorResponse> handleRateLimit(RateLimitException e) {
+        return new ResponseEntity<>(
+            createApiErrorResponse(e.getDescription(), HttpStatus.TOO_MANY_REQUESTS, e),
+            HttpStatus.TOO_MANY_REQUESTS
         );
     }
 

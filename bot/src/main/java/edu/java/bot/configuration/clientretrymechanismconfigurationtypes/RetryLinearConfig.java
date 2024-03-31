@@ -14,23 +14,23 @@ import reactor.util.retry.Retry;
 @Log4j2
 public class RetryLinearConfig {
 
-    private ApplicationConfig.ClientRetrySettings clientRetrySettings;
+    private ApplicationConfig applicationConfig;
 
     @Autowired
     public RetryLinearConfig(ApplicationConfig applicationConfig) {
-        this.clientRetrySettings = applicationConfig.clientRetrySettings();
+        this.applicationConfig = applicationConfig;
     }
 
     @Bean
     public Retry retry() {
         return new LinearRetry(
-            clientRetrySettings.attemptsLimit(),
-            clientRetrySettings.attemptDelay(),
-            clientRetrySettings.attemptDelayLimit()
+            applicationConfig.clientRetrySettings().attemptsLimit(),
+            applicationConfig.clientRetrySettings().attemptDelay(),
+            applicationConfig.clientRetrySettings().attemptDelayLimit()
         )
             .filter(throwable -> {
                 if (throwable instanceof WebClientResponseException) {
-                    return clientRetrySettings.retryCodes()
+                    return applicationConfig.clientRetrySettings().retryCodes()
                         .contains(((WebClientResponseException) throwable).getStatusCode().value());
                 }
                 return false;

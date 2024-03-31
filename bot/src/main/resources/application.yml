@@ -12,6 +12,10 @@ app:
       - 502
       - 503
       - 504
+  api-rate-limit-settings:
+    limit: 50
+    refill-limit: 5
+    refill-delay: 30s
 
 spring:
   application:
