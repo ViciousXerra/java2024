@@ -30,7 +30,10 @@ public class ScrapperClientConfig {
     public ChatClient chatClient() {
         String baseUrl = applicationConfig.scrapperSettings().baseUrl();
         return baseUrl == null || isInvalidBaseUrl(baseUrl)
-            ? createClient(ChatClient.class, applicationConfig.scrapperSettings().defaultBaseUrl(), exchangeFilterFunction)
+            ? createClient(ChatClient.class,
+            applicationConfig.scrapperSettings().defaultBaseUrl(),
+            exchangeFilterFunction
+        )
             : createClient(ChatClient.class, baseUrl, exchangeFilterFunction);
     }
 
@@ -38,11 +41,18 @@ public class ScrapperClientConfig {
     public LinksClient linksClient() {
         String baseUrl = applicationConfig.scrapperSettings().baseUrl();
         return baseUrl == null || isInvalidBaseUrl(baseUrl)
-            ? createClient(LinksClient.class, applicationConfig.scrapperSettings().defaultBaseUrl(), exchangeFilterFunction)
+            ? createClient(LinksClient.class,
+            applicationConfig.scrapperSettings().defaultBaseUrl(),
+            exchangeFilterFunction
+        )
             : createClient(LinksClient.class, baseUrl, exchangeFilterFunction);
     }
 
-    private static <T> T createClient(Class<T> clientClass, String baseUrl, ExchangeFilterFunction exchangeFilterFunction) {
+    private static <T> T createClient(
+        Class<T> clientClass,
+        String baseUrl,
+        ExchangeFilterFunction exchangeFilterFunction
+    ) {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(baseUrl)

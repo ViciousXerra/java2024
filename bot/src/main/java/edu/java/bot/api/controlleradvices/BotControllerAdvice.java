@@ -1,8 +1,8 @@
 package edu.java.bot.api.controlleradvices;
 
 import edu.java.bot.api.dto.errorresponses.ApiErrorResponse;
-import java.util.Arrays;
 import edu.java.bot.api.exceptions.RateLimitException;
+import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

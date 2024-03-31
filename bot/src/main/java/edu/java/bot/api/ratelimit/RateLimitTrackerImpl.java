@@ -3,9 +3,9 @@ package edu.java.bot.api.ratelimit;
 import edu.java.bot.configuration.ApplicationConfig;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import io.github.bucket4j.Refill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

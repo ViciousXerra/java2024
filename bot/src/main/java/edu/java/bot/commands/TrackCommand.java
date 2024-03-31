@@ -35,18 +35,22 @@ public class TrackCommand implements Command {
     public String createMessage(String text, String username, long id) {
         boolean syntaxMatches = text.matches(VALID_SYNTAX_PATTERN);
         if (syntaxMatches && urlParser.isValid(text.substring(LINK_START_CHAR_INDEX))) {
-            try {
-                scrapperService.addLink(id, text.substring(LINK_START_CHAR_INDEX));
-                return "Saved.";
-            } catch (ClientException e) {
-                return e.getClientErrorResponseBody().description();
-            } catch (WebClientResponseException e) {
-                return "Unavailable to reach service.";
-            }
+            return constructMessage(id, text.substring(LINK_START_CHAR_INDEX));
         } else if (syntaxMatches) {
             return "The link does not satisfy the URI pattern requirements or the given resource is not supported.";
         } else {
             return "Please, pass link after \"/track\" command. Command and link must be delimited with whitespace.";
+        }
+    }
+
+    private String constructMessage(long tgChatId, String text) {
+        try {
+            scrapperService.addLink(tgChatId, text);
+            return "Saved.";
+        } catch (ClientException e) {
+            return e.getClientErrorResponseBody().description();
+        } catch (WebClientResponseException e) {
+            return "Unavailable to reach service.";
         }
     }
 
