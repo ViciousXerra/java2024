@@ -1,4 +1,4 @@
-package edu.java.scrapper.webclientretrypoliticstest.fixedretrytests;
+package edu.java.scrapper.webclientretrypoliticstest.linearretrytests;
 
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import edu.java.scrapper.webclients.clients.GitHubClient;
@@ -18,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GitHubClientFixedRetryTest extends ClientFixedRetryTest {
+class GitHubClientLinearRetryTest extends ClientLinearRetryTest {
 
     private static final String URL_PATH = "/repos/test_user/test_repo/activity";
     private final static String TEST_REPOSITORY_FULL_NAME = "test_repo";

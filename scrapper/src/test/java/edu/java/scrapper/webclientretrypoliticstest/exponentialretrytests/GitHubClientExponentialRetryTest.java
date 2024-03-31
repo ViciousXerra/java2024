@@ -1,24 +1,21 @@
-package edu.java.scrapper.webclientretrypoliticstest.fixedretrytests;
+package edu.java.scrapper.webclientretrypoliticstest.exponentialretrytests;
 
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import edu.java.scrapper.webclients.clients.GitHubClient;
 import edu.java.scrapper.webclients.dto.github.GitHubUser;
 import edu.java.scrapper.webclients.dto.github.RepositoryActivityResponse;
 import edu.java.scrapper.webclients.dto.github.RepositoryActivityType;
-import java.time.OffsetDateTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import java.time.OffsetDateTime;
+import java.util.List;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GitHubClientFixedRetryTest extends ClientFixedRetryTest {
+class GitHubClientExponentialRetryTest extends ClientExponentialRetryTest {
 
     private static final String URL_PATH = "/repos/test_user/test_repo/activity";
     private final static String TEST_REPOSITORY_FULL_NAME = "test_repo";
