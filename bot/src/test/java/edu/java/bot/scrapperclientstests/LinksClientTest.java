@@ -2,6 +2,7 @@ package edu.java.bot.scrapperclientstests;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.pengrad.telegrambot.TelegramBot;
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.clients.LinksClient;
 import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -78,6 +80,8 @@ class LinksClientTest {
     private static WireMockServer mockServer;
     @Autowired
     private LinksClient linksClient;
+    @MockBean
+    private TelegramBot bot;
 
     @BeforeAll
     public static void setUpMockServer() {
