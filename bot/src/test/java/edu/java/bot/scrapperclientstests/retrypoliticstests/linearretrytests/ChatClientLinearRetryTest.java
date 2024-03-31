@@ -28,7 +28,7 @@ class ChatClientLinearRetryTest extends ClientLinearRetryTest {
     @DisplayName(DELETE_EXCHANGE_RETRY_EXHAUSTED)
     void testDeleteExchangeRetryExhausted() {
         //Set up
-        for (int i = 0; i < ATTEMPTS_LIMIT; i++) {
+        for (int i = 0; i < ATTEMPTS_LIMIT - REATTACH_DELTA; i++) {
             mockServer
                 .stubFor(delete(urlEqualTo(URL_PATH))
                     .inScenario(DELETE_EXCHANGE_RETRY_EXHAUSTED)
@@ -37,6 +37,12 @@ class ChatClientLinearRetryTest extends ClientLinearRetryTest {
                     .willSetStateTo(String.valueOf(i + 1))
                 );
         }
+        mockServer
+            .stubFor(delete(urlEqualTo(URL_PATH))
+                .inScenario(DELETE_EXCHANGE_RETRY_EXHAUSTED)
+                .whenScenarioStateIs(String.valueOf(SUCCESS_RETRY_ATTEMPT_COUNT))
+                .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR_CODE))
+            );
         //Then
         assertThatThrownBy(() -> chatClient.removeChat(1L)).isInstanceOf(WebClientResponseException.class);
     }
@@ -69,7 +75,7 @@ class ChatClientLinearRetryTest extends ClientLinearRetryTest {
     @DisplayName(POST_EXCHANGE_RETRY_EXHAUSTED)
     void testPostExchangeRetryExhausted() {
         //Set up
-        for (int i = 0; i < ATTEMPTS_LIMIT; i++) {
+        for (int i = 0; i < ATTEMPTS_LIMIT - REATTACH_DELTA; i++) {
             mockServer
                 .stubFor(post(urlEqualTo(URL_PATH))
                     .inScenario(POST_EXCHANGE_RETRY_EXHAUSTED)
@@ -78,6 +84,12 @@ class ChatClientLinearRetryTest extends ClientLinearRetryTest {
                     .willSetStateTo(String.valueOf(i + 1))
                 );
         }
+        mockServer
+            .stubFor(post(urlEqualTo(URL_PATH))
+                .inScenario(POST_EXCHANGE_RETRY_EXHAUSTED)
+                .whenScenarioStateIs(String.valueOf(SUCCESS_RETRY_ATTEMPT_COUNT))
+                .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR_CODE))
+            );
         //Then
         assertThatThrownBy(() -> chatClient.signUpChat(1L)).isInstanceOf(WebClientResponseException.class);
     }
