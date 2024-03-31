@@ -6,7 +6,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
 @DirtiesContext(hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL)
-class ClientFixedRetryTest extends RetryPoliticsTest {
+abstract class ClientFixedRetryTest extends RetryPoliticsTest {
 
     @DynamicPropertySource
     static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {

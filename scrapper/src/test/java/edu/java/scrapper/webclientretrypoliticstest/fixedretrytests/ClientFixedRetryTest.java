@@ -1,16 +1,16 @@
-package edu.java.bot.scrapperclientstests.retrypoliticstests.linearretrytests;
+package edu.java.scrapper.webclientretrypoliticstest.fixedretrytests;
 
-import edu.java.bot.scrapperclientstests.retrypoliticstests.RetryPoliticsTest;
+import edu.java.scrapper.webclientretrypoliticstest.RetryPoliticsTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
 @DirtiesContext(hierarchyMode = DirtiesContext.HierarchyMode.CURRENT_LEVEL)
-abstract class ClientLinearRetryTest  extends RetryPoliticsTest {
+abstract class ClientFixedRetryTest extends RetryPoliticsTest {
 
     @DynamicPropertySource
     static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {
-        registry.add("app.client-retry-settings.backoff-type", () -> "linear");
+        registry.add("app.client-retry-settings.backoff-type", () -> "fixed");
     }
 
 }

@@ -11,16 +11,17 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@Log4j2
 public class LinkUpdaterScheduler {
 
-    private final static Logger LOGGER = LogManager.getLogger(LinkUpdaterScheduler.class);
+    private static final String SERVICE_UNAVAILABLE_LOG_TEMPLATE = "Service unavailable: {}";
     private final LinkUpdater linkUpdater;
     private final AbstractLinkResourceUpdater abstractLinkResourceUpdater;
     private final BotUpdateClient botUpdateClient;
@@ -49,7 +50,9 @@ public class LinkUpdaterScheduler {
                     linkActivityMap.put(link, result.getValue());
                 }
             } catch (IllegalArgumentException e) {
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
+            } catch (WebClientResponseException e) {
+                log.error(SERVICE_UNAVAILABLE_LOG_TEMPLATE, e.getMessage());
             }
         });
         if (linkZonedDateTimeMap.isEmpty()) {
@@ -60,11 +63,15 @@ public class LinkUpdaterScheduler {
     }
 
     private void startMessaging(List<ChatIdLinkId> relations, Map<Link, String> linkActivityMap) {
-        linkActivityMap.forEach((link, activityDescription) -> {
-            List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId())
-                .map(ChatIdLinkId::chatId).toList();
-            botUpdateClient.postLinkUpdate(new LinkUpdate(link.linkId(), link.url(), activityDescription, chatIds));
-        });
+        try {
+            linkActivityMap.forEach((link, activityDescription) -> {
+                List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId())
+                    .map(ChatIdLinkId::chatId).toList();
+                botUpdateClient.postLinkUpdate(new LinkUpdate(link.linkId(), link.url(), activityDescription, chatIds));
+            });
+        } catch (WebClientResponseException e) {
+            log.error(SERVICE_UNAVAILABLE_LOG_TEMPLATE, e.getMessage());
+        }
     }
 
 }
