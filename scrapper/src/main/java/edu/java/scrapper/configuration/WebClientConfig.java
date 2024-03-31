@@ -31,7 +31,8 @@ public class WebClientConfig {
     @Bean
     public GitHubClient gitHubClient() {
         String baseUrl = applicationConfig.gitHubSettings().baseUrl();
-        return baseUrl == null || isInvalidBaseUrl(baseUrl) ? createClientWithBodyToMonoException(GitHubClient.class,
+        return baseUrl == null || isInvalidBaseUrl(baseUrl) ? createClientWithBodyToMonoException(
+            GitHubClient.class,
             applicationConfig.gitHubSettings().defaultBaseUrl(),
             exchangeFilterFunction
         ) : createClientWithBodyToMonoException(GitHubClient.class, baseUrl, exchangeFilterFunction);
@@ -40,7 +41,8 @@ public class WebClientConfig {
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
         String baseUrl = applicationConfig.stackOverFlowSettings().baseUrl();
-        return baseUrl == null || isInvalidBaseUrl(baseUrl) ? createClientWithBodyToMonoException(StackOverFlowClient.class,
+        return baseUrl == null || isInvalidBaseUrl(baseUrl) ? createClientWithBodyToMonoException(
+            StackOverFlowClient.class,
             applicationConfig.stackOverFlowSettings().defaultBaseUrl(),
             exchangeFilterFunction
         ) : createClientWithBodyToMonoException(StackOverFlowClient.class, baseUrl, exchangeFilterFunction);

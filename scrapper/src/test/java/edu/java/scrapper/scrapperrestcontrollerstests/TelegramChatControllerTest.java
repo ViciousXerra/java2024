@@ -2,6 +2,7 @@ package edu.java.scrapper.scrapperrestcontrollerstests;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
+import edu.java.scrapper.api.ratelimit.RateLimitTrackerImpl;
 import edu.java.scrapper.api.restcontrollers.TelegramChatController;
 import edu.java.scrapper.dao.service.interfaces.ChatService;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TelegramChatController.class)
+@Import(RateLimitTrackerImpl.class)
 class TelegramChatControllerTest {
 
     private static final String ERROR_RESPONSE_DESC_PATH = "$.description";

@@ -2,6 +2,7 @@ package edu.java.scrapper.scrapperrestcontrollerstests;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
+import edu.java.scrapper.api.ratelimit.RateLimitTrackerImpl;
 import edu.java.scrapper.api.restcontrollers.LinksRestController;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.interfaces.LinkService;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LinksRestController.class)
+@Import(RateLimitTrackerImpl.class)
 class LinksRestControllerTest {
 
     private static final String URL_TEMPLATE = "/scrapper/links";
