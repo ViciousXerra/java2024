@@ -72,8 +72,8 @@ class RateLimitTest {
     }
 
     @Test
-    @DisplayName("Test POST 200 OK success")
-    void testPostLinkUpdateSuccess() throws Exception {
+    @DisplayName("Test POST endpoint rate limit")
+    void testPostEndpointRateLimit() throws Exception {
         //Successful responses
         for (int i = 0; i < REQUEST_QUOTA; i++) {
             mockMvc.perform(
