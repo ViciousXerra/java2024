@@ -46,6 +46,7 @@ public class ScrapperClientConfig {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(baseUrl)
+            .filter(exchangeFilterFunction)
             .defaultStatusHandler(
                 HttpStatusCode::is4xxClientError,
                 clientResponse -> clientResponse
@@ -54,7 +55,6 @@ public class ScrapperClientConfig {
                         body -> Mono.error(new ClientException(body))
                     )
             )
-            .filter(exchangeFilterFunction)
             .build();
         WebClientAdapter adapter = WebClientAdapter.create(webClient);
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();

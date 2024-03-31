@@ -1,7 +1,6 @@
 package edu.java.bot.commands;
 
 import edu.java.bot.scrapperclient.ClientException;
-import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
 import edu.java.bot.scrapperservices.ScrapperService;
 import java.net.URI;
 import java.util.List;

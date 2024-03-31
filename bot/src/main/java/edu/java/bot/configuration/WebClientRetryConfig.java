@@ -21,7 +21,7 @@ public class WebClientRetryConfig {
     public ExchangeFilterFunction withRetryableRequests() {
         return (request, next) -> next.exchange(request)
             .flatMap(clientResponse -> Mono.just(clientResponse)
-                .filter(response ->  clientResponse.statusCode().isError())
+                .filter(response ->  clientResponse.statusCode().is5xxServerError())
                 .flatMap(response -> clientResponse.createException())
                 .flatMap(Mono::error)
                 .thenReturn(clientResponse))
