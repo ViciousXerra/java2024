@@ -68,6 +68,12 @@ class LinksClientTest {
             "size": 2
         }
         """;
+    private static final String HEADER_LABEL = "Tg-Chat-Id";
+    private static final String HEADER_VALUE = "1";
+    private static final String CONTENT_HEADER_LABEL = "Content-Type";
+    private static final String CONTENT_HEADER_VALUE = "application/json";
+    private static final String LINK = "https://github.com";
+    private static final String URL_PATH = "/links";
     private static WireMockServer mockServer;
     @Autowired
     private LinksClient linksClient;
@@ -100,16 +106,16 @@ class LinksClientTest {
     void testDeleteExchange() {
         //Set up
         mockServer
-            .stubFor(delete(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(delete(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK));
         //When
-        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest("https://github.com"));
+        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest(LINK));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -119,17 +125,17 @@ class LinksClientTest {
     void testPostExchange() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(
                         ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK));
         //When
-        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest("https://github.com"));
+        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest(LINK));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -139,16 +145,16 @@ class LinksClientTest {
     void testGetExchange() {
         //Set up
         mockServer
-            .stubFor(get(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(get(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(GET_RESPONSE_BODY)));
         //Given
         ListLinkResponse expectedResponse = new ListLinkResponse(
             List.of(
-                new LinkResponse(1L, URI.create("https://github.com")),
+                new LinkResponse(1L, URI.create(LINK)),
                 new LinkResponse(2L, URI.create("https://stackoverflow.com"))
             ),
             2
@@ -164,10 +170,10 @@ class LinksClientTest {
     void testClientErrorHandler() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(400)
                     .withBody(CONVERTED_API_ERROR_RESPONSE_BODY)
                 )

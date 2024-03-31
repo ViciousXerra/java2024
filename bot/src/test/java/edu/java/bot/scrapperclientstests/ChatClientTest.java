@@ -39,6 +39,7 @@ class ChatClientTest {
             ]
         }
         """;
+    private static final String URL_PATH = "/tg-chat/1";
     private static WireMockServer mockServer;
     @Autowired
     private ChatClient chatClient;
@@ -71,7 +72,7 @@ class ChatClientTest {
     void testDeleteExchange() {
         //Set up
         mockServer
-            .stubFor(delete(urlEqualTo("/tg-chat/1"))
+            .stubFor(delete(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)));
         //When
@@ -85,7 +86,7 @@ class ChatClientTest {
     void testPostExchange() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/tg-chat/1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)));
         //When
@@ -99,7 +100,7 @@ class ChatClientTest {
     void testClientErrorHandler() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/tg-chat/1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)
