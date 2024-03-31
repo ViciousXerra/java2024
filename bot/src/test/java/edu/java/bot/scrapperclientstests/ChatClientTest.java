@@ -63,7 +63,7 @@ class ChatClientTest {
     }
 
     @DynamicPropertySource
-    static void lstubScrapperBaseUrl(DynamicPropertyRegistry registry) {
+    static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {
         registry.add("app.scrapper-settings.default-base-url", () -> "http://localhost:8080");
     }
 
