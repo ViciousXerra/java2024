@@ -11,6 +11,20 @@ app:
   git-hub-settings:
     default-base-url: https://api.github.com/
   database-access-type: jdbc
+  client-retry-settings:
+    backoff-type: linear
+    attempts-limit: 3
+    attempt-delay: 2s
+    attempt-delay-limit: 60s
+    retry-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+  api-rate-limit-settings:
+    limit: 50
+    refill-limit: 5
+    refill-delay: 30s
 
 spring:
   application:

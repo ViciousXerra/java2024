@@ -3,6 +3,7 @@ package edu.java.scrapper.api.controlleradvices;
 import edu.java.scrapper.api.dto.errorresponses.ApiErrorResponse;
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
+import edu.java.scrapper.api.exceptions.RateLimitException;
 import edu.java.scrapper.api.exceptions.UnhandledException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,14 @@ public class ScrapperControllerAdvice {
         return new ResponseEntity<>(
             createApiErrorResponse("Unable to correctly satisfy a request", HttpStatus.INTERNAL_SERVER_ERROR, e),
             HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<ApiErrorResponse> handleRateLimit(RateLimitException e) {
+        return new ResponseEntity<>(
+            createApiErrorResponse(e.getDescription(), HttpStatus.TOO_MANY_REQUESTS, e),
+            HttpStatus.TOO_MANY_REQUESTS
         );
     }
 

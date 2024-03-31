@@ -39,6 +39,7 @@ class BotUpdateClientTest {
                 ]
             }
             """;
+    private static final String URL_PATH = "/updates";
     private static WireMockServer mockServer;
     @Autowired
     private BotUpdateClient botClient;
@@ -71,7 +72,7 @@ class BotUpdateClientTest {
     void testPostExchange() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/updates"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)));
         //When
@@ -87,7 +88,7 @@ class BotUpdateClientTest {
     void testClientErrorHandler() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/updates"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)
