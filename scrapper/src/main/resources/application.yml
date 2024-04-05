@@ -25,6 +25,15 @@ app:
     limit: 50
     refill-limit: 5
     refill-delay: 30s
+  use-queue: false
+  kafka-settings:
+    bootstrap-server: localhost:9092
+    linger-ms: 10
+    batch-size: 10
+    link-update-topic:
+      name: link_updates
+      partitions: 10
+      replicas: 1
 
 spring:
   application:

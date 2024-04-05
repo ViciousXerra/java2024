@@ -29,7 +29,10 @@ public record ApplicationConfig(
     @NotNull
     ClientRetrySettings clientRetrySettings,
     @NotNull
-    ApiRateLimitSettings apiRateLimitSettings
+    ApiRateLimitSettings apiRateLimitSettings,
+    boolean useQueue,
+    @NotNull
+    KafkaSettings kafkaSettings
 ) {
 
     public record Scheduler(
@@ -71,7 +74,7 @@ public record ApplicationConfig(
         BackoffType backoffType,
         @Positive
         @Max(10)
-        Integer attemptsLimit,
+        int attemptsLimit,
         @NotNull
         Duration attemptDelay,
         @NotNull
@@ -84,12 +87,40 @@ public record ApplicationConfig(
     public record ApiRateLimitSettings(
         @Positive
         @Max(2000)
-        Integer limit,
+        int limit,
         @Positive
         @Max(200)
-        Integer refillLimit,
+        int refillLimit,
         @NotNull
         Duration refillDelay
+    ) {
+    }
+
+    public record KafkaSettings(
+        @NotNull
+        @NotBlank
+        String bootstrapServer,
+        @Positive
+        @Max(500)
+        int lingerMs,
+        @Positive
+        @Max(20)
+        int batchSize,
+        @NotNull
+        LinkUpdateTopic linkUpdateTopic
+    ) {
+    }
+
+    public record LinkUpdateTopic(
+        @NotNull
+        @NotBlank
+        String name,
+        @Positive
+        @Max(20)
+        int partitions,
+        @Positive
+        @Max(5)
+        int replicas
     ) {
     }
 

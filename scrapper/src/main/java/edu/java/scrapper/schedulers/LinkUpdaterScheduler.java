@@ -1,5 +1,6 @@
 package edu.java.scrapper.schedulers;
 
+import edu.java.scrapper.botlinkupdateservices.BotLinkUpdateService;
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
@@ -24,17 +25,17 @@ public class LinkUpdaterScheduler {
     private static final String SERVICE_UNAVAILABLE_LOG_TEMPLATE = "Service unavailable: {}";
     private final LinkUpdater linkUpdater;
     private final AbstractLinkResourceUpdater abstractLinkResourceUpdater;
-    private final BotUpdateClient botUpdateClient;
+    private final BotLinkUpdateService botLinkUpdateService;
 
     @Autowired
     public LinkUpdaterScheduler(
         LinkUpdater linkUpdater,
         AbstractLinkResourceUpdater abstractLinkResourceUpdater,
-        BotUpdateClient botUpdateClient
+        BotLinkUpdateService botLinkUpdateService
     ) {
         this.linkUpdater = linkUpdater;
         this.abstractLinkResourceUpdater = abstractLinkResourceUpdater;
-        this.botUpdateClient = botUpdateClient;
+        this.botLinkUpdateService = botLinkUpdateService;
     }
 
     @Scheduled(fixedDelayString = "#{scheduler.interval()}")
@@ -63,15 +64,16 @@ public class LinkUpdaterScheduler {
     }
 
     private void startMessaging(List<ChatIdLinkId> relations, Map<Link, String> linkActivityMap) {
-        try {
-            linkActivityMap.forEach((link, activityDescription) -> {
-                List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId())
-                    .map(ChatIdLinkId::chatId).toList();
-                botUpdateClient.postLinkUpdate(new LinkUpdate(link.linkId(), link.url(), activityDescription, chatIds));
-            });
-        } catch (WebClientResponseException e) {
-            log.error(SERVICE_UNAVAILABLE_LOG_TEMPLATE, e.getMessage());
-        }
+        linkActivityMap.forEach((link, activityDescription) -> {
+            List<Long> chatIds = relations.stream().filter(chatIdLinkId -> chatIdLinkId.linkId() == link.linkId())
+                .map(ChatIdLinkId::chatId).toList();
+            botLinkUpdateService.postLinkUpdate(new LinkUpdate(
+                link.linkId(),
+                link.url(),
+                activityDescription,
+                chatIds
+            ));
+        });
     }
 
 }
