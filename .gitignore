@@ -3,6 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Kafka and Zookeeper volume data
+kafka-single/
+zoo-single/
+
 ### STS ###
 .apt_generated
 .classpath
