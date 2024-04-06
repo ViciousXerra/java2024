@@ -3,9 +3,9 @@ package edu.java.bot.configuration.kafkaconfiguration;
 import edu.java.bot.api.dto.requests.LinkUpdate;
 import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.bot.configuration.kafkaconfiguration.deserializers.LinkUpdateDeserializer;
+import edu.java.bot.configuration.kafkaconfiguration.serializers.LinkUpdateSerializer;
 import java.util.HashMap;
 import java.util.Map;
-import edu.java.bot.configuration.kafkaconfiguration.serializers.LinkUpdateSerializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -19,7 +19,6 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.retry.annotation.EnableRetry;
 
 @Configuration
 public class KafkaConfig {
