@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.TestUtils;
 import edu.java.bot.applisteners.BotInitializationListener;
 import edu.java.bot.commands.Command;
-import edu.java.bot.messageservices.ResponseService;
+import edu.java.bot.responseeditorservices.ResponseService;
 import edu.java.bot.scrapperservices.ScrapperService;
 import java.util.List;
 import java.util.function.Consumer;

@@ -16,6 +16,12 @@ app:
     limit: 50
     refill-limit: 5
     refill-delay: 30s
+  kafka-settings:
+    bootstrap-server: localhost:9092
+    link-update-topic:
+      name: link_updates
+      consumer-group-id: link_updates_group
+      auto-offset-reset: earliest
 
 spring:
   application:

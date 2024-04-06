@@ -21,7 +21,9 @@ public record ApplicationConfig(
     @NotNull
     ClientRetrySettings clientRetrySettings,
     @NotNull
-    ApiRateLimitSettings apiRateLimitSettings
+    ApiRateLimitSettings apiRateLimitSettings,
+    @NotNull
+    KafkaSettings kafkaSettings
 ) {
 
     public record ScrapperSettings(@NotBlank String defaultBaseUrl, String baseUrl) {
@@ -32,7 +34,7 @@ public record ApplicationConfig(
         BackoffType backoffType,
         @Positive
         @Max(10)
-        Integer attemptsLimit,
+        int attemptsLimit,
         @NotNull
         Duration attemptDelay,
         @NotNull
@@ -45,12 +47,34 @@ public record ApplicationConfig(
     public record ApiRateLimitSettings(
         @Positive
         @Max(2000)
-        Integer limit,
+        int limit,
         @Positive
         @Max(200)
-        Integer refillLimit,
+        int refillLimit,
         @NotNull
         Duration refillDelay
+    ) {
+    }
+
+    public record KafkaSettings(
+        @NotNull
+        @NotBlank
+        String bootstrapServer,
+        @NotNull
+        LinkUpdateTopic linkUpdateTopic
+    ) {
+    }
+
+    public record LinkUpdateTopic(
+        @NotNull
+        @NotBlank
+        String name,
+        @NotNull
+        @NotBlank
+        String consumerGroupId,
+        @NotNull
+        @NotBlank
+        String autoOffsetReset
     ) {
     }
 
