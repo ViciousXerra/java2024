@@ -1,23 +1,17 @@
 package edu.java.bot.botrestcontrollerstests;
 
 import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.BaseTestConfig;
 import edu.java.bot.WithoutKafkaTestConfig;
 import edu.java.bot.api.ratelimit.RateLimitTrackerImpl;
 import edu.java.bot.api.restcontrollers.BotRestController;
-import edu.java.bot.applisteners.BotInitializationListener;
 import edu.java.bot.commandexecutors.LinkUpdateCommandExecutor;
-import edu.java.bot.commands.Command;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BotRestController.class)
-@Import(WithoutKafkaTestConfig.class)
+@Import({BaseTestConfig.class, WithoutKafkaTestConfig.class, RateLimitTrackerImpl.class})
 class RateLimitTest {
 
     private final static String VALID_REQUEST_BODY =
@@ -49,25 +43,8 @@ class RateLimitTest {
 
     @MockBean
     private TelegramBot bot;
-
-    @TestConfiguration
-    @Import(RateLimitTrackerImpl.class)
-    static class TestingConfig {
-
-        @Bean
-        ApplicationListener<ContextRefreshedEvent> botInitializationListener(
-            TelegramBot bot,
-            List<Command> allSupportedCommands
-        ) {
-            return new BotInitializationListener(bot, allSupportedCommands);
-        }
-
-        @Bean
-        LinkUpdateCommandExecutor linkUpdateCommandExecutor(TelegramBot bot) {
-            return new LinkUpdateCommandExecutor(bot);
-        }
-
-    }
+    @MockBean
+    private LinkUpdateCommandExecutor linkUpdateCommandExecutor;
 
     @Autowired
     private MockMvc mockMvc;
