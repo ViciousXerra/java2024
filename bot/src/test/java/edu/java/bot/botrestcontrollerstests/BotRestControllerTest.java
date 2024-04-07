@@ -1,9 +1,11 @@
 package edu.java.bot.botrestcontrollerstests;
 
 import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.WithoutKafkaTestConfig;
 import edu.java.bot.api.ratelimit.RateLimitTrackerImpl;
 import edu.java.bot.api.restcontrollers.BotRestController;
 import edu.java.bot.applisteners.BotInitializationListener;
+import edu.java.bot.commandexecutors.LinkUpdateCommandExecutor;
 import edu.java.bot.commands.Command;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BotRestController.class)
+@Import(WithoutKafkaTestConfig.class)
 class BotRestControllerTest {
 
     private final static String VALID_REQUEST_BODY =
@@ -91,6 +94,11 @@ class BotRestControllerTest {
             List<Command> allSupportedCommands
         ) {
             return new BotInitializationListener(bot, allSupportedCommands);
+        }
+
+        @Bean
+        LinkUpdateCommandExecutor linkUpdateCommandExecutor(TelegramBot bot) {
+            return new LinkUpdateCommandExecutor(bot);
         }
 
     }
