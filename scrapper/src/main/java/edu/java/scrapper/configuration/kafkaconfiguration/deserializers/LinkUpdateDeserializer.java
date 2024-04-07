@@ -1,7 +1,7 @@
-package edu.java.bot.configuration.kafkaconfiguration.deserializers;
+package edu.java.scrapper.configuration.kafkaconfiguration.deserializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.bot.api.dto.requests.LinkUpdate;
+import edu.java.scrapper.telegrambotclient.dto.requests.LinkUpdate;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Deserializer;
 

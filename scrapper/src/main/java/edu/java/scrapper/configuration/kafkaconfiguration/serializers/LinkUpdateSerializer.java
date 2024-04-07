@@ -20,7 +20,7 @@ public class LinkUpdateSerializer implements Serializer<LinkUpdate> {
         try {
             return objectMapper.writeValueAsBytes(linkUpdate);
         } catch (JsonProcessingException e) {
-            log.error("Unable to serialize object {}", linkUpdate, e);
+            log.error("Unable to serialize object: {}", e.getMessage());
             return null;
         }
     }

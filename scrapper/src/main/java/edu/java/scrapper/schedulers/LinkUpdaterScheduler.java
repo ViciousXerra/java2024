@@ -6,7 +6,6 @@ import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.AbstractLinkResourceUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.LinkUpdaterUtils;
-import edu.java.scrapper.telegrambotclient.clients.BotUpdateClient;
 import edu.java.scrapper.telegrambotclient.dto.requests.LinkUpdate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;

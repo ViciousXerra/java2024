@@ -30,9 +30,9 @@ public class BotLinkUpdateServiceConfig {
 
     @Bean
     public BotLinkUpdateService botLinkUpdateService() {
-        return applicationConfig.useQueue() ?
-            new BotLinkUpdateMessageQueueService(applicationConfig.kafkaSettings().linkUpdateTopic(), template) :
-            new BotLinkUpdateClientService(botUpdateClient);
+        return applicationConfig.useQueue()
+            ? new BotLinkUpdateMessageQueueService(applicationConfig.kafkaSettings().linkUpdateTopic(), template)
+            : new BotLinkUpdateClientService(botUpdateClient);
     }
 
 }

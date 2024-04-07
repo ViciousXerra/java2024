@@ -72,7 +72,6 @@ services:
 
 volumes:
   postgresql: { }
-  zookeeper: { }
 
 networks:
   backend: { }

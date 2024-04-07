@@ -41,7 +41,9 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, LinkUpdate> retryableTopicKafkaTemplate(ProducerFactory<String, LinkUpdate> producerFactory) {
+    public KafkaTemplate<String, LinkUpdate> retryableTopicKafkaTemplate(
+        ProducerFactory<String, LinkUpdate> producerFactory
+    ) {
         return new KafkaTemplate<>(producerFactory);
     }
 

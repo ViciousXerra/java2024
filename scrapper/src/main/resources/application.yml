@@ -25,7 +25,7 @@ app:
     limit: 50
     refill-limit: 5
     refill-delay: 30s
-  use-queue: false
+  use-queue: true
   kafka-settings:
     bootstrap-server: localhost:9092
     linger-ms: 10
