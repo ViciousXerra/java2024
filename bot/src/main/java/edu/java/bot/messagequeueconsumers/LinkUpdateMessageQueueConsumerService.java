@@ -35,7 +35,7 @@ public class LinkUpdateMessageQueueConsumerService {
     @KafkaListener(groupId = "${app.kafka-settings.link-update-topic.consumer-group-id}",
                    topics = "${app.kafka-settings.link-update-topic.name}",
                    containerFactory = "kafkaListenerContainerFactory")
-    public void handleLinkUpdate(LinkUpdate linkUpdate, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+    public void handleLinkUpdate(LinkUpdate linkUpdate) {
         linkUpdateCommandExecutor.process(linkUpdate);
     }
 

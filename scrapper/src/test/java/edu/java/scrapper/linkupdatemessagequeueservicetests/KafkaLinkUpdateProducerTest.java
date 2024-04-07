@@ -43,11 +43,6 @@ class KafkaLinkUpdateProducerTest {
         KAFKA.start();
     }
 
-    @Autowired
-    private BotLinkUpdateService botLinkUpdateService;
-    @Autowired
-    private KafkaConsumer<String, LinkUpdate> consumer;
-
     @TestConfiguration
     static class TestConfig {
 
@@ -67,6 +62,11 @@ class KafkaLinkUpdateProducerTest {
         }
     }
 
+    @Autowired
+    private BotLinkUpdateService botLinkUpdateService;
+    @Autowired
+    private KafkaConsumer<String, LinkUpdate> consumer;
+
     @DynamicPropertySource
     static void stubBootstrapServer(DynamicPropertyRegistry registry) {
         registry.add("app.use-queue", () -> true);
@@ -74,8 +74,8 @@ class KafkaLinkUpdateProducerTest {
     }
 
     @Test
-    @DisplayName("Test link update message consume")
-    public void testMessageConsume() {
+    @DisplayName("Test link update message produce")
+    public void testMessageProduce() {
         //Set up
         consumer.subscribe(Collections.singletonList(TOPIC_NAME));
         //Given
@@ -85,7 +85,7 @@ class KafkaLinkUpdateProducerTest {
         Iterable<ConsumerRecord<String, LinkUpdate>> records =
             consumer.poll(Duration.ofMillis(POLL_DATA_DELAY)).records(TOPIC_NAME);
         List<LinkUpdate> actualConsumedRecords = new ArrayList<>();
-        records.forEach(r -> actualConsumedRecords.addFirst(r.value()));
+        records.forEach(r -> actualConsumedRecords.addLast(r.value()));
         //Then
         Assertions.assertAll(
             () -> assertThat(actualConsumedRecords).isNotEmpty(),
