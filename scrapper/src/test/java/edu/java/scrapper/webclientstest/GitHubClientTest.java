@@ -2,6 +2,9 @@ package edu.java.scrapper.webclientstest;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.webclients.clients.GitHubClient;
 import edu.java.scrapper.webclients.dto.github.GitHubUser;
 import edu.java.scrapper.webclients.dto.github.RepositoryActivityResponse;
@@ -18,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -48,6 +52,13 @@ class GitHubClientTest {
     private final static long TEST_USER_ID_ANOTHER = 25L;
     private final static String TEST_ACTIVITY_TYPE1 = "push";
     private final static String TEST_ACTIVITY_TYPE2 = "branch_creation";
+
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
     @Autowired
     private GitHubClient gitHubClient;

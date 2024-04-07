@@ -2,10 +2,14 @@ package edu.java.scrapper.webclientretrypoliticstest;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -19,6 +23,13 @@ public abstract class RetryPoliticsTest {
     protected static final int SUCCESS_CODE = 200;
     protected static WireMockServer mockServer;
     private static final String STUB_URL = "http://localhost:8080";
+
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
     @BeforeAll
     public static void setUpMockServer() {

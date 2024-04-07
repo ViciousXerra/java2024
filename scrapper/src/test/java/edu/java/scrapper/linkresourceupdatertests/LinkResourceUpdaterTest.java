@@ -3,6 +3,9 @@ package edu.java.scrapper.linkresourceupdatertests;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.scrapper.dao.dto.Link;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.AbstractLinkResourceUpdater;
 import edu.java.scrapper.schedulers.linkresourceupdaters.LinkUpdaterUtils;
 import java.time.ZoneOffset;
@@ -21,6 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -104,6 +108,13 @@ class LinkResourceUpdaterTest {
         ZonedDateTime.parse("2007-12-03T10:15:30", DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneOffset.UTC));
 
     private static WireMockServer mockServer;
+
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
     @Autowired
     private AbstractLinkResourceUpdater resourceUpdater;

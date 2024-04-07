@@ -2,6 +2,9 @@ package edu.java.scrapper.linkupdatemessagequeueservicetests;
 
 import edu.java.scrapper.botlinkupdateservices.BotLinkUpdateService;
 import edu.java.scrapper.configuration.kafkaconfiguration.deserializers.LinkUpdateDeserializer;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.telegrambotclient.dto.requests.LinkUpdate;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -61,6 +65,13 @@ class KafkaLinkUpdateProducerTest {
             return props;
         }
     }
+
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
     @Autowired
     private BotLinkUpdateService botLinkUpdateService;

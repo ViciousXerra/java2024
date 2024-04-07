@@ -2,6 +2,9 @@ package edu.java.scrapper.webclientstest;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.webclients.clients.StackOverFlowClient;
 import edu.java.scrapper.webclients.dto.stackoverflow.AnswerInfo;
 import edu.java.scrapper.webclients.dto.stackoverflow.QuestionInfo;
@@ -17,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -44,6 +48,13 @@ class StackOverFlowClientTest {
     private final static int TEST_QUOTA_REMAINING = 275;
     private final static boolean TEST_IS_ACCEPTED = true;
     private final static int TEST_SCORE = 2500;
+
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
     @Autowired
     private StackOverFlowClient stackOverFlowClient;
