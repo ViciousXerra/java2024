@@ -7,7 +7,6 @@
         <groupId>edu.java</groupId>
         <artifactId>root</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>jooq-source-codegen</artifactId>
