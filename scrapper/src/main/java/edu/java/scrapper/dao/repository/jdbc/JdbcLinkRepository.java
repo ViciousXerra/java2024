@@ -16,9 +16,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-link-repo")
+@Repository(JdbcLinkRepository.JDBC_LINK_REPO)
 public class JdbcLinkRepository implements LinkRepository {
 
+    public static final String JDBC_LINK_REPO = "jdbc-link-repo";
     private final static String ADD_QUERY = "INSERT INTO Link (url) VALUES (?) RETURNING *";
     private final static String REMOVE_QUERY = "DELETE FROM Link WHERE url = ? RETURNING *";
     private final static String REMOVE_BY_ID_QUERY_TEMPLATE = "DELETE FROM Link WHERE id IN (%s)";

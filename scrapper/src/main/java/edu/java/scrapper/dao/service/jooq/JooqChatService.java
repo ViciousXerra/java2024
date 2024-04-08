@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooq-chat-service")
+@Service(JooqChatService.JOOQ_CHAT_SERVICE)
 @Transactional(rollbackFor = Exception.class)
 public class JooqChatService implements ChatService {
 
+    public static final String JOOQ_CHAT_SERVICE = "jooq-chat-service";
     private final JooqChatRepository chatRepository;
     private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
     private final JooqLinkRepository linkRepository;

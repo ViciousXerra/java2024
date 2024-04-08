@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-link-updater-service")
+@Service(JdbcLinkUpdater.JDBC_LINK_UPDATER_SERVICE)
 @Transactional
 public class JdbcLinkUpdater implements LinkUpdater {
 
+    public static final String JDBC_LINK_UPDATER_SERVICE = "jdbc-link-updater-service";
     private final JdbcLinkRepository linkRepository;
     private final int fetchLimit;
 

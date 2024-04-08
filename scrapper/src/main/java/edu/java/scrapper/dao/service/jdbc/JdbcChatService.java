@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-chat-service")
+@Service(JdbcChatService.JDBC_CHAT_SERVICE)
 @Transactional(rollbackFor = Exception.class)
 public class JdbcChatService implements ChatService {
 
+    public static final String JDBC_CHAT_SERVICE = "jdbc-chat-service";
     private final JdbcChatRepository chatRepository;
     private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;
     private final JdbcLinkRepository linkRepository;

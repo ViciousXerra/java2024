@@ -11,9 +11,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-chatidlinkid-repo")
+@Repository(JdbcChatIdLinkIdRepository.JDBC_CHATIDLINKID_REPO)
 public class JdbcChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
+    public static final String JDBC_CHATIDLINKID_REPO = "jdbc-chatidlinkid-repo";
     private final static String ADD_QUERY = "INSERT INTO ChatIdLinkId (chat_id, link_id) VALUES (?, ?)";
     private final static String REMOVE_QUERY = "DELETE FROM ChatIdLinkId WHERE chat_id = ? AND link_id = ?";
     private final static String FIND_ALL_QUERY = "SELECT * FROM ChatIdLinkId";

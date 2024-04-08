@@ -14,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jdbc-link-service")
+@Service(JdbcLinkService.JDBC_LINK_SERVICE)
 @Transactional(rollbackFor = Exception.class)
 public class JdbcLinkService implements LinkService {
 
+    public static final String JDBC_LINK_SERVICE = "jdbc-link-service";
     private final JdbcChatRepository chatRepository;
     private final JdbcLinkRepository linkRepository;
     private final JdbcChatIdLinkIdRepository chatIdLinkIdRepository;

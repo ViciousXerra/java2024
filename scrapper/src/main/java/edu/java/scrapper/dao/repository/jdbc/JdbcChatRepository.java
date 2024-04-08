@@ -9,9 +9,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository("jdbc-chat-repo")
+@Repository(JdbcChatRepository.JDBC_CHAT_REPO)
 public class JdbcChatRepository implements ChatRepository {
 
+    public static final String JDBC_CHAT_REPO = "jdbc-chat-repo";
     private final static String ADD_QUERY = "INSERT INTO Chat (id) VALUES (?)";
     private final static String REMOVE_QUERY = "DELETE FROM Chat WHERE id = ?";
     private final static String FIND_ALL_QUERY = "SELECT id FROM Chat";

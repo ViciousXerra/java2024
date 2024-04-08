@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class LinkUpdaterScheduler {
 
+    public static final String JDBC_LINK_UPDATER_SERVICE = "jdbc-link-updater-service";
+    public static final String JDBC_LINK_REPO = "jdbc-link-repo";
+    public static final String JDBC_CHATIDLINKID_REPO = "jdbc-chatidlinkid-repo";
     private final static Logger LOGGER = LogManager.getLogger(LinkUpdaterScheduler.class);
     private final LinkUpdater linkUpdater;
     private final LinkRepository linkRepository;
@@ -33,11 +36,11 @@ public class LinkUpdaterScheduler {
 
     @Autowired
     public LinkUpdaterScheduler(
-        @Qualifier("jdbc-link-updater-service")
+        @Qualifier(JDBC_LINK_UPDATER_SERVICE)
         LinkUpdater linkUpdater,
-        @Qualifier("jdbc-link-repo")
+        @Qualifier(JDBC_LINK_REPO)
         LinkRepository linkRepository,
-        @Qualifier("jdbc-chatidlinkid-repo")
+        @Qualifier(JDBC_CHATIDLINKID_REPO)
         ChatIdLinkIdRepository chatIdLinkIdRepository,
         AbstractLinkResourceUpdater abstractLinkResourceUpdater,
         BotUpdateClient botUpdateClient

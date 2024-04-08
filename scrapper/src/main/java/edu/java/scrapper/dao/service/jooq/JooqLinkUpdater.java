@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooq-link-updater-service")
+@Service(JooqLinkUpdater.JOOQ_LINK_UPDATER_SERVICE)
 @Transactional
 public class JooqLinkUpdater implements LinkUpdater {
 
+    public static final String JOOQ_LINK_UPDATER_SERVICE = "jooq-link-updater-service";
     private final JooqLinkRepository linkRepository;
     private final int fetchLimit;
 

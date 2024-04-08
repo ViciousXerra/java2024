@@ -14,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("jooq-link-service")
+@Service(JooqLinkService.JOOQ_LINK_SERVICE)
 @Transactional(rollbackFor = Exception.class)
 public class JooqLinkService implements LinkService {
 
+    public static final String JOOQ_LINK_SERVICE = "jooq-link-service";
     private final JooqChatRepository chatRepository;
     private final JooqLinkRepository linkRepository;
     private final JooqChatIdLinkIdRepository chatIdLinkIdRepository;
