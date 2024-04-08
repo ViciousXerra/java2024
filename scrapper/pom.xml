@@ -138,6 +138,12 @@
             <artifactId>jooq-codegen</artifactId>
             <version>${jooq.version}</version>
         </dependency>
+        <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>jooq-source-codegen</artifactId>
+            <version>0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

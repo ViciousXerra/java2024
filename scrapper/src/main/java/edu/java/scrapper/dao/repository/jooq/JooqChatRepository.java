@@ -7,7 +7,7 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import static edu.java.scrapper.domain.jooq.Tables.CHAT;
+import static domain.jooq.tables.Chat.CHAT;
 
 @Repository
 public class JooqChatRepository implements ChatRepository {

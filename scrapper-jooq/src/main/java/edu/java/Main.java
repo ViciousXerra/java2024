@@ -39,8 +39,8 @@ public class Main {
             .withPojos(true);
 
         Target target = new Target()
-            .withPackageName("edu.java.scrapper.domain.jooq")
-            .withDirectory("scrapper/src/main/java");
+            .withPackageName("domain.jooq")
+            .withDirectory("jooq-source-codegen/src/main/java");
 
         Configuration configuration = new Configuration()
             .withGenerator(

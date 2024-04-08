@@ -53,6 +53,7 @@
         <module>bot</module>
         <module>scrapper</module>
         <module>scrapper-jooq</module>
+        <module>jooq-source-codegen</module>
     </modules>
 
     <dependencyManagement>

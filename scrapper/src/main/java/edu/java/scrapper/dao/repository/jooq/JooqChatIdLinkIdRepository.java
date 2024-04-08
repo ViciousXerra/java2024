@@ -1,5 +1,6 @@
 package edu.java.scrapper.dao.repository.jooq;
 
+import domain.jooq.tables.pojos.Chatidlinkid;
 import edu.java.scrapper.api.exceptions.UnhandledException;
 import edu.java.scrapper.dao.dto.ChatIdLinkId;
 import edu.java.scrapper.dao.repository.interfaces.ChatIdLinkIdRepository;
@@ -9,12 +10,12 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import static edu.java.scrapper.domain.jooq.Tables.CHATIDLINKID;
+import static domain.jooq.tables.Chatidlinkid.CHATIDLINKID;
 
 @Repository
 public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
-    private final static Function<edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid, ChatIdLinkId>
+    private final static Function<Chatidlinkid, ChatIdLinkId>
         DTO_CONVERTER_LAMBDA =
         chatidlinkid -> new ChatIdLinkId(
             chatidlinkid.getChatId(),
@@ -62,7 +63,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
         try {
             return dslContext
                 .select().from(CHATIDLINKID)
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
@@ -77,7 +78,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
             return dslContext
                 .select().from(CHATIDLINKID)
                 .where(CHATIDLINKID.CHAT_ID.eq(chatId))
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
@@ -92,7 +93,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
             return dslContext
                 .select().from(CHATIDLINKID)
                 .where(CHATIDLINKID.LINK_ID.eq(linkId))
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
