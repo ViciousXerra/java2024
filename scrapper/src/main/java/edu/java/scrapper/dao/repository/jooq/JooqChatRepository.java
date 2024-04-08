@@ -5,7 +5,7 @@ import edu.java.scrapper.dao.repository.interfaces.ChatRepository;
 import java.util.List;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
-import static edu.java.scrapper.domain.jooq.Tables.CHAT;
+import static domain.jooq.tables.Chat.CHAT;
 
 public class JooqChatRepository implements ChatRepository {
 

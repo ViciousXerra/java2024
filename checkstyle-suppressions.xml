@@ -5,4 +5,6 @@
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
+    <suppress files="[/\\]jooq-source-codegen.+" checks=".*"/>
+    <suppress files="[/\\]scrapper-jooq.+" checks=".*"/>
 </suppressions>
