@@ -28,6 +28,37 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
+  management:
+    endpoints:
+      enabled-by-default: false
+      web:
+        base-path: /
+        path-mapping:
+          info: info
+          health: health
+          prometheus: metrics
+        exposure:
+          include:
+            - info
+            - health
+            - prometheus
+    port: 8091
+    endpoint:
+      info:
+        enabled: true
+      health:
+        enabled: true
+      prometheus:
+        enabled: true
+    metrics:
+      tags:
+        application: ${spring.application.name}
+      export:
+        prometheus:
+          enabled: true
+      distribution:
+        percentiles-histogram:
+          "[http.server.requests]": true
 
 springdoc:
   swagger-ui:
