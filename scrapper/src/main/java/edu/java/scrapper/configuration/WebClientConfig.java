@@ -1,7 +1,7 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.clients.GitHubClient;
-import edu.java.scrapper.clients.StackOverFlowClient;
+import edu.java.scrapper.webclients.clients.GitHubClient;
+import edu.java.scrapper.webclients.clients.StackOverFlowClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
