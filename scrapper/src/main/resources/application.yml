@@ -49,37 +49,30 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
-  management:
-    endpoints:
-      enabled-by-default: false
-      web:
-        base-path: /
-        path-mapping:
-          info: info
-          health: health
-          prometheus: metrics
-        exposure:
-          include:
-            - info
-            - health
-            - prometheus
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: "info,health,prometheus"
+  server:
     port: 8081
-    endpoint:
-      info:
-        enabled: true
-      health:
-        enabled: true
-      prometheus:
-        enabled: true
-    metrics:
-      tags:
-        application: ${spring.application.name}
-      export:
-        prometheus:
-          enabled: true
-      distribution:
-        percentiles-histogram:
-          "[http.server.requests]": true
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 springdoc:
   swagger-ui:
