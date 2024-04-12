@@ -2,6 +2,7 @@ package edu.java.bot.api.restcontrollers;
 
 import edu.java.bot.api.dto.requests.LinkUpdate;
 import edu.java.bot.commandexecutors.LinkUpdateCommandExecutor;
+import io.micrometer.core.annotation.Counted;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bot/updates")
 public class BotRestController {
 
+    private static final String SCRAPPER_REQUESTS_METRIC_LABEl = "scrapper_requests";
     private final LinkUpdateCommandExecutor linkUpdateCommandExecutor;
 
     @Autowired
@@ -23,6 +25,7 @@ public class BotRestController {
     }
 
     @PostMapping(consumes = "application/json")
+    @Counted(value = SCRAPPER_REQUESTS_METRIC_LABEl)
     public ResponseEntity<?> postLinkUpdate(@Valid @RequestBody LinkUpdate linkUpdate) {
         linkUpdateCommandExecutor.process(linkUpdate);
         return new ResponseEntity<>(HttpStatus.OK);
