@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bot/updates")
 public class BotRestController {
 
-    private static final String SCRAPPER_REQUESTS_METRIC_LABEl = "scrapper_requests";
+    private static final String SCRAPPER_REQUESTS_METRIC_LABEL = "scrapper_requests";
     private final LinkUpdateCommandExecutor linkUpdateCommandExecutor;
 
     @Autowired
@@ -25,7 +25,7 @@ public class BotRestController {
     }
 
     @PostMapping(consumes = "application/json")
-    @Counted(value = SCRAPPER_REQUESTS_METRIC_LABEl)
+    @Counted(value = SCRAPPER_REQUESTS_METRIC_LABEL)
     public ResponseEntity<?> postLinkUpdate(@Valid @RequestBody LinkUpdate linkUpdate) {
         linkUpdateCommandExecutor.process(linkUpdate);
         return new ResponseEntity<>(HttpStatus.OK);
