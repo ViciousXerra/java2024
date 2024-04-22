@@ -4,7 +4,6 @@ import edu.java.bot.api.dto.requests.LinkUpdate;
 import edu.java.bot.commandexecutors.LinkUpdateCommandExecutor;
 import java.net.SocketTimeoutException;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -12,15 +11,12 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.stereotype.Service;
 
-@Service
 @Log4j2
 public class LinkUpdateMessageQueueConsumerService {
 
     private final LinkUpdateCommandExecutor linkUpdateCommandExecutor;
 
-    @Autowired
     public LinkUpdateMessageQueueConsumerService(LinkUpdateCommandExecutor linkUpdateCommandExecutor) {
         this.linkUpdateCommandExecutor = linkUpdateCommandExecutor;
     }
@@ -34,7 +30,8 @@ public class LinkUpdateMessageQueueConsumerService {
     )
     @KafkaListener(groupId = "${app.kafka-settings.link-update-topic.consumer-group-id}",
                    topics = "${app.kafka-settings.link-update-topic.name}",
-                   containerFactory = "kafkaListenerContainerFactory")
+                   containerFactory = "kafkaListenerContainerFactory",
+                   autoStartup = "${app.use-queue}")
     public void handleLinkUpdate(LinkUpdate linkUpdate) {
         linkUpdateCommandExecutor.process(linkUpdate);
     }
