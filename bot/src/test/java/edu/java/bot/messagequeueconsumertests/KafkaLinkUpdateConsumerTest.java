@@ -87,6 +87,7 @@ public class KafkaLinkUpdateConsumerTest {
 
     @DynamicPropertySource
     static void stubBootstrapServer(DynamicPropertyRegistry registry) {
+        registry.add("app.use-queue", () -> true);
         registry.add("app.kafka-settings.bootstrap-server", KAFKA::getBootstrapServers);
     }
 
