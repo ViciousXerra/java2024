@@ -22,6 +22,7 @@ public record ApplicationConfig(
     ClientRetrySettings clientRetrySettings,
     @NotNull
     ApiRateLimitSettings apiRateLimitSettings,
+    boolean useQueue,
     @NotNull
     KafkaSettings kafkaSettings
 ) {

@@ -16,6 +16,7 @@ app:
     limit: 50
     refill-limit: 5
     refill-delay: 30s
+  use-queue: true
   kafka-settings:
     bootstrap-server: localhost:9092
     link-update-topic:
