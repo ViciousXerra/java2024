@@ -4,25 +4,21 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.TestUtils;
-import edu.java.bot.applisteners.BotInitializationListener;
-import edu.java.bot.commands.Command;
-import edu.java.bot.messageservices.ResponseService;
+import edu.java.bot.WithoutKafkaTestConfig;
+import edu.java.bot.responseeditorservices.ResponseService;
 import edu.java.bot.scrapperservices.ScrapperService;
-import java.util.List;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Import(WithoutKafkaTestConfig.class)
 class ResponseEditorTest {
 
     private static final long CHAT_ID = 1L;
@@ -34,19 +30,6 @@ class ResponseEditorTest {
 
     @MockBean
     private TelegramBot bot;
-
-    @TestConfiguration
-    static class TestingConfig {
-
-        @Bean
-        ApplicationListener<ContextRefreshedEvent> otInitializationListener(
-            TelegramBot bot,
-            List<Command> allSupportedCommands
-        ) {
-            return new BotInitializationListener(bot, allSupportedCommands);
-        }
-
-    }
 
     @MockBean
     private ScrapperService scrapperService;

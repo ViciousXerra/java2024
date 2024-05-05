@@ -1,8 +1,8 @@
 package edu.java.bot.api.restcontrollers;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.api.dto.requests.LinkUpdate;
+import edu.java.bot.commandexecutors.LinkUpdateCommandExecutor;
+import io.micrometer.core.annotation.Counted;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bot/updates")
 public class BotRestController {
 
-    private final TelegramBot telegramBot;
+    private static final String SCRAPPER_REQUESTS_METRIC_LABEL = "scrapper_requests";
+    private final LinkUpdateCommandExecutor linkUpdateCommandExecutor;
 
     @Autowired
-    public BotRestController(TelegramBot telegramBot) {
-        this.telegramBot = telegramBot;
+    public BotRestController(LinkUpdateCommandExecutor linkUpdateCommandExecutor) {
+        this.linkUpdateCommandExecutor = linkUpdateCommandExecutor;
     }
 
     @PostMapping(consumes = "application/json")
+    @Counted(value = SCRAPPER_REQUESTS_METRIC_LABEL)
     public ResponseEntity<?> postLinkUpdate(@Valid @RequestBody LinkUpdate linkUpdate) {
-        linkUpdate.tgChatIds().stream()
-            .map(chatId -> new SendMessage(chatId, linkUpdate.description()).disableWebPagePreview(true))
-            .forEach(telegramBot::execute);
+        linkUpdateCommandExecutor.process(linkUpdate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.function.Function;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DefaultDSLContext;
-import static edu.java.scrapper.domain.jooq.Tables.CHATIDLINKID;
+import static domain.jooq.tables.Chatidlinkid.CHATIDLINKID;
 
 public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
 
-    private final static Function<edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid, ChatIdLinkId>
+    private final static Function<domain.jooq.tables.pojos.Chatidlinkid, ChatIdLinkId>
         DTO_CONVERTER_LAMBDA =
         chatidlinkid -> new ChatIdLinkId(
             chatidlinkid.getChatId(),
@@ -58,7 +58,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
         try {
             return dslContext
                 .select().from(CHATIDLINKID)
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(domain.jooq.tables.pojos.Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
@@ -73,7 +73,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
             return dslContext
                 .select().from(CHATIDLINKID)
                 .where(CHATIDLINKID.CHAT_ID.eq(chatId))
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(domain.jooq.tables.pojos.Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();
@@ -88,7 +88,7 @@ public class JooqChatIdLinkIdRepository implements ChatIdLinkIdRepository {
             return dslContext
                 .select().from(CHATIDLINKID)
                 .where(CHATIDLINKID.LINK_ID.eq(linkId))
-                .fetchInto(edu.java.scrapper.domain.jooq.tables.pojos.Chatidlinkid.class)
+                .fetchInto(domain.jooq.tables.pojos.Chatidlinkid.class)
                 .stream()
                 .map(DTO_CONVERTER_LAMBDA)
                 .toList();

@@ -2,12 +2,57 @@ app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-settings:
     default-base-url: http://localhost:8080/scrapper
+  client-retry-settings:
+    backoff-type: linear
+    attempts-limit: 3
+    attempt-delay: 2s
+    attempt-delay-limit: 60s
+    retry-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+  api-rate-limit-settings:
+    limit: 50
+    refill-limit: 5
+    refill-delay: 30s
+  use-queue: true
+  kafka-settings:
+    bootstrap-server: localhost:9092
+    link-update-topic:
+      name: link_updates
+      consumer-group-id: link_updates_group
+      auto-offset-reset: earliest
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: "info,health,prometheus"
+  server:
+    port: 8091
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 springdoc:
   swagger-ui:

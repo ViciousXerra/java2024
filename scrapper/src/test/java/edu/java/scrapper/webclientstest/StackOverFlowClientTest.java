@@ -1,31 +1,35 @@
 package edu.java.scrapper.webclientstest;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.webclients.clients.StackOverFlowClient;
-import edu.java.scrapper.configuration.ApplicationConfig;
-import edu.java.scrapper.configuration.WebClientConfig;
 import edu.java.scrapper.webclients.dto.stackoverflow.AnswerInfo;
 import edu.java.scrapper.webclients.dto.stackoverflow.QuestionInfo;
 import edu.java.scrapper.webclients.dto.stackoverflow.StackOverFlowQuestionResponse;
 import edu.java.scrapper.webclients.dto.stackoverflow.StackOverFlowUser;
 import java.time.ZoneOffset;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static java.time.Instant.ofEpochSecond;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8080)
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class StackOverFlowClientTest {
 
     private final static String TEST_BASE_URL = "http://localhost:8080/";
@@ -45,13 +49,39 @@ class StackOverFlowClientTest {
     private final static boolean TEST_IS_ACCEPTED = true;
     private final static int TEST_SCORE = 2500;
 
-    @Mock
-    private ApplicationConfig applicationConfig;
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
-    @InjectMocks
-    private WebClientConfig webClientConfig;
-
+    @Autowired
     private StackOverFlowClient stackOverFlowClient;
+    private static WireMockServer mockServer;
+
+    @BeforeAll
+    public static void setUpMockServer() {
+        mockServer = new WireMockServer();
+        mockServer.start();
+        WireMock.configureFor("localhost", 8080);
+    }
+
+    @AfterEach
+    public void resetMockServerState() {
+        mockServer.resetAll();
+    }
+
+    @AfterAll
+    public static void stopMockServer() {
+        mockServer.stop();
+        mockServer.shutdown();
+    }
+
+    @DynamicPropertySource
+    static void stubStackOverflowClientBaseUrl(DynamicPropertyRegistry registry) {
+        registry.add("app.stack-over-flow-settings.default-base-url", () -> "http://localhost:8080");
+    }
 
     @ParameterizedTest
     @MethodSource("provideBaseUrls")
@@ -76,9 +106,6 @@ class StackOverFlowClientTest {
                 TEST_QUOTA_REMAINING
             );
         //Setting up test conditions
-        Mockito.when(applicationConfig.stackOverFlowSettings())
-            .thenReturn(new ApplicationConfig.StackOverFlowSettings(TEST_BASE_URL, baseUrl));
-        stackOverFlowClient = webClientConfig.stackOverFlowClient();
         stubFor(get("/questions/12345?site=stackoverflow").willReturn(okJson(getQuestionInfoJSONBody())));
 
         //When
@@ -114,9 +141,6 @@ class StackOverFlowClientTest {
                 TEST_QUOTA_REMAINING
             );
         //Setting up test conditions
-        Mockito.when(applicationConfig.stackOverFlowSettings())
-            .thenReturn(new ApplicationConfig.StackOverFlowSettings(TEST_BASE_URL, baseUrl));
-        stackOverFlowClient = webClientConfig.stackOverFlowClient();
         stubFor(get("/questions/12345/answers?site=stackoverflow").willReturn(okJson(getAnswersInfoJSONBody())));
 
         //When

@@ -2,6 +2,8 @@ package edu.java.bot.scrapperclientstests;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.WithoutKafkaTestConfig;
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.clients.LinksClient;
 import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
@@ -18,6 +20,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -30,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Import(WithoutKafkaTestConfig.class)
 class LinksClientTest {
 
     private static final String ADD_DELETE_RESPONSE_BODY =
@@ -68,9 +73,18 @@ class LinksClientTest {
             "size": 2
         }
         """;
+    private static final String HEADER_LABEL = "Tg-Chat-Id";
+    private static final String HEADER_VALUE = "1";
+    private static final String CONTENT_HEADER_LABEL = "Content-Type";
+    private static final String CONTENT_HEADER_VALUE = "application/json";
+    private static final String LINK1 = "https://github.com";
+    private static final String LINK2 = "https://stackoverflow.com";
+    private static final String URL_PATH = "/links";
     private static WireMockServer mockServer;
     @Autowired
     private LinksClient linksClient;
+    @MockBean
+    private TelegramBot bot;
 
     @BeforeAll
     public static void setUpMockServer() {
@@ -100,16 +114,16 @@ class LinksClientTest {
     void testDeleteExchange() {
         //Set up
         mockServer
-            .stubFor(delete(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(delete(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK1));
         //When
-        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest("https://github.com"));
+        LinkResponse actualResponse = linksClient.removeLink(1L, new RemoveLinkRequest(LINK1));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -119,17 +133,17 @@ class LinksClientTest {
     void testPostExchange() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(
                         ADD_DELETE_RESPONSE_BODY)));
         //Given
-        LinkResponse expectedResponse = new LinkResponse(1L, URI.create("https://github.com"));
+        LinkResponse expectedResponse = new LinkResponse(1L, URI.create(LINK1));
         //When
-        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest("https://github.com"));
+        LinkResponse actualResponse = linksClient.addLink(1L, new AddLinkRequest(LINK1));
         //Then
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -139,17 +153,17 @@ class LinksClientTest {
     void testGetExchange() {
         //Set up
         mockServer
-            .stubFor(get(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(get(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(200)
                     .withBody(GET_RESPONSE_BODY)));
         //Given
         ListLinkResponse expectedResponse = new ListLinkResponse(
             List.of(
-                new LinkResponse(1L, URI.create("https://github.com")),
-                new LinkResponse(2L, URI.create("https://stackoverflow.com"))
+                new LinkResponse(1L, URI.create(LINK1)),
+                new LinkResponse(2L, URI.create(LINK2))
             ),
             2
         );
@@ -164,10 +178,10 @@ class LinksClientTest {
     void testClientErrorHandler() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/links"))
-                .withHeader("Tg-Chat-Id", equalTo("1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
+                .withHeader(HEADER_LABEL, equalTo(HEADER_VALUE))
                 .willReturn(aResponse()
-                    .withHeader("Content-Type", "application/json")
+                    .withHeader(CONTENT_HEADER_LABEL, CONTENT_HEADER_VALUE)
                     .withStatus(400)
                     .withBody(CONVERTED_API_ERROR_RESPONSE_BODY)
                 )

@@ -1,9 +1,11 @@
 package edu.java.scrapper.webclientstest;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import edu.java.scrapper.dao.service.interfaces.ChatService;
+import edu.java.scrapper.dao.service.interfaces.LinkService;
+import edu.java.scrapper.dao.service.interfaces.LinkUpdater;
 import edu.java.scrapper.webclients.clients.GitHubClient;
-import edu.java.scrapper.configuration.ApplicationConfig;
-import edu.java.scrapper.configuration.WebClientConfig;
 import edu.java.scrapper.webclients.dto.github.GitHubUser;
 import edu.java.scrapper.webclients.dto.github.RepositoryActivityResponse;
 import edu.java.scrapper.webclients.dto.github.RepositoryActivityType;
@@ -11,21 +13,23 @@ import edu.java.scrapper.webclients.dto.github.RepositoryGeneralInfoResponse;
 import edu.java.scrapper.webclients.dto.github.RepositoryVisibility;
 import java.time.OffsetDateTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8080)
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class GitHubClientTest {
 
     private final static String TEST_BASE_URL = "http://localhost:8080/";
@@ -49,13 +53,39 @@ class GitHubClientTest {
     private final static String TEST_ACTIVITY_TYPE1 = "push";
     private final static String TEST_ACTIVITY_TYPE2 = "branch_creation";
 
-    @Mock
-    private ApplicationConfig applicationConfig;
+    @MockBean
+    private ChatService chatService;
+    @MockBean
+    private LinkService linkService;
+    @MockBean
+    private LinkUpdater linkUpdater;
 
-    @InjectMocks
-    private WebClientConfig webClientConfig;
-
+    @Autowired
     private GitHubClient gitHubClient;
+    private static WireMockServer mockServer;
+
+    @BeforeAll
+    public static void setUpMockServer() {
+        mockServer = new WireMockServer();
+        mockServer.start();
+        WireMock.configureFor("localhost", 8080);
+    }
+
+    @AfterEach
+    public void resetMockServerState() {
+        mockServer.resetAll();
+    }
+
+    @AfterAll
+    public static void stopMockServer() {
+        mockServer.stop();
+        mockServer.shutdown();
+    }
+
+    @DynamicPropertySource
+    static void stubGitHubClientBaseUrl(DynamicPropertyRegistry registry) {
+        registry.add("app.git-hub-settings.default-base-url", () -> "http://localhost:8080");
+    }
 
     @ParameterizedTest
     @MethodSource("provideBaseUrls")
@@ -73,9 +103,6 @@ class GitHubClientTest {
             RepositoryVisibility.PUBLIC
         );
         //Setting up test conditions
-        Mockito.when(applicationConfig.gitHubSettings())
-            .thenReturn(new ApplicationConfig.GitHubSettings(TEST_BASE_URL, baseUrl));
-        gitHubClient = webClientConfig.gitHubClient();
         stubFor(get("/repos/test_user/test_repo").willReturn(okJson(getRepositoryJSONBody())));
 
         //When
@@ -111,9 +138,6 @@ class GitHubClientTest {
                 )
             );
         //Setting up test conditions
-        Mockito.when(applicationConfig.gitHubSettings())
-            .thenReturn(new ApplicationConfig.GitHubSettings(TEST_BASE_URL, baseUrl));
-        gitHubClient = webClientConfig.gitHubClient();
         stubFor(get("/repos/test_user/test_repo/activity").willReturn(okJson(getRepositoryActivityJSONBody())));
 
         //When

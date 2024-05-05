@@ -1,7 +1,7 @@
 app:
   scheduler:
     enable: true
-    interval: 15s
+    interval: 60s
     force-check-delay: 10s
     fetch-limit: 2
   bot-settings:
@@ -11,6 +11,29 @@ app:
   git-hub-settings:
     default-base-url: https://api.github.com/
   database-access-type: jdbc
+  client-retry-settings:
+    backoff-type: linear
+    attempts-limit: 3
+    attempt-delay: 2s
+    attempt-delay-limit: 60s
+    retry-codes:
+      - 500
+      - 502
+      - 503
+      - 504
+  api-rate-limit-settings:
+    limit: 50
+    refill-limit: 5
+    refill-delay: 30s
+  use-queue: false
+  kafka-settings:
+    bootstrap-server: localhost:9092
+    linger-ms: 10
+    batch-size: 10
+    link-update-topic:
+      name: link_updates
+      partitions: 10
+      replicas: 1
 
 spring:
   application:
@@ -26,6 +49,30 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include: "info,health,prometheus"
+  server:
+    port: 8081
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 springdoc:
   swagger-ui:

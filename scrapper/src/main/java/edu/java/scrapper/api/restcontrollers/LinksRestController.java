@@ -6,6 +6,7 @@ import edu.java.scrapper.api.dto.responses.LinkResponse;
 import edu.java.scrapper.api.dto.responses.ListLinkResponse;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.interfaces.LinkService;
+import io.micrometer.core.annotation.Counted;
 import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +28,7 @@ public class LinksRestController {
 
     private static final String HEADER_LABEL = "Tg-Chat-Id";
     private static final String MEDIA_TYPE = "application/json";
+    private static final String BOT_REQUESTS_METRIC_LABEL = "bot_requests";
     private final LinkService linkService;
 
     @Autowired
@@ -35,6 +37,7 @@ public class LinksRestController {
     }
 
     @GetMapping(produces = MEDIA_TYPE)
+    @Counted(value = BOT_REQUESTS_METRIC_LABEL)
     public ResponseEntity<ListLinkResponse> getAllLinks(@RequestHeader(HEADER_LABEL) long id) {
         Collection<Link> links = linkService.listAll(id);
         List<LinkResponse> linkResponses =
@@ -49,6 +52,7 @@ public class LinksRestController {
     }
 
     @PostMapping(consumes = MEDIA_TYPE, produces = MEDIA_TYPE)
+    @Counted(value = BOT_REQUESTS_METRIC_LABEL)
     public ResponseEntity<LinkResponse> addLink(
         @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody AddLinkRequest addLinkRequest
@@ -58,6 +62,7 @@ public class LinksRestController {
     }
 
     @DeleteMapping(consumes = MEDIA_TYPE, produces = MEDIA_TYPE)
+    @Counted(value = BOT_REQUESTS_METRIC_LABEL)
     public ResponseEntity<LinkResponse> deleteLink(
         @RequestHeader(HEADER_LABEL) long id,
         @Valid @RequestBody RemoveLinkRequest removeLinkRequest

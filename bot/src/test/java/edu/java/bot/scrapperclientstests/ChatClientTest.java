@@ -2,6 +2,8 @@ package edu.java.bot.scrapperclientstests;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.WithoutKafkaTestConfig;
 import edu.java.bot.scrapperclient.ClientException;
 import edu.java.bot.scrapperclient.clients.ChatClient;
 import edu.java.bot.scrapperclient.dto.errorresponses.ScrapperApiErrorResponse;
@@ -13,6 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -24,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Import(WithoutKafkaTestConfig.class)
 class ChatClientTest {
 
     private static final String CONVERTED_API_ERROR_RESPONSE_BODY =
@@ -39,9 +44,12 @@ class ChatClientTest {
             ]
         }
         """;
+    private static final String URL_PATH = "/tg-chat/1";
     private static WireMockServer mockServer;
     @Autowired
     private ChatClient chatClient;
+    @MockBean
+    private TelegramBot bot;
 
     @BeforeAll
     public static void setUpMockServer() {
@@ -62,7 +70,7 @@ class ChatClientTest {
     }
 
     @DynamicPropertySource
-    static void lstubScrapperBaseUrl(DynamicPropertyRegistry registry) {
+    static void stubScrapperBaseUrl(DynamicPropertyRegistry registry) {
         registry.add("app.scrapper-settings.default-base-url", () -> "http://localhost:8080");
     }
 
@@ -71,7 +79,7 @@ class ChatClientTest {
     void testDeleteExchange() {
         //Set up
         mockServer
-            .stubFor(delete(urlEqualTo("/tg-chat/1"))
+            .stubFor(delete(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)));
         //When
@@ -85,7 +93,7 @@ class ChatClientTest {
     void testPostExchange() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/tg-chat/1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withStatus(200)));
         //When
@@ -99,7 +107,7 @@ class ChatClientTest {
     void testClientErrorHandler() {
         //Set up
         mockServer
-            .stubFor(post(urlEqualTo("/tg-chat/1"))
+            .stubFor(post(urlEqualTo(URL_PATH))
                 .willReturn(aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withStatus(400)

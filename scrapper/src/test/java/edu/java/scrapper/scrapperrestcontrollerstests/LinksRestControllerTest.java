@@ -2,6 +2,7 @@ package edu.java.scrapper.scrapperrestcontrollerstests;
 
 import edu.java.scrapper.api.exceptions.ConflictException;
 import edu.java.scrapper.api.exceptions.NotFoundException;
+import edu.java.scrapper.api.ratelimit.RateLimitTrackerImpl;
 import edu.java.scrapper.api.restcontrollers.LinksRestController;
 import edu.java.scrapper.dao.dto.Link;
 import edu.java.scrapper.dao.service.interfaces.LinkService;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LinksRestController.class)
+@Import(RateLimitTrackerImpl.class)
 class LinksRestControllerTest {
 
     private static final String URL_TEMPLATE = "/scrapper/links";
@@ -33,7 +36,7 @@ class LinksRestControllerTest {
     private static final long HEADER_VALID_VALUE = 1L;
     private static final String HEADER_INVALID_VALUE = "notLong";
     private static final String VALID_LINK = "https://stackoverflow.com";
-    private static final long LINK_ID = 2L;
+    private static final long LINK_ID1 = 1L;
     private static final String LINKS_PATH = "$.links";
     private static final String SIZE_PATH = "$.size";
     private static final String LINK_ID_PATH = "$.id";
@@ -71,14 +74,14 @@ class LinksRestControllerTest {
     @DisplayName("Test GET \"list all\" 200 OK")
     void testGetSuccess() throws Exception {
         List<Link> returnStubCollection =
-            List.of(new Link(LINK_ID, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now()));
+            List.of(new Link(LINK_ID1, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now()));
         Mockito.doReturn(returnStubCollection).when(linkService)
             .listAll(HEADER_VALID_VALUE);
         //Then
         mockMvc.perform(get(URL_TEMPLATE).header(HEADER_LABEL, HEADER_VALID_VALUE))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath(SIZE_PATH).value(1))
+            .andExpect(jsonPath(SIZE_PATH).value(returnStubCollection.size()))
             .andExpect(jsonPath(LINKS_PATH).isArray())
             .andExpect(jsonPath(LINKS_PATH).isNotEmpty());
     }
@@ -86,28 +89,28 @@ class LinksRestControllerTest {
     @Test
     @DisplayName("Test POST \"add link\" 200 OK")
     void testPostSuccess() throws Exception {
-        Mockito.doReturn(new Link(1L, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now())).when(linkService)
+        Mockito.doReturn(new Link(LINK_ID1, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now())).when(linkService)
             .add(HEADER_VALID_VALUE, VALID_LINK);
         //Then
         mockMvc.perform(post(URL_TEMPLATE).header(HEADER_LABEL, HEADER_VALID_VALUE)
                 .contentType(MediaType.APPLICATION_JSON).content(LINK_REQUEST_VALID_CONTENT_BODY))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath(LINK_ID_PATH).value(1L))
+            .andExpect(jsonPath(LINK_ID_PATH).value(LINK_ID1))
             .andExpect(jsonPath(URL_PATH).value(VALID_LINK));
     }
 
     @Test
     @DisplayName("Test DELETE \"remove link\" 200 OK")
     void testDeleteSuccess() throws Exception {
-        Mockito.doReturn(new Link(1L, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now())).when(linkService)
+        Mockito.doReturn(new Link(LINK_ID1, VALID_LINK, ZonedDateTime.now(), ZonedDateTime.now())).when(linkService)
             .remove(HEADER_VALID_VALUE, VALID_LINK);
         //Then
         mockMvc.perform(delete(URL_TEMPLATE).header(HEADER_LABEL, HEADER_VALID_VALUE)
                 .contentType(MediaType.APPLICATION_JSON).content(LINK_REQUEST_VALID_CONTENT_BODY))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath(LINK_ID_PATH).value(1L))
+            .andExpect(jsonPath(LINK_ID_PATH).value(LINK_ID1))
             .andExpect(jsonPath(URL_PATH).value(VALID_LINK));
     }
 
